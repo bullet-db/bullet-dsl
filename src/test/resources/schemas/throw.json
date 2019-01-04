@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "name": "myInt",
+      "reference": "throwMyInt",
+      "type": "INTEGER"
+    }
+  ]
+}

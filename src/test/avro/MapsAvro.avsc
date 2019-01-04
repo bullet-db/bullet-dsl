@@ -1,0 +1,56 @@
+{
+    "type" : "record",
+    "name" : "MapsAvro",
+    "namespace" : "com.yahoo.bullet.dsl",
+    "fields" :
+    [
+        {
+            "name" : "myIntMap",
+            "type" : { "type" : "map", "values" : "int" }
+        },
+        {
+            "name" : "myLongMap",
+            "type" : { "type" : "map", "values" : "long" }
+        },
+        {
+            "name" : "myFloatMap",
+            "type" : { "type" : "map", "values" : "float" }
+        },
+        {
+            "name" : "myDoubleMap",
+            "type" : { "type" : "map", "values" : "double" }
+        },
+        {
+            "name" : "myBoolMap",
+            "type" : { "type" : "map", "values" : "boolean" }
+        },
+        {
+            "name" : "myStringMap",
+            "type" : { "type" : "map", "values" : "string" }
+        },
+        {
+            "name" : "myIntMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "int" } }
+        },
+        {
+            "name" : "myLongMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "long" } }
+        },
+        {
+            "name" : "myFloatMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "float" } }
+        },
+        {
+            "name" : "myDoubleMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "double" } }
+        },
+        {
+            "name" : "myBoolMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "boolean" } }
+        },
+        {
+            "name" : "myStringMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "string" } }
+        }
+    ]
+}

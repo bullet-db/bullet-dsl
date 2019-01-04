@@ -1,0 +1,8 @@
+{
+  "fields": [
+    {
+      "reference": "data",
+      "type": "RECORD"
+    }
+  ]
+}

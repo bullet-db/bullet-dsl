@@ -1,0 +1,128 @@
+{
+    "type" : "record",
+    "name" : "SmartAvro",
+    "namespace" : "com.yahoo.bullet.dsl",
+    "fields" :
+    [
+        {
+            "name" : "myInt",
+            "type" : "int"
+        },
+        {
+            "name" : "myLong",
+            "type" : "long"
+        },
+        {
+            "name" : "myFloat",
+            "type" : "float"
+        },
+        {
+            "name" : "myDouble",
+            "type" : "double"
+        },
+        {
+            "name" : "myBool",
+            "type" : "boolean"
+        },
+        {
+            "name" : "myString",
+            "type" : "string"
+        },
+        {
+            "name" : "myIntMap",
+            "type" : { "type" : "map", "values" : "int" }
+        },
+        {
+            "name" : "myLongMap",
+            "type" : { "type" : "map", "values" : "long" }
+        },
+        {
+            "name" : "myFloatMap",
+            "type" : { "type" : "map", "values" : "float" }
+        },
+        {
+            "name" : "myDoubleMap",
+            "type" : { "type" : "map", "values" : "double" }
+        },
+        {
+            "name" : "myBoolMap",
+            "type" : { "type" : "map", "values" : "boolean" }
+        },
+        {
+            "name" : "myStringMap",
+            "type" : { "type" : "map", "values" : "string" }
+        },
+        {
+            "name" : "myIntMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "int" } }
+        },
+        {
+            "name" : "myLongMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "long" } }
+        },
+        {
+            "name" : "myFloatMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "float" } }
+        },
+        {
+            "name" : "myDoubleMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "double" } }
+        },
+        {
+            "name" : "myBoolMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "boolean" } }
+        },
+        {
+            "name" : "myStringMapMap",
+            "type" : { "type" : "map", "values" : { "type" : "map", "values" : "string" } }
+        },
+        {
+            "name" : "myIntList",
+            "type" : { "type" : "array", "items" : "int" }
+        },
+        {
+            "name" : "myLongList",
+            "type" : { "type" : "array", "items" : "long" }
+        },
+        {
+            "name" : "myFloatList",
+            "type" : { "type" : "array", "items" : "float" }
+        },
+        {
+            "name" : "myDoubleList",
+            "type" : { "type" : "array", "items" : "double" }
+        },
+        {
+            "name" : "myBoolList",
+            "type" : { "type" : "array", "items" : "boolean" }
+        },
+        {
+            "name" : "myStringList",
+            "type" : { "type" : "array", "items" : "string" }
+        },
+        {
+            "name" : "myIntMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "int" } }
+        },
+        {
+            "name" : "myLongMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "long" } }
+        },
+        {
+            "name" : "myFloatMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "float" } }
+        },
+        {
+            "name" : "myDoubleMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "double" } }
+        },
+        {
+            "name" : "myBoolMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "boolean" } }
+        },
+        {
+            "name" : "myStringMapList",
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "string" } }
+        }
+    ]
+}

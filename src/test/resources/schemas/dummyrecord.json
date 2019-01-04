@@ -1,0 +1,16 @@
+{
+  "fields": [
+    {
+      "reference": "myIntList",
+      "type": "RECORD"
+    },
+    {
+      "reference": "myStringMap",
+      "type": "RECORD"
+    },
+    {
+      "reference": "myDummyAvro",
+      "type": "RECORD"
+    }
+  ]
+}

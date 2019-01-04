@@ -1,0 +1,49 @@
+{
+  "fields": [
+    {
+      "name": "myBool",
+      "type": "BOOLEAN"
+    },
+    {
+      "name": "myLong",
+      "type": "LONG"
+    },
+    {
+      "name": "myFloat",
+      "type": "FLOAT"
+    },
+    {
+      "name": "myDouble",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "myIntList",
+      "type": "LIST",
+      "subtype": "INTEGER"
+    },
+    {
+      "name": "myStringMap",
+      "type": "MAP",
+      "subtype": "STRING"
+    },
+    {
+      "name": "myDummyInt",
+      "reference": "myDummyAvro.myInt",
+      "type": "INTEGER"
+    },
+    {
+      "name": "aaa",
+      "reference": "myStringMap.aaa",
+      "type": "STRING"
+    },
+    {
+      "name": "bbb",
+      "reference": "myIntList.2",
+      "type": "INTEGER"
+    },
+    {
+      "name": "myBytes",
+      "type": "BOOLEAN"
+    }
+  ]
+}

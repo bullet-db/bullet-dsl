@@ -1,0 +1,46 @@
+{
+  "fields": [
+    {
+      "name": "myLong",
+      "reference": "getMyLong",
+      "type": "LONG"
+    },
+    {
+      "name": "myDouble",
+      "reference": "getMyDouble",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "myString",
+      "reference": "getMyString",
+      "type": "STRING"
+    },
+    {
+      "name": "myFloat",
+      "reference": "getMyFloat",
+      "type": "FLOAT"
+    },
+    {
+      "name": "myBool",
+      "reference": "getMyBool",
+      "type": "BOOLEAN"
+    },
+    {
+      "name": "myInt",
+      "reference": "getMyInt",
+      "type": "INTEGER"
+    },
+    {
+      "name": "myIntMap",
+      "reference": "getMyIntMap",
+      "type": "MAP",
+      "subtype": "INTEGER"
+    },
+    {
+      "name": "myIntList",
+      "reference": "getMyIntList",
+      "type": "LIST",
+      "subtype": "INTEGER"
+    }
+  ]
+}

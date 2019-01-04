@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "name": "listofmap",
+      "type": "LISTOFMAP",
+      "subtype": "BOOLEAN"
+    }
+  ]
+}

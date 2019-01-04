@@ -1,0 +1,39 @@
+###### BulletRecordConverter properties
+
+bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+
+###### AvroBulletRecordConverter properties
+
+bullet.dsl.converter.avro.throw.unsupported.enable: true
+
+###### POJOBulletRecordConverter properties
+
+bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
+bullet.dsl.converter.pojo.schema.file: "src/test/resources/foo_schema_simple.json"
+
+###### MapBulletRecordConverter properties
+
+bullet.dsl.converter.map.schema.file: "src/test/resources/map_schema.json"
+
+###### BulletConnector properties
+
+bullet.dsl.connector.class.name: "com.yahoo.bullet.dsl.connector.KafkaConnector"
+bullet.dsl.connector.read.timeout.ms: 0
+bullet.dsl.connector.async.commit.enable: true
+
+###### KafkaConnector properties
+
+bullet.dsl.connector.kafka.topics:
+  - ""
+bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
+bullet.dsl.connector.kafka.group.id: "mygroup"
+bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+bullet.dsl.connector.kafka.value.deserializer: "com.yahoo.bullet.dsl.serializer.kafka.JavaSerializerDeserializer"
+
+###### PulsarConnector properties
+
+bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
+bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
+bullet.dsl.connector.pulsar.topics:
+  - ""
+bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.PulsarSchema"

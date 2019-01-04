@@ -1,0 +1,9 @@
+{
+  "fields": [
+    {
+      "name": "mapofmap",
+      "type": "MAPOFMAP",
+      "subtype": "BOOLEAN"
+    }
+  ]
+}

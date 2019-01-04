@@ -1,0 +1,48 @@
+{
+    "type" : "record",
+    "name" : "DummyAvro",
+    "namespace" : "com.yahoo.bullet.dsl",
+    "fields" :
+    [
+        {
+            "name" : "myInt",
+            "type" : "int"
+        },
+        {
+            "name" : "myLong",
+            "type" : "long"
+        },
+        {
+            "name" : "myFloat",
+            "type" : "float"
+        },
+        {
+            "name" : "myDouble",
+            "type" : "double"
+        },
+        {
+            "name" : "myBool",
+            "type" : "boolean"
+        },
+        {
+            "name" : "myString",
+            "type" : "string"
+        },
+        {
+            "name" : "myIntList",
+            "type" : [{ "type" : "array", "items" : "int" }, "null"]
+        },
+        {
+            "name" : "myStringMap",
+            "type" : [{ "type" : "map", "values" : "string" }, "null"]
+        },
+        {
+            "name" : "myBytes",
+            "type" : ["bytes", "null"]
+        },
+        {
+            "name" : "myDummyAvro",
+            "type" : ["DummyAvro", "null"]
+        }
+    ]
+}

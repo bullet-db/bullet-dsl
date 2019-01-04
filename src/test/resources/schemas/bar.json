@@ -1,0 +1,34 @@
+{
+  "fields": [
+    {
+      "name": "myBoolMap",
+      "type": "MAP",
+      "subtype": "BOOLEAN"
+    },
+    {
+      "name": "myBoolList",
+      "type": "LIST",
+      "subtype": "BOOLEAN"
+    },
+    {
+      "name": "myStringList",
+      "type": "LIST",
+      "subtype": "STRING"
+    },
+    {
+      "name": "myDoubleMap",
+      "type": "MAP",
+      "subtype": "DOUBLE"
+    },
+    {
+      "name": "myIntMapMap",
+      "type": "MAPOFMAP",
+      "subtype": "INTEGER"
+    },
+    {
+      "name": "myLongMapList",
+      "type": "LISTOFMAP",
+      "subtype": "LONG"
+    }
+  ]
+}

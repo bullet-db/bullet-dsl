@@ -1,0 +1,72 @@
+###### BulletRecordConverter properties
+
+# The classpath to the BulletRecordConverter to use
+bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+bullet.dsl.converter.schema.file: ""
+
+###### AvroBulletRecordConverter properties
+
+# Specifies whether or not to throw an exception on unsupported fields
+bullet.dsl.converter.avro.throw.unsupported.enable: true
+
+###### POJOBulletRecordConverter properties
+
+# The POJO classpath
+bullet.dsl.converter.pojo.class.name:
+# The POJO schema filepath (optional)
+bullet.dsl.converter.pojo.schema.file:
+
+###### MapBulletRecordConverter properties
+
+# The map schema filepath
+bullet.dsl.converter.map.schema.file:
+
+###### BulletConnector properties
+
+# The classpath to the BulletConnector to use
+bullet.dsl.connector.class.name: "com.yahoo.bullet.dsl.connector.KafkaConnector"
+# The read timeout duration in ms
+bullet.dsl.connector.read.timeout.ms: 0
+# Whether or not to asynchronously commit messages
+bullet.dsl.connector.async.commit.enable: true
+
+###### KafkaConnector properties
+
+# The list of Kafka topics to subscribe to (required)
+bullet.dsl.connector.kafka.topics:
+- ""
+# Whether or not the KafkaConsumer should seek to the end of its subscribed topics at initialization
+bullet.dsl.connector.kafka.start.at.end.enable: false
+
+# Kafka properties (prefixed by "bullet.dsl.connector.kafka.") are passed to KafkaConsumer during construction with the
+# prefix removed. The properties below are required.
+# Properties found at: https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
+bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
+bullet.dsl.connector.kafka.group.id:
+bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+bullet.dsl.connector.kafka.value.deserializer:
+
+###### PulsarConnector properties
+
+# The list of Pulsar topics to subscribe to (required)
+bullet.dsl.connector.pulsar.topics:
+- ""
+# The classpath to the Pulsar Schema to use (required)
+bullet.dsl.connector.pulsar.schema.class.name:
+
+# PulsarClient properties (prefixed by "bullet.dsl.connector.pulsar.client.") are passed to PulsarClient during construction
+# with the prefix removed. Note, serviceUrl is required.
+# Properties found at: https://github.com/apache/pulsar/blob/master/pulsar-client/src/main/java/org/apache/pulsar/client/impl/conf/ClientConfigurationData.java
+bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
+
+# PulsarClient authentication properties (disabled by default)
+bullet.dsl.connector.pulsar.auth.enable: false
+bullet.dsl.connector.pulsar.auth.plugin.class.name:
+bullet.dsl.connector.pulsar.auth.plugin.params.string:
+
+# Pulsar Consumer properties (prefixed by "bullet.dsl.connector.pulsar.consumer.") are passed to Consumer during construction
+# with the prefix removed. Note, subscriptionName is required.
+# Properties found at: https://github.com/apache/pulsar/blob/master/pulsar-client/src/main/java/org/apache/pulsar/client/impl/conf/ConsumerConfigurationData.java
+bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
+# PulsarConnector overrides the default subscriptionType -- "Exclusive" -- and uses "Shared" if it's not explicitly set
+bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
