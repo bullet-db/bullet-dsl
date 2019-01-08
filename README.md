@@ -1,5 +1,7 @@
 # Bullet DSL
 
+[![Build Status](https://travis-ci.org/bullet-db/bullet-dsl.svg?branch=master)](https://travis-ci.org/bullet-db/bullet-dsl) [![Coverage Status](https://coveralls.io/repos/github/bullet-db/bullet-dsl/badge.svg?branch=master)](https://coveralls.io/github/bullet-db/bullet-dsl?branch=master) [![Download](https://api.bintray.com/packages/yahoo/maven/bullet-dsl/images/download.svg) ](https://bintray.com/yahoo/maven/bullet-dsl/_latestVersion)
+
 A DSL for users to plug in their datasource into Bullet (Spark, Storm, etc.)
 
 ## Table of Contents
@@ -24,11 +26,11 @@ Bullet DSL is a library written in Java and published to [Bintray](https://bintr
 ## Usage
 
 Bullet DSL consists of two major components: the BulletConnector and the BulletRecordConverter. The BulletConnector is used to read data (objects) from a pluggable datasource while the BulletRecordConverter
-converts those objects into BulletRecords. 
+converts those objects into BulletRecords.
 
-Bullet Storm and Spark (and others) will provide a reading component that will use BulletConnector and BulletRecordConverter, so users will not have to write code themselves but will instead provide configuration. 
+Bullet Storm and Spark (and others) will provide a reading component that will use BulletConnector and BulletRecordConverter, so users will not have to write code themselves but will instead provide configuration.
 
-Below are some examples for users that wish to use BulletConnector or BulletRecordConverter separately. 
+Below are some examples for users that wish to use BulletConnector or BulletRecordConverter separately.
 
 #### BulletConnector
 
@@ -59,10 +61,10 @@ Example usage:
 
 #### BulletRecordConverter
 
-The currently implemented BulletRecordConverters are AvroBulletRecordConverter, MapBulletRecordConverter, and POJOBulletRecordConverter. These converters support converting 
-Apache Avro records, maps, and POJOs to BulletRecords. 
+The currently implemented BulletRecordConverters are AvroBulletRecordConverter, MapBulletRecordConverter, and POJOBulletRecordConverter. These converters support converting
+Apache Avro records, maps, and POJOs to BulletRecords.
 
-Note, BulletRecordConverter can be used with or without a BulletRecordSchema; the schema can be specified in the configuration as a json file. 
+Note, BulletRecordConverter can be used with or without a BulletRecordSchema; the schema can be specified in the configuration as a json file.
 
 Example usage:
 
@@ -79,13 +81,13 @@ Example usage:
 An array of objects where each object is a BulletRecordField that consists of a name, reference, type, and subtype.
 
 When an object is converted, the name of the fields in the resulting BulletRecord are specified by the schema and the corresponding values by the corresponding references.
-If a reference is null, the corresponding name will be used instead. 
+If a reference is null, the corresponding name will be used instead.
 
 Possible types are: BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, STRING, LIST, LISTOFMAP, MAP, MAPOFMAP, and RECORD.
 
 Possible subtypes are: BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, AND STRING.
 
-Note, if type is MAP, MAPOFMAP, LIST, or LISTOFMAP, then a subtype is required (otherwise subtype must be null). If type is RECORD, then name should be left empty. 
+Note, if type is MAP, MAPOFMAP, LIST, or LISTOFMAP, then a subtype is required (otherwise subtype must be null). If type is RECORD, then name should be left empty.
 
 Example schema and fields:
 
@@ -107,7 +109,7 @@ Example schema and fields:
       {
         "name": "myIntFromSomeMap",
         "reference": "someMap.myInt",
-        "type": "INTEGER"    
+        "type": "INTEGER"
       },
       {
         "name": "myIntFromSomeIntList",
@@ -124,7 +126,7 @@ Example schema and fields:
         "type": "RECORD"
       }
     ]
-    
+
 ## Documentation
 
 All documentation is available at **[Github Pages here](https://bullet-db.github.io/)**.
