@@ -7,7 +7,20 @@
     <groupId>com.yahoo.bullet</groupId>
     <artifactId>bullet-dsl</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>bullet-dsl</name>
+
+    <scm>
+        <developerConnection>scm:git:ssh://git@github.com/bullet-db/bullet-dsl.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-bullet-dsl-repo</id>
+            <url>https://api.bintray.com/maven/yahoo/maven/bullet-dsl;publish=1</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -118,6 +131,14 @@
                         <version>6.8.2</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>4.0.5</version>
+                <configuration>
+                    <licenseLocation>${user.home}/clover.license</licenseLocation>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
