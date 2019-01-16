@@ -2,18 +2,9 @@
 
 bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
 
-###### AvroBulletRecordConverter properties
-
-bullet.dsl.converter.avro.throw.unsupported.enable: true
-
 ###### POJOBulletRecordConverter properties
 
 bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
-bullet.dsl.converter.pojo.schema.file: "src/test/resources/foo_schema_simple.json"
-
-###### MapBulletRecordConverter properties
-
-bullet.dsl.converter.map.schema.file: "src/test/resources/map_schema.json"
 
 ###### BulletConnector properties
 

@@ -11,7 +11,6 @@ import com.yahoo.bullet.common.Validator;
 import com.yahoo.bullet.dsl.connector.KafkaConnector;
 import com.yahoo.bullet.dsl.connector.PulsarConnector;
 import com.yahoo.bullet.dsl.converter.POJOBulletRecordConverter;
-import org.apache.pulsar.client.api.SubscriptionType;
 
 import static com.yahoo.bullet.common.Validator.isImpliedBy;
 import static java.util.function.Predicate.isEqual;
@@ -64,7 +63,7 @@ public class BulletDSLConfig extends BulletConfig {
     public static final int DEFAULT_CONNECTOR_READ_TIMEOUT_MS = 0;
     public static final boolean DEFAULT_CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT = true;
     public static final boolean DEFAULT_CONNECTOR_KAFKA_START_AT_END_ENABLE = false;
-    public static final String DEFAULT_CONNECTOR_PULSAR_CONSUMER_SUBSCRIPTION_TYPE = SubscriptionType.Shared.toString();
+    public static final String DEFAULT_CONNECTOR_PULSAR_CONSUMER_SUBSCRIPTION_TYPE = "Shared";
     public static final boolean DEFAULT_CONNECTOR_PULSAR_AUTH_ENABLE = false;
 
     private static final Validator VALIDATOR = BulletConfig.getValidator();

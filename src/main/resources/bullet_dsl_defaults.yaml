@@ -2,24 +2,11 @@
 
 # The classpath to the BulletRecordConverter to use
 bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+# The path to the schema file to use
 bullet.dsl.converter.schema.file: ""
 
-###### AvroBulletRecordConverter properties
-
-# Specifies whether or not to throw an exception on unsupported fields
-bullet.dsl.converter.avro.throw.unsupported.enable: true
-
-###### POJOBulletRecordConverter properties
-
-# The POJO classpath
+# POJOBulletRecordConverter - POJO class name
 bullet.dsl.converter.pojo.class.name:
-# The POJO schema filepath (optional)
-bullet.dsl.converter.pojo.schema.file:
-
-###### MapBulletRecordConverter properties
-
-# The map schema filepath
-bullet.dsl.converter.map.schema.file:
 
 ###### BulletConnector properties
 

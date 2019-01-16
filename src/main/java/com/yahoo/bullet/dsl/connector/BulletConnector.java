@@ -8,13 +8,14 @@ package com.yahoo.bullet.dsl.connector;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * A BulletConnector is used to read objects from a data source such as Kafka or Pulsar. Connectors should extend this
  * class and expect configuration though {@link BulletDSLConfig}.
  */
-public abstract class BulletConnector implements AutoCloseable {
+public abstract class BulletConnector implements AutoCloseable, Serializable {
 
     protected BulletDSLConfig config;
 
