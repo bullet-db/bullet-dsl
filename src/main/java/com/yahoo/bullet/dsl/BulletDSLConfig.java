@@ -51,6 +51,11 @@ public class BulletDSLConfig extends BulletConfig {
     public static final String CONNECTOR_PULSAR_TOPICS = "bullet.dsl.connector.pulsar.topics";
     public static final String CONNECTOR_PULSAR_SCHEMA_CLASS_NAME = "bullet.dsl.connector.pulsar.schema.class.name";
 
+    // pulsar.schema.type -> BYTES, STRING, JSON, AVRO, PROTOBUF,
+    // pulsar.schema.of.class.name
+    // pulsar.schema.custom.class.name
+
+
     // Class names
     public static final String POJO_BULLET_RECORD_CONVERTER_CLASS_NAME = POJOBulletRecordConverter.class.getName();
 

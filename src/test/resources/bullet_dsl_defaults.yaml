@@ -27,4 +27,4 @@ bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
 bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 bullet.dsl.connector.pulsar.topics:
   - ""
-bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.PulsarSchema"
+bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema"

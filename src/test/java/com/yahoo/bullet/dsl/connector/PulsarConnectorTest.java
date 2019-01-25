@@ -7,7 +7,7 @@ package com.yahoo.bullet.dsl.connector;
 
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
-import com.yahoo.bullet.dsl.serializer.pulsar.PulsarSchema;
+import com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.AuthenticationDataProvider;
 import org.apache.pulsar.client.api.Consumer;
@@ -73,7 +73,7 @@ public class PulsarConnectorTest {
         ConsumerBuilder<Serializable> consumerBuilder = Mockito.mock(ConsumerBuilder.class);
         Consumer<Serializable> consumer = Mockito.mock(Consumer.class);
 
-        Schema<Serializable> schema = new PulsarSchema();
+        Schema<Serializable> schema = new JavaSchema();
 
         Mockito.doReturn(consumer).when(consumerBuilder).subscribe();
         Mockito.when(consumer.receive(Mockito.eq(100), Mockito.any()))
@@ -105,7 +105,7 @@ public class PulsarConnectorTest {
         ConsumerBuilder<Serializable> consumerBuilder = Mockito.mock(ConsumerBuilder.class);
         Consumer<Serializable> consumer = Mockito.mock(Consumer.class);
 
-        Schema<Serializable> schema = new PulsarSchema();
+        Schema<Serializable> schema = new JavaSchema();
 
         Mockito.doReturn(consumer).when(consumerBuilder).subscribe();
         Mockito.when(consumer.receive(Mockito.eq(100), Mockito.any()))
@@ -135,7 +135,7 @@ public class PulsarConnectorTest {
         PulsarConnector connector = new PulsarConnector(config);
 
         Consumer<Serializable> consumer = Mockito.mock(Consumer.class);
-        Schema<Serializable> schema = new PulsarSchema();
+        Schema<Serializable> schema = new JavaSchema();
         Mockito.when(consumer.receive(Mockito.eq(100), Mockito.any()))
                 .thenReturn(new MessageImpl<>("mytopic", "1:1", Collections.emptyMap(), Unpooled.wrappedBuffer(schema.encode("hello world")), schema));
         Mockito.doThrow(new PulsarClientException("mock exception")).when(consumer).acknowledge(Mockito.any(Message.class));

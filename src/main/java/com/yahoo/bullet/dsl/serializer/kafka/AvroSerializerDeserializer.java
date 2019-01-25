@@ -36,7 +36,7 @@ import java.util.Map;
 public class AvroSerializerDeserializer implements Serializer<GenericRecord>, Deserializer<GenericRecord> {
 
     public static final String AVRO_CLASS_NAME = "avro.class.name";
-    public static final String AVRO_SCHEMA_FILE = "avro.schema.file";
+    //public static final String AVRO_SCHEMA_FILE = "avro.schema.file";
 
     private final DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     private final DatumWriter<GenericRecord> writer = new GenericDatumWriter<>();
@@ -46,9 +46,9 @@ public class AvroSerializerDeserializer implements Serializer<GenericRecord>, De
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
         Schema schema = getSchemaFromClassName((String) configs.get(AVRO_CLASS_NAME));
-        if (schema == null) {
-            schema = getSchemaFromFile((String) configs.get(AVRO_SCHEMA_FILE));
-        }
+        //if (schema == null) {
+        //    schema = getSchemaFromFile((String) configs.get(AVRO_SCHEMA_FILE));
+        //}
         if (schema == null) {
             throw new RuntimeException("Could not find avro schema.");
         }

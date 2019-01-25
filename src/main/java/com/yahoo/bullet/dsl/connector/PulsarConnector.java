@@ -67,6 +67,8 @@ public class PulsarConnector extends BulletConnector {
         String authParamsString = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_AUTH_PARAMS_STRING, String.class);
         String schemaClassName = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_CLASS_NAME, String.class);
 
+        //Schema.;
+
         // TODO support default pulsar schemas
         Class<Schema> schemaClass = (Class<Schema>) Class.forName(schemaClassName);
         Constructor<Schema> c = schemaClass.getDeclaredConstructor();

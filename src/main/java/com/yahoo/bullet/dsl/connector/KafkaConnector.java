@@ -59,7 +59,6 @@ public class KafkaConnector extends BulletConnector {
     public void initialize() {
         consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(topics);
-
         if (startAtEnd) {
             consumer.seekToEnd(Collections.emptyList());
         }

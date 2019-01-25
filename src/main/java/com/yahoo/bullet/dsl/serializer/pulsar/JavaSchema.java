@@ -6,15 +6,28 @@
 package com.yahoo.bullet.dsl.serializer.pulsar;
 
 import com.yahoo.bullet.common.SerializerDeserializer;
+import com.yahoo.bullet.dsl.BulletDSLConfig;
+import lombok.NoArgsConstructor;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.common.schema.SchemaInfo;
 
 import java.io.Serializable;
 
 /**
- * A Pulsar schema that uses Java serialization to encode/decode {@link Serializable} objects.
+ * A custom Pulsar schema that uses Java serialization to encode/decode {@link Serializable} objects.
+ *
+ * Used for any object. Not a traditional pulsar schema.
+ *
+ * Does not support SchemaInfo (i.e. compatibility things..). Needs testing.
  */
-public class PulsarSchema implements Schema<Serializable> {
+@NoArgsConstructor
+public class JavaSchema implements Schema<Serializable> {
+
+    /**
+     * not used. awk
+     */
+    public JavaSchema(BulletDSLConfig config) {
+    }
 
     @Override
     public byte[] encode(Serializable message) {

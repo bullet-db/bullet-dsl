@@ -8,11 +8,11 @@ package com.yahoo.bullet.dsl.serializer.pulsar;
 import org.junit.Assert;
 import org.testng.annotations.Test;
 
-public class PulsarSchemaTest {
+public class JavaSchemaTest {
 
     @Test
     public void testPulsarSchema() {
-        PulsarSchema schema = new PulsarSchema();
+        JavaSchema schema = new JavaSchema();
 
         byte[] bytes = schema.encode("hello world!");
         Assert.assertNotNull(bytes);
