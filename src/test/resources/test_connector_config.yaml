@@ -28,4 +28,5 @@ bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
 bullet.dsl.connector.pulsar.consumer.subscriptionName: "mysubscription"
 bullet.dsl.connector.pulsar.topics:
   - "persistent://sample/standalone/ns1/mytopic"
+bullet.dsl.connector.pulsar.schema.type: "CUSTOM"
 bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema"

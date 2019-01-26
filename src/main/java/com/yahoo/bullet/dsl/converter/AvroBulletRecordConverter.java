@@ -64,8 +64,30 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     }
 
     @Override
+    protected BulletRecordConverter build() throws BulletDSLException {
+        super.build();
+
+        // check for specified avro record schema file option
+        // try to get schema if there and fail if can't get it
+
+        // check for specified avro record class
+        // try to get schema if there and fail if can't get it
+
+        // check for deserialize byte[] option
+        // if there, check for schema and fail if cant get it
+        // set up decoding
+
+
+        return this;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public BulletRecord convert(Object object, BulletRecord record) throws BulletDSLException {
+        // if deserialize
+        // deserialize and then set object = decode((byte[]) object);
+
+
         if (schema != null) {
             return super.convert(object, record);
         }

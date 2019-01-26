@@ -12,6 +12,10 @@ import com.yahoo.bullet.dsl.connector.KafkaConnector;
 import com.yahoo.bullet.dsl.connector.PulsarConnector;
 import com.yahoo.bullet.dsl.converter.POJOBulletRecordConverter;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.yahoo.bullet.common.Validator.isImpliedBy;
 import static java.util.function.Predicate.isEqual;
 
@@ -49,13 +53,27 @@ public class BulletDSLConfig extends BulletConfig {
     public static final String CONNECTOR_PULSAR_AUTH_PLUGIN_CLASS_NAME = "bullet.dsl.connector.pulsar.auth.plugin.class.name";
     public static final String CONNECTOR_PULSAR_AUTH_PARAMS_STRING = "bullet.dsl.connector.pulsar.auth.params.string";
     public static final String CONNECTOR_PULSAR_TOPICS = "bullet.dsl.connector.pulsar.topics";
+    public static final String CONNECTOR_PULSAR_SCHEMA_TYPE = "bullet.dsl.connector.pulsar.schema.type";
     public static final String CONNECTOR_PULSAR_SCHEMA_CLASS_NAME = "bullet.dsl.connector.pulsar.schema.class.name";
 
-    // pulsar.schema.type -> BYTES, STRING, JSON, AVRO, PROTOBUF,
-    // pulsar.schema.of.class.name
-    // pulsar.schema.custom.class.name
+    public static final String PULSAR_SCHEMA_BYTES = "BYTES";
+    public static final String PULSAR_SCHEMA_STRING = "STRING";
+    public static final String PULSAR_SCHEMA_JSON = "JSON";
+    public static final String PULSAR_SCHEMA_AVRO = "AVRO";
+    public static final String PULSAR_SCHEMA_PROTOBUF = "PROTOBUF";
+    public static final String PULSAR_SCHEMA_CUSTOM = "CUSTOM";
 
+    public static final Set<String> PULSAR_SCHEMA_TYPES = new HashSet<>(Arrays.asList(PULSAR_SCHEMA_BYTES,
+                                                                                      PULSAR_SCHEMA_STRING,
+                                                                                      PULSAR_SCHEMA_JSON,
+                                                                                      PULSAR_SCHEMA_AVRO,
+                                                                                      PULSAR_SCHEMA_PROTOBUF,
+                                                                                      PULSAR_SCHEMA_CUSTOM));
 
+    public static final Set<String> PULSAR_SCHEMA_CLASS_REQUIRED_TYPES = new HashSet<>(Arrays.asList(PULSAR_SCHEMA_JSON,
+                                                                                                     PULSAR_SCHEMA_AVRO,
+                                                                                                     PULSAR_SCHEMA_PROTOBUF,
+                                                                                                     PULSAR_SCHEMA_CUSTOM));
     // Class names
     public static final String POJO_BULLET_RECORD_CONVERTER_CLASS_NAME = POJOBulletRecordConverter.class.getName();
 
@@ -134,9 +152,13 @@ public class BulletDSLConfig extends BulletConfig {
         VALIDATOR.relate("If using PulsarConnector, a list of topic names must be specified.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_TOPICS)
                  .checkIf(isImpliedBy(isEqual(PULSAR_CONNECTOR_CLASS_NAME), Validator::isNonEmptyList))
                  .orFail();
+        VALIDATOR.define(CONNECTOR_PULSAR_SCHEMA_TYPE);
+        VALIDATOR.relate("If using PulsarConnector, schema type must be one of: BYTES, STRING, JSON, AVRO, PROTOBUF, or CUSTOM.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_SCHEMA_TYPE)
+                 .checkIf(isImpliedBy(isEqual(PULSAR_CONNECTOR_CLASS_NAME), Validator.isIn(PULSAR_SCHEMA_TYPES.toArray())))
+                 .orFail();
         VALIDATOR.define(CONNECTOR_PULSAR_SCHEMA_CLASS_NAME);
-        VALIDATOR.relate("If using PulsarConnector, schema class name must be specified.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_SCHEMA_CLASS_NAME)
-                 .checkIf(isImpliedBy(isEqual(PULSAR_CONNECTOR_CLASS_NAME), Validator::isClassName))
+        VALIDATOR.relate("If using a JSON, AVRO, PROTOBUF, or CUSTOM schema, the wrapped class or the custom schema class must be specified.", CONNECTOR_PULSAR_SCHEMA_TYPE, CONNECTOR_PULSAR_SCHEMA_CLASS_NAME)
+                 .checkIf(isImpliedBy(Validator.isIn(PULSAR_SCHEMA_CLASS_REQUIRED_TYPES.toArray()), Validator::isClassName))
                  .orFail();
         VALIDATOR.define(CONNECTOR_PULSAR_CLIENT_SERVICE_URL);
         VALIDATOR.relate("If using PulsarConnector, a service url must be specified.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_CLIENT_SERVICE_URL)

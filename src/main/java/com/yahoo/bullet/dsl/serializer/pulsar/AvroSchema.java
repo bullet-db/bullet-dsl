@@ -11,9 +11,9 @@ import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
-import org.apache.kafka.common.errors.SerializationException;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.common.schema.SchemaInfo;
+import org.apache.pulsar.common.schema.SchemaType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +30,14 @@ public class AvroSchema implements Schema<GenericRecord> {
 
     public static final String AVRO_CLASS_NAME = "avro.class.name";
 
+    private static final SchemaInfo SCHEMA_INFO = new SchemaInfo();
+
+    static {
+        SCHEMA_INFO.setName("AvroSchema");
+        SCHEMA_INFO.setSchema(new byte[0]);
+        SCHEMA_INFO.setType(SchemaType.NONE);
+    }
+
     private final DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     private final DatumWriter<GenericRecord> writer = new GenericDatumWriter<>();
     private BinaryDecoder decoder;
@@ -39,6 +47,8 @@ public class AvroSchema implements Schema<GenericRecord> {
      * kinda needs a constructor...
      *
      * either the Avro class or bullet config as an arg
+     *
+     * @param config
      */
     public AvroSchema(BulletDSLConfig config) {
         org.apache.avro.Schema schema = getSchemaFromClassName(config.getRequiredConfigAs(AVRO_CLASS_NAME, String.class));
@@ -73,7 +83,7 @@ public class AvroSchema implements Schema<GenericRecord> {
             encoder.flush();
             return outputStream.toByteArray();
         } catch (Exception e) {
-            throw new SerializationException("Failed to serialize avro record.", e);
+            throw new RuntimeException("Failed to serialize avro record.", e);
         }
     }
 
@@ -84,12 +94,12 @@ public class AvroSchema implements Schema<GenericRecord> {
         try {
             return reader.read(null, decoder);
         } catch (Exception e) {
-            throw new SerializationException("Failed to deserialize avro record.", e);
+            throw new RuntimeException("Failed to deserialize avro record.", e);
         }
     }
 
     @Override
     public SchemaInfo getSchemaInfo() {
-        return null;
+        return SCHEMA_INFO;
     }
 }

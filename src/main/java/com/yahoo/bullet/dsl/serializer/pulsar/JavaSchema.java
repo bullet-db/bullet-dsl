@@ -9,7 +9,9 @@ import com.yahoo.bullet.common.SerializerDeserializer;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import lombok.NoArgsConstructor;
 import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.common.schema.SchemaData;
 import org.apache.pulsar.common.schema.SchemaInfo;
+import org.apache.pulsar.common.schema.SchemaType;
 
 import java.io.Serializable;
 
@@ -23,8 +25,18 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class JavaSchema implements Schema<Serializable> {
 
+    private static final SchemaInfo SCHEMA_INFO = new SchemaInfo();
+
+    static {
+        SCHEMA_INFO.setName("JavaSchema");
+        SCHEMA_INFO.setSchema(new byte[0]);
+        SCHEMA_INFO.setType(SchemaType.NONE);
+    }
+
     /**
      * not used. awk
+     *
+     * @param config
      */
     public JavaSchema(BulletDSLConfig config) {
     }
@@ -41,6 +53,6 @@ public class JavaSchema implements Schema<Serializable> {
 
     @Override
     public SchemaInfo getSchemaInfo() {
-        return null;
+        return SCHEMA_INFO;
     }
 }

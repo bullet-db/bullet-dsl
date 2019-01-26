@@ -54,12 +54,6 @@ public class MapBulletRecordConverter extends BulletRecordConverter {
     }
 
     @Override
-    protected BulletRecordConverter build() throws BulletDSLException {
-        super.build();
-        return this;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public BulletRecord convert(Object object, BulletRecord record) throws BulletDSLException {
         if (schema != null) {

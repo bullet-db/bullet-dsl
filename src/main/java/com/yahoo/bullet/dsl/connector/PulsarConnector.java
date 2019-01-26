@@ -65,14 +65,35 @@ public class PulsarConnector extends BulletConnector {
         Boolean authEnable = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_AUTH_ENABLE, Boolean.class);
         String authPluginClassName = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_AUTH_PLUGIN_CLASS_NAME, String.class);
         String authParamsString = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_AUTH_PARAMS_STRING, String.class);
+        String schemaType = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, String.class);
         String schemaClassName = this.config.getAs(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_CLASS_NAME, String.class);
 
-        //Schema.;
+        Schema schema;
+        Class schemaClass = Class.forName(schemaClassName);
 
-        // TODO support default pulsar schemas
-        Class<Schema> schemaClass = (Class<Schema>) Class.forName(schemaClassName);
-        Constructor<Schema> c = schemaClass.getDeclaredConstructor();
-        Schema<Object> schema = c.newInstance();
+        switch (schemaType) {
+            case "BYTES":
+                schema = Schema.BYTES;
+                break;
+            case "STRING":
+                schema = Schema.STRING;
+                break;
+            case "JSON":
+                schema = Schema.JSON(schemaClass);
+                break;
+            case "AVRO":
+                schema = Schema.AVRO(schemaClass);
+                break;
+            case "PROTOBUF":
+                schema = Schema.PROTOBUF(schemaClass); // class must extend GeneratedMessageV3
+                break;
+            case "CUSTOM":
+                Constructor<Schema> c = schemaClass.getDeclaredConstructor(BulletDSLConfig.class);
+                schema = c.newInstance(this.config);
+                break;
+            default:
+                throw new BulletDSLException("Could not create Pulsar Schema.");
+        }
 
         ClientBuilder builder = PulsarClient.builder().loadConf(clientConf);
         if (authEnable) {
