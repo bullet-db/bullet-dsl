@@ -6,7 +6,6 @@ import org.apache.avro.generic.GenericRecord;
 import org.junit.Assert;
 import org.testng.annotations.Test;
 
-
 public class AvroSchemaTest {
     @Test
     public void testWithClassName() {
@@ -56,6 +55,129 @@ public class AvroSchemaTest {
         Assert.assertNull(myDummyAvro.get("myDummyAvro"));
 
         // coverage
-        Assert.assertNull(schema.getSchemaInfo());
+        Assert.assertNotNull(schema.getSchemaInfo());
+    }
+
+    @Test
+    public void testWithSchemaFile() {
+        BulletDSLConfig config = new BulletDSLConfig();
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "src/test/avro/DummyAvro.avsc");
+
+        AvroSchema schema = new AvroSchema(config);
+
+        DummyAvro dummyAvro = new DummyAvro();
+        dummyAvro.setMyBool(true);
+        dummyAvro.setMyInt(1);
+        dummyAvro.setMyLong(2L);
+        dummyAvro.setMyFloat(3.0f);
+        dummyAvro.setMyDouble(4.0);
+        dummyAvro.setMyString("5.0");
+
+        DummyAvro another = new DummyAvro();
+        another.setMyBool(false);
+        another.setMyInt(2);
+        another.setMyLong(3L);
+        another.setMyFloat(4.0f);
+        another.setMyDouble(5.0);
+        another.setMyString("6.0");
+
+        dummyAvro.setMyDummyAvro(another);
+
+        byte[] bytes = schema.encode(dummyAvro);
+        Assert.assertNotNull(bytes);
+
+        GenericRecord message = schema.decode(bytes);
+
+        Assert.assertEquals(message.get("myBool"), true);
+        Assert.assertEquals(message.get("myInt"), 1);
+        Assert.assertEquals(message.get("myLong"), 2L);
+        Assert.assertEquals(message.get("myFloat"), 3.0f);
+        Assert.assertEquals(message.get("myDouble"), 4.0);
+        Assert.assertEquals(message.get("myString").toString(), "5.0");
+        Assert.assertNotNull(message.get("myDummyAvro"));
+
+        GenericRecord myDummyAvro = (GenericRecord) message.get("myDummyAvro");
+        Assert.assertEquals(myDummyAvro.get("myBool"), false);
+        Assert.assertEquals(myDummyAvro.get("myInt"), 2);
+        Assert.assertEquals(myDummyAvro.get("myLong"), 3L);
+        Assert.assertEquals(myDummyAvro.get("myFloat"), 4.0f);
+        Assert.assertEquals(myDummyAvro.get("myDouble"), 5.0);
+        Assert.assertEquals(myDummyAvro.get("myString").toString(), "6.0");
+        Assert.assertNull(myDummyAvro.get("myDummyAvro"));
+    }
+
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
+    public void testNoSchema() {
+        new AvroSchema(new BulletDSLConfig());
+    }
+
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
+    public void testMissingClass() {
+        BulletDSLConfig config = new BulletDSLConfig();
+        config.set(AvroSchema.AVRO_CLASS_NAME, "");
+
+        new AvroSchema(config);
+    }
+
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
+    public void testMissingFile() {
+        BulletDSLConfig config = new BulletDSLConfig();
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "");
+
+        new AvroSchema(config);
+    }
+
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Failed to serialize avro record\\.")
+    public void testWrongAvroEncode() {
+        BulletDSLConfig config = new BulletDSLConfig();
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "src/test/avro/SmartAvro.avsc");
+
+        AvroSchema schema = new AvroSchema(config);
+
+        DummyAvro dummyAvro = new DummyAvro();
+        dummyAvro.setMyBool(true);
+        dummyAvro.setMyInt(1);
+        dummyAvro.setMyLong(2L);
+        dummyAvro.setMyFloat(3.0f);
+        dummyAvro.setMyDouble(4.0);
+        dummyAvro.setMyString("5.0");
+        dummyAvro.setMyDummyAvro(null);
+
+        schema.encode(dummyAvro);
+    }
+
+    @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Failed to deserialize avro record\\.")
+    public void testWrongAvroDecode() {
+        BulletDSLConfig config = new BulletDSLConfig();
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "src/test/avro/DummyAvro.avsc");
+
+        AvroSchema schema = new AvroSchema(config);
+
+        DummyAvro dummyAvro = new DummyAvro();
+        dummyAvro.setMyBool(true);
+        dummyAvro.setMyInt(1);
+        dummyAvro.setMyLong(2L);
+        dummyAvro.setMyFloat(3.0f);
+        dummyAvro.setMyDouble(4.0);
+        dummyAvro.setMyString("5.0");
+
+        DummyAvro another = new DummyAvro();
+        another.setMyBool(false);
+        another.setMyInt(2);
+        another.setMyLong(3L);
+        another.setMyFloat(4.0f);
+        another.setMyDouble(5.0);
+        another.setMyString("6.0");
+
+        dummyAvro.setMyDummyAvro(another);
+
+        byte[] bytes = schema.encode(dummyAvro);
+        Assert.assertNotNull(bytes);
+
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "src/test/avro/SmartAvro.avsc");
+
+        schema = new AvroSchema(config);
+
+        schema.decode(bytes);
     }
 }

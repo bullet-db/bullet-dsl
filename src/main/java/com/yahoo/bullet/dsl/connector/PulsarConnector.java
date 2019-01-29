@@ -88,8 +88,13 @@ public class PulsarConnector extends BulletConnector {
                 schema = Schema.PROTOBUF(schemaClass); // class must extend GeneratedMessageV3
                 break;
             case "CUSTOM":
-                Constructor<Schema> c = schemaClass.getDeclaredConstructor(BulletDSLConfig.class);
-                schema = c.newInstance(this.config);
+                try {
+                    Constructor<Schema> c = schemaClass.getDeclaredConstructor(BulletDSLConfig.class);
+                    schema = c.newInstance(this.config);
+                } catch (Exception e) {
+                    Constructor<Schema> c = schemaClass.getDeclaredConstructor();
+                    schema = c.newInstance();
+                }
                 break;
             default:
                 throw new BulletDSLException("Could not create Pulsar Schema.");

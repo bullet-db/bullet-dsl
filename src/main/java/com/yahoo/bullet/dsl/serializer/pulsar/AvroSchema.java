@@ -17,18 +17,17 @@ import org.apache.pulsar.common.schema.SchemaType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * A custom Pulsar schema for serializing/deserializing Avro records.
- *
- * Used for only avro records. Not a traditional pulsar schema.
- *
- * Does not support SchemaInfo. needs testing.
  */
 @Slf4j
 public class AvroSchema implements Schema<GenericRecord> {
 
-    public static final String AVRO_CLASS_NAME = "avro.class.name";
+    public static final String AVRO_CLASS_NAME = "bullet.dsl.connector.pulsar.avro.class.name";
+    public static final String AVRO_SCHEMA_FILE = "bullet.dsl.connector.pulsar.avro.schema.file";
 
     private static final SchemaInfo SCHEMA_INFO = new SchemaInfo();
 
@@ -44,14 +43,15 @@ public class AvroSchema implements Schema<GenericRecord> {
     private BinaryEncoder encoder;
 
     /**
-     * kinda needs a constructor...
+     * Creates a Schema for serializing/deserializing Avro records with the given schema.
      *
-     * either the Avro class or bullet config as an arg
-     *
-     * @param config
+     * @param config The config to get the Avro schema from.
      */
     public AvroSchema(BulletDSLConfig config) {
-        org.apache.avro.Schema schema = getSchemaFromClassName(config.getRequiredConfigAs(AVRO_CLASS_NAME, String.class));
+        org.apache.avro.Schema schema = getSchemaFromClassName(config.getAs(AVRO_CLASS_NAME, String.class));
+        if (schema == null) {
+            schema = getSchemaFromFile(config.getAs(AVRO_SCHEMA_FILE, String.class));
+        }
         if (schema == null) {
             throw new RuntimeException("Could not find avro schema.");
         }
@@ -70,6 +70,19 @@ public class AvroSchema implements Schema<GenericRecord> {
             return avro.getSchema();
         } catch (Exception e) {
             log.error("Could not get avro schema from class name: " + className, e);
+            return null;
+        }
+    }
+
+    private org.apache.avro.Schema getSchemaFromFile(String file) {
+        if (file == null) {
+            return null;
+        }
+        try {
+            InputStream is = this.getClass().getResourceAsStream("/" + file);
+            return is != null ? new org.apache.avro.Schema.Parser().parse(is) : new org.apache.avro.Schema.Parser().parse(new File(file));
+        } catch (Exception e) {
+            log.error("Could not get avro schema from schema file: " + file, e);
             return null;
         }
     }

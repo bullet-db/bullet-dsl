@@ -28,6 +28,9 @@ public class BulletDSLConfig extends BulletConfig {
     public static final String RECORD_CONVERTER_CLASS_NAME = "bullet.dsl.converter.class.name";
     public static final String RECORD_CONVERTER_SCHEMA_FILE = "bullet.dsl.converter.schema.file";
     public static final String RECORD_CONVERTER_POJO_CLASS_NAME = "bullet.dsl.converter.pojo.class.name";
+    public static final String RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE = "bullet.dsl.converter.avro.deserialize.enable";
+    public static final String RECORD_CONVERTER_AVRO_CLASS_NAME = "bullet.dsl.converter.avro.class.name";
+    public static final String RECORD_CONVERTER_AVRO_SCHEMA_FILE = "bullet.dsl.converter.avro.schema.file";
 
     // BulletConnector properties
     public static final String CONNECTOR_CLASS_NAME = "bullet.dsl.connector.class.name";
@@ -75,17 +78,18 @@ public class BulletDSLConfig extends BulletConfig {
                                                                                                      PULSAR_SCHEMA_PROTOBUF,
                                                                                                      PULSAR_SCHEMA_CUSTOM));
     // Class names
-    public static final String POJO_BULLET_RECORD_CONVERTER_CLASS_NAME = POJOBulletRecordConverter.class.getName();
-
+    public static final String POJO_CONVERTER_CLASS_NAME = POJOBulletRecordConverter.class.getName();
     public static final String KAFKA_CONNECTOR_CLASS_NAME = KafkaConnector.class.getName();
     public static final String PULSAR_CONNECTOR_CLASS_NAME = PulsarConnector.class.getName();
 
     // Defaults
     public static final String DEFAULT_DSL_CONFIGURATION = "bullet_dsl_defaults.yaml";
+    public static final Boolean DEFAULT_RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE = false;
     public static final boolean DEFAULT_BULLET_CONNECTOR_ASYNC_COMMIT_ENABLE = true;
     public static final int DEFAULT_CONNECTOR_READ_TIMEOUT_MS = 0;
     public static final boolean DEFAULT_CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT = true;
     public static final boolean DEFAULT_CONNECTOR_KAFKA_START_AT_END_ENABLE = false;
+    public static final String DEFAULT_CONNECTOR_PULSAR_SCHEMA_TYPE = PULSAR_SCHEMA_BYTES;
     public static final String DEFAULT_CONNECTOR_PULSAR_CONSUMER_SUBSCRIPTION_TYPE = "Shared";
     public static final boolean DEFAULT_CONNECTOR_PULSAR_AUTH_ENABLE = false;
 
@@ -103,8 +107,11 @@ public class BulletDSLConfig extends BulletConfig {
                  .orFail();
         VALIDATOR.define(RECORD_CONVERTER_POJO_CLASS_NAME);
         VALIDATOR.relate("If using POJOBulletRecordConverter, a POJO class name must be specified.", RECORD_CONVERTER_CLASS_NAME, RECORD_CONVERTER_POJO_CLASS_NAME)
-                 .checkIf(isImpliedBy(isEqual(POJO_BULLET_RECORD_CONVERTER_CLASS_NAME), Validator::isClassName))
+                 .checkIf(isImpliedBy(isEqual(POJO_CONVERTER_CLASS_NAME), Validator::isClassName))
                  .orFail();
+        VALIDATOR.define(RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE)
+                 .checkIf(Validator::isBoolean)
+                 .defaultTo(DEFAULT_RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE);
 
         // BulletConnector validation
         VALIDATOR.define(CONNECTOR_CLASS_NAME)
@@ -152,7 +159,9 @@ public class BulletDSLConfig extends BulletConfig {
         VALIDATOR.relate("If using PulsarConnector, a list of topic names must be specified.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_TOPICS)
                  .checkIf(isImpliedBy(isEqual(PULSAR_CONNECTOR_CLASS_NAME), Validator::isNonEmptyList))
                  .orFail();
-        VALIDATOR.define(CONNECTOR_PULSAR_SCHEMA_TYPE);
+        VALIDATOR.define(CONNECTOR_PULSAR_SCHEMA_TYPE)
+                 .checkIf(Validator::isString)
+                 .defaultTo(DEFAULT_CONNECTOR_PULSAR_SCHEMA_TYPE);
         VALIDATOR.relate("If using PulsarConnector, schema type must be one of: BYTES, STRING, JSON, AVRO, PROTOBUF, or CUSTOM.", CONNECTOR_CLASS_NAME, CONNECTOR_PULSAR_SCHEMA_TYPE)
                  .checkIf(isImpliedBy(isEqual(PULSAR_CONNECTOR_CLASS_NAME), Validator.isIn(PULSAR_SCHEMA_TYPES.toArray())))
                  .orFail();

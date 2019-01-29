@@ -6,6 +6,10 @@ bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecor
 
 bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
 
+###### AvroBulletRecordConverter properties
+
+
+
 ###### BulletConnector properties
 
 bullet.dsl.connector.class.name: "com.yahoo.bullet.dsl.connector.KafkaConnector"
@@ -27,4 +31,5 @@ bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
 bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 bullet.dsl.connector.pulsar.topics:
   - ""
+bullet.dsl.connector.pulsar.schema.type: "CUSTOM"
 bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema"

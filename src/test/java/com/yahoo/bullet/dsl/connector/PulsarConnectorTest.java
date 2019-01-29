@@ -7,6 +7,8 @@ package com.yahoo.bullet.dsl.connector;
 
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
+import com.yahoo.bullet.dsl.DummyAvro;
+import com.yahoo.bullet.dsl.serializer.pulsar.AvroSchema;
 import com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.AuthenticationDataProvider;
@@ -179,5 +181,45 @@ public class PulsarConnectorTest {
 
         Assert.assertTrue(connector.getClient() instanceof PulsarClientImpl);
         Assert.assertTrue(((PulsarClientImpl) connector.getClient()).getConfiguration().getAuthentication() instanceof MockAuthentication);
+    }
+
+    @Test
+    public void testBytesSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, BulletDSLConfig.PULSAR_SCHEMA_BYTES);
+        new PulsarConnector(config);
+    }
+
+    @Test
+    public void testStringSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, BulletDSLConfig.PULSAR_SCHEMA_STRING);
+        new PulsarConnector(config);
+    }
+
+    @Test
+    public void testJsonSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, BulletDSLConfig.PULSAR_SCHEMA_JSON);
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_CLASS_NAME, DummyAvro.class.getName());
+        new PulsarConnector(config);
+    }
+
+    @Test
+    public void testAvroSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, BulletDSLConfig.PULSAR_SCHEMA_AVRO);
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_CLASS_NAME, DummyAvro.class.getName());
+        new PulsarConnector(config);
+    }
+
+    @Test
+    public void testCustomAvroSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, BulletDSLConfig.PULSAR_SCHEMA_CUSTOM);
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_CLASS_NAME, AvroSchema.class.getName());
+        config.set(AvroSchema.AVRO_SCHEMA_FILE, "src/test/avro/DummyAvro.avsc");
+        new PulsarConnector(config);
+    }
+
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not create Pulsar Schema\\.")
+    public void testNoSchema() throws Exception {
+        config.set(BulletDSLConfig.CONNECTOR_PULSAR_SCHEMA_TYPE, "");
+        new PulsarConnector(config);
     }
 }

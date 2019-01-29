@@ -8,6 +8,14 @@ bullet.dsl.converter.schema.file: ""
 # POJOBulletRecordConverter - POJO class name
 bullet.dsl.converter.pojo.class.name:
 
+# AvroBulletRecordConverter
+# If enabled, the converter will expect byte[] as input and first deserialize those into Avro records
+bullet.dsl.converter.avro.deserialize.enable: false
+# If deserializing is enabled, either the Avro record class (to get the Avro schema) or
+bullet.dsl.converter.avro.class.name:
+# the Avro schema file itself must be provided
+bullet.dsl.converter.avro.schema.file:
+
 ###### BulletConnector properties
 
 # The classpath to the BulletConnector to use
@@ -31,14 +39,16 @@ bullet.dsl.connector.kafka.start.at.end.enable: false
 bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
 bullet.dsl.connector.kafka.group.id:
 bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-bullet.dsl.connector.kafka.value.deserializer:
+bullet.dsl.connector.kafka.value.deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
 
 ###### PulsarConnector properties
 
 # The list of Pulsar topics to subscribe to (required)
 bullet.dsl.connector.pulsar.topics:
 - ""
-# The classpath to the Pulsar Schema to use (required)
+# The Pulsar Schema to use (required)
+bullet.dsl.connector.pulsar.schema.type: "BYTES"
+# The classpath to the Pulsar Schema to use (required only if using JSON, AVRO, PROTOBUF, or CUSTOM schema)
 bullet.dsl.connector.pulsar.schema.class.name:
 
 # PulsarClient properties (prefixed by "bullet.dsl.connector.pulsar.client.") are passed to PulsarClient during construction

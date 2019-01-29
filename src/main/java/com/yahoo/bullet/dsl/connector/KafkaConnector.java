@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,7 +36,6 @@ public class KafkaConnector extends BulletConnector {
     private boolean autoCommit;
     private boolean asyncCommit;
     private Duration timeout;
-    private Map<String, Object> properties;
 
     /**
      * Constructs a KafkaConnector from a given configuration.
@@ -52,12 +50,11 @@ public class KafkaConnector extends BulletConnector {
         this.autoCommit = this.config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT, Boolean.class);
         this.asyncCommit = this.config.getAs(BulletDSLConfig.CONNECTOR_ASYNC_COMMIT_ENABLE, Boolean.class);
         this.timeout = Duration.ofMillis(this.config.getAs(BulletDSLConfig.CONNECTOR_READ_TIMEOUT_MS, Number.class).longValue());
-        this.properties = this.config.getAllWithPrefix(Optional.empty(), BulletDSLConfig.CONNECTOR_KAFKA_NAMESPACE, true);
+        this.consumer = new KafkaConsumer<>(this.config.getAllWithPrefix(Optional.empty(), BulletDSLConfig.CONNECTOR_KAFKA_NAMESPACE, true));
     }
 
     @Override
     public void initialize() {
-        consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(topics);
         if (startAtEnd) {
             consumer.seekToEnd(Collections.emptyList());

@@ -20,6 +20,6 @@ public class JavaSchemaTest {
         String message = (String) schema.decode(bytes);
         Assert.assertEquals(message, "hello world!");
 
-        Assert.assertNull(schema.getSchemaInfo());
+        Assert.assertNotNull(schema.getSchemaInfo());
     }
 }

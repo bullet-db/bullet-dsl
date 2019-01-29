@@ -7,6 +7,7 @@ package com.yahoo.bullet.dsl.serializer.kafka;
 
 import com.yahoo.bullet.dsl.DummyAvro;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.kafka.common.errors.SerializationException;
 import org.junit.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,7 +68,7 @@ public class AvroSerializerDeserializerTest {
 
         serdes.close();
     }
-/*
+
     @Test
     public void testWithSchemaFile() {
         serdes.configure(Collections.singletonMap(AvroSerializerDeserializer.AVRO_SCHEMA_FILE, "src/test/avro/DummyAvro.avsc"), false);
@@ -114,7 +115,7 @@ public class AvroSerializerDeserializerTest {
 
         serdes.close();
     }
-*/
+
     @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
     public void testAvroSerializerDeserializerNoSchema() {
         serdes.configure(Collections.emptyMap(), false);
@@ -124,7 +125,7 @@ public class AvroSerializerDeserializerTest {
     public void testConfigureMissingClass() {
         serdes.configure(Collections.singletonMap(AvroSerializerDeserializer.AVRO_CLASS_NAME, ""), false);
     }
-/*
+
     @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
     public void testConfigureMissingFile() {
         serdes.configure(Collections.singletonMap(AvroSerializerDeserializer.AVRO_SCHEMA_FILE, ""), false);
@@ -174,5 +175,5 @@ public class AvroSerializerDeserializerTest {
         serdes.configure(Collections.singletonMap(AvroSerializerDeserializer.AVRO_SCHEMA_FILE, "src/test/avro/SmartAvro.avsc"), false);
 
         serdes.deserialize(null, bytes);
-    }*/
+    }
 }

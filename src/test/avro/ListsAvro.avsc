@@ -26,31 +26,31 @@
         },
         {
             "name" : "myStringList",
-            "type" : { "type" : "array", "items" : "string" }
+            "type" : { "type" : "array", "items" : { "type": "string", "avro.java.string" : "String" } }
         },
         {
             "name" : "myIntMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "int" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "int", "avro.java.string" : "String" } }
         },
         {
             "name" : "myLongMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "long" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "long", "avro.java.string" : "String" } }
         },
         {
             "name" : "myFloatMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "float" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "float", "avro.java.string" : "String" } }
         },
         {
             "name" : "myDoubleMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "double" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "double", "avro.java.string" : "String" } }
         },
         {
             "name" : "myBoolMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "boolean" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "boolean", "avro.java.string" : "String" } }
         },
         {
             "name" : "myStringMapList",
-            "type" : { "type" : "array", "items" : { "type" : "map", "values" : "string" } }
+            "type" : { "type" : "array", "items" : { "type" : "map", "values" : { "type": "string", "avro.java.string" : "String" }, "avro.java.string" : "String" } }
         }
     ]
 }

@@ -12,8 +12,15 @@ import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.record.BulletRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DecoderFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,6 +34,10 @@ import java.util.Objects;
  */
 @Slf4j
 public class AvroBulletRecordConverter extends BulletRecordConverter {
+
+    private final DatumReader<GenericRecord> reader = new GenericDatumReader<>();
+    private BinaryDecoder decoder;
+    private boolean deserialize;
 
     /**
      * Constructs an AvroBulletRecordConverter without a schema.
@@ -66,28 +77,26 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     @Override
     protected BulletRecordConverter build() throws BulletDSLException {
         super.build();
-
-        // check for specified avro record schema file option
-        // try to get schema if there and fail if can't get it
-
-        // check for specified avro record class
-        // try to get schema if there and fail if can't get it
-
-        // check for deserialize byte[] option
-        // if there, check for schema and fail if cant get it
-        // set up decoding
-
-
+        deserialize = config.getRequiredConfigAs(BulletDSLConfig.RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE, Boolean.class);
+        if (deserialize) {
+            Schema schema = getSchemaFromClassName(config.getAs(BulletDSLConfig.RECORD_CONVERTER_AVRO_CLASS_NAME, String.class));
+            if (schema == null) {
+                schema = getSchemaFromFile(config.getAs(BulletDSLConfig.RECORD_CONVERTER_AVRO_SCHEMA_FILE, String.class));
+            }
+            if (schema == null) {
+                throw new BulletDSLException("Could not find avro schema.");
+            }
+            reader.setSchema(schema);
+        }
         return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public BulletRecord convert(Object object, BulletRecord record) throws BulletDSLException {
-        // if deserialize
-        // deserialize and then set object = decode((byte[]) object);
-
-
+        if (deserialize) {
+            object = deserializeRecord((byte[]) object);
+        }
         if (schema != null) {
             return super.convert(object, record);
         }
@@ -140,5 +149,43 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
             return ((GenericRecord) object).get(field);
         }
         return super.getField(object, field);
+    }
+
+    private GenericRecord deserializeRecord(byte[] bytes) throws BulletDSLException {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        decoder = DecoderFactory.get().binaryDecoder(inputStream, decoder);
+        try {
+            return reader.read(null, decoder);
+        } catch (Exception e) {
+            throw new BulletDSLException("Failed to deserialize avro record.", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Schema getSchemaFromClassName(String className) {
+        if (className == null) {
+            return null;
+        }
+        try {
+            Class<? extends GenericRecord> cls = (Class<? extends GenericRecord>) Class.forName(className);
+            GenericRecord avro = cls.getConstructor().newInstance();
+            return avro.getSchema();
+        } catch (Exception e) {
+            log.error("Could not get avro schema from class name: " + className, e);
+            return null;
+        }
+    }
+
+    private Schema getSchemaFromFile(String file) {
+        if (file == null) {
+            return null;
+        }
+        try {
+            InputStream is = this.getClass().getResourceAsStream("/" + file);
+            return is != null ? new Schema.Parser().parse(is) : new Schema.Parser().parse(new File(file));
+        } catch (Exception e) {
+            log.error("Could not get avro schema from schema file: " + file, e);
+            return null;
+        }
     }
 }
