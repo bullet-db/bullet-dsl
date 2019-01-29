@@ -8,7 +8,9 @@ bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBullet
 
 ###### AvroBulletRecordConverter properties
 
-
+bullet.dsl.converter.avro.deserialize.enable: false
+bullet.dsl.converter.avro.class.name:
+bullet.dsl.converter.avro.schema.file:
 
 ###### BulletConnector properties
 
