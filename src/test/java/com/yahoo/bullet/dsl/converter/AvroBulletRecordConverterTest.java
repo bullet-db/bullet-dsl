@@ -11,13 +11,9 @@ import com.yahoo.bullet.dsl.DummyAvro;
 import com.yahoo.bullet.dsl.ListsAvro;
 import com.yahoo.bullet.dsl.MapsAvro;
 import com.yahoo.bullet.record.BulletRecord;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.specific.SpecificDatumWriter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
@@ -252,136 +248,5 @@ public class AvroBulletRecordConverterTest {
         Assert.assertEquals(record.get("myDoubleMapList"), listsAvro.getMyDoubleMapList());
         Assert.assertEquals(record.get("myStringMapList"), listsAvro.getMyStringMapList());
         Assert.assertNull(record.get("dne"));
-    }
-
-    @Test
-    public void testDeserializeClassName() throws Exception {
-        BulletDSLConfig config = new BulletDSLConfig();
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE, true);
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_CLASS_NAME, ListsAvro.class.getName());
-
-        AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter(config);
-
-        ListsAvro listsAvro = new ListsAvro();
-        listsAvro.setMyBoolList(Collections.singletonList(false));
-        listsAvro.setMyIntList(Collections.singletonList(14));
-        listsAvro.setMyLongList(Collections.singletonList(15L));
-        listsAvro.setMyFloatList(Collections.singletonList(16.0f));
-        listsAvro.setMyDoubleList(Collections.singletonList(17.0));
-        listsAvro.setMyStringList(Collections.singletonList("18"));
-        listsAvro.setMyBoolMapList(Collections.singletonList(Collections.singletonMap("s", true)));
-        listsAvro.setMyIntMapList(Collections.singletonList(Collections.singletonMap("t", 20)));
-        listsAvro.setMyLongMapList(Collections.singletonList(Collections.singletonMap("u", 21L)));
-        listsAvro.setMyFloatMapList(Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        listsAvro.setMyDoubleMapList(Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        listsAvro.setMyStringMapList(Collections.singletonList(Collections.singletonMap("x", "24")));
-
-        SpecificDatumWriter<ListsAvro> writer = new SpecificDatumWriter<>(ListsAvro.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Encoder encoder = EncoderFactory.get().binaryEncoder(stream, null);
-        writer.write(listsAvro, encoder);
-        encoder.flush();
-
-        BulletRecord record = recordConverter.convert(stream.toByteArray());
-
-        Assert.assertEquals(record.get("myBoolList"), listsAvro.getMyBoolList());
-        Assert.assertEquals(record.get("myIntList"), listsAvro.getMyIntList());
-        Assert.assertEquals(record.get("myLongList"), listsAvro.getMyLongList());
-        Assert.assertEquals(record.get("myFloatList"), listsAvro.getMyFloatList());
-        Assert.assertEquals(record.get("myDoubleList"), listsAvro.getMyDoubleList());
-        Assert.assertEquals(record.get("myStringList"), listsAvro.getMyStringList());
-        Assert.assertEquals(record.get("myBoolMapList"), listsAvro.getMyBoolMapList());
-        Assert.assertEquals(record.get("myIntMapList"), listsAvro.getMyIntMapList());
-        Assert.assertEquals(record.get("myLongMapList"), listsAvro.getMyLongMapList());
-        Assert.assertEquals(record.get("myFloatMapList"), listsAvro.getMyFloatMapList());
-        Assert.assertEquals(record.get("myDoubleMapList"), listsAvro.getMyDoubleMapList());
-        Assert.assertEquals(record.get("myStringMapList"), listsAvro.getMyStringMapList());
-        Assert.assertNull(record.get("dne"));
-    }
-
-    @Test
-    public void testDeserializeSchemaFile() throws Exception {
-        BulletDSLConfig config = new BulletDSLConfig();
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE, true);
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_SCHEMA_FILE, "src/test/avro/ListsAvro.avsc");
-
-        AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter(config);
-
-        ListsAvro listsAvro = new ListsAvro();
-        listsAvro.setMyBoolList(Collections.singletonList(false));
-        listsAvro.setMyIntList(Collections.singletonList(14));
-        listsAvro.setMyLongList(Collections.singletonList(15L));
-        listsAvro.setMyFloatList(Collections.singletonList(16.0f));
-        listsAvro.setMyDoubleList(Collections.singletonList(17.0));
-        listsAvro.setMyStringList(Collections.singletonList("18"));
-        listsAvro.setMyBoolMapList(Collections.singletonList(Collections.singletonMap("s", true)));
-        listsAvro.setMyIntMapList(Collections.singletonList(Collections.singletonMap("t", 20)));
-        listsAvro.setMyLongMapList(Collections.singletonList(Collections.singletonMap("u", 21L)));
-        listsAvro.setMyFloatMapList(Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        listsAvro.setMyDoubleMapList(Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        listsAvro.setMyStringMapList(Collections.singletonList(Collections.singletonMap("x", "24")));
-
-        SpecificDatumWriter<ListsAvro> writer = new SpecificDatumWriter<>(ListsAvro.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Encoder encoder = EncoderFactory.get().binaryEncoder(stream, null);
-        writer.write(listsAvro, encoder);
-        encoder.flush();
-
-        BulletRecord record = recordConverter.convert(stream.toByteArray());
-
-        Assert.assertEquals(record.get("myBoolList"), listsAvro.getMyBoolList());
-        Assert.assertEquals(record.get("myIntList"), listsAvro.getMyIntList());
-        Assert.assertEquals(record.get("myLongList"), listsAvro.getMyLongList());
-        Assert.assertEquals(record.get("myFloatList"), listsAvro.getMyFloatList());
-        Assert.assertEquals(record.get("myDoubleList"), listsAvro.getMyDoubleList());
-        Assert.assertEquals(record.get("myStringList"), listsAvro.getMyStringList());
-        Assert.assertEquals(record.get("myBoolMapList"), listsAvro.getMyBoolMapList());
-        Assert.assertEquals(record.get("myIntMapList"), listsAvro.getMyIntMapList());
-        Assert.assertEquals(record.get("myLongMapList"), listsAvro.getMyLongMapList());
-        Assert.assertEquals(record.get("myFloatMapList"), listsAvro.getMyFloatMapList());
-        Assert.assertEquals(record.get("myDoubleMapList"), listsAvro.getMyDoubleMapList());
-        Assert.assertEquals(record.get("myStringMapList"), listsAvro.getMyStringMapList());
-        Assert.assertNull(record.get("dne"));
-    }
-
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not find avro schema\\.")
-    public void testDeserializeNoSchema() throws Exception {
-        BulletDSLConfig config = new BulletDSLConfig();
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE, true);
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_CLASS_NAME, "");
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_SCHEMA_FILE, "");
-
-        new AvroBulletRecordConverter(config);
-    }
-
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Failed to deserialize avro record\\.")
-    public void testDeserializeWrongAvro() throws Exception {
-        BulletDSLConfig config = new BulletDSLConfig();
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_DESERIALIZE_ENABLE, true);
-        config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_CLASS_NAME, DummyAvro.class.getName());
-
-        AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter(config);
-
-        ListsAvro listsAvro = new ListsAvro();
-        listsAvro.setMyBoolList(Collections.singletonList(false));
-        listsAvro.setMyIntList(Collections.singletonList(14));
-        listsAvro.setMyLongList(Collections.singletonList(15L));
-        listsAvro.setMyFloatList(Collections.singletonList(16.0f));
-        listsAvro.setMyDoubleList(Collections.singletonList(17.0));
-        listsAvro.setMyStringList(Collections.singletonList("18"));
-        listsAvro.setMyBoolMapList(Collections.singletonList(Collections.singletonMap("s", true)));
-        listsAvro.setMyIntMapList(Collections.singletonList(Collections.singletonMap("t", 20)));
-        listsAvro.setMyLongMapList(Collections.singletonList(Collections.singletonMap("u", 21L)));
-        listsAvro.setMyFloatMapList(Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        listsAvro.setMyDoubleMapList(Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        listsAvro.setMyStringMapList(Collections.singletonList(Collections.singletonMap("x", "24")));
-
-        SpecificDatumWriter<ListsAvro> writer = new SpecificDatumWriter<>(ListsAvro.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Encoder encoder = EncoderFactory.get().binaryEncoder(stream, null);
-        writer.write(listsAvro, encoder);
-        encoder.flush();
-
-        recordConverter.convert(stream.toByteArray());
     }
 }

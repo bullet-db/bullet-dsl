@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option java_package = "com.yahoo.bullet.dsl";
+
+message Dummy {
+    string myString = 1;
+}

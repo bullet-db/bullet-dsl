@@ -44,12 +44,12 @@ public class MapBulletRecordConverter extends BulletRecordConverter {
     /**
      * Constructs a MapBulletRecordConverter from a given configuration.
      *
-     * @param config The configuration that specifies the settings for a MapBulletRecordConverter.
+     * @param bulletConfig The configuration that specifies the settings for a MapBulletRecordConverter.
      * @throws BulletDSLException if there is an error creating the converter.
      */
-    public MapBulletRecordConverter(BulletConfig config) throws BulletDSLException {
+    public MapBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
         // Copy settings from config.
-        this.config = new BulletDSLConfig(config);
+        config = new BulletDSLConfig(bulletConfig);
         build();
     }
 
