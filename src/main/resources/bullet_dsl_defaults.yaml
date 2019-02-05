@@ -50,16 +50,6 @@ bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 # PulsarConnector overrides the default subscriptionType -- "Exclusive" -- and uses "Shared" if it's not explicitly set
 bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
 
-###### AvroDeserializer properties
-
-# At least one of the following configs must be provided when using AvroDeserializer.
-# If both are provided, only the schema file will be used.
-
-# The path to the Avro schema file to use prefixed by "file://" (e.g. "file://example.avsc")
-bullet.dsl.deserializer.avro.schema.file:
-# The class name of the Avro record class to deserialize
-bullet.dsl.deserializer.avro.class.name:
-
 ###### BulletRecordConverter properties
 
 # The classpath to the BulletRecordConverter to use
@@ -74,3 +64,13 @@ bullet.dsl.converter.pojo.class.name:
 
 # The classpath to the BulletDeserializer to use
 bullet.dsl.deserializer.class.name:
+
+###### AvroDeserializer properties
+
+# At least one of the following configs must be provided when using AvroDeserializer.
+# If both are provided, only the schema file will be used.
+
+# The path to the Avro schema file to use prefixed by "file://" (e.g. "file://example.avsc")
+bullet.dsl.deserializer.avro.schema.file:
+# The class name of the Avro record class to deserialize
+bullet.dsl.deserializer.avro.class.name:
