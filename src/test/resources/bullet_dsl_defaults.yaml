@@ -22,6 +22,14 @@ bullet.dsl.connector.pulsar.topics:
 bullet.dsl.connector.pulsar.schema.type: "CUSTOM"
 bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema"
 
+###### BulletRecordConverter properties
+
+bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+
+###### POJOBulletRecordConverter properties
+
+bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
+
 ###### BulletDeserializer properties
 
 bullet.dsl.deserializer.class.name: "com.yahoo.bullet.dsl.deserializer.JavaDeserializer"
@@ -30,11 +38,3 @@ bullet.dsl.deserializer.class.name: "com.yahoo.bullet.dsl.deserializer.JavaDeser
 
 bullet.dsl.deserializer.avro.schema.file:
 bullet.dsl.deserializer.avro.class.name:
-
-###### BulletRecordConverter properties
-
-bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
-
-###### POJOBulletRecordConverter properties
-
-bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"

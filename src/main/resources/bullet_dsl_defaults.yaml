@@ -50,11 +50,6 @@ bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 # PulsarConnector overrides the default subscriptionType -- "Exclusive" -- and uses "Shared" if it's not explicitly set
 bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
 
-###### BulletDeserializer properties
-
-# The classpath to the BulletDeserializer to use
-bullet.dsl.deserializer.class.name:
-
 ###### AvroDeserializer properties
 
 # At least one of the following configs must be provided when using AvroDeserializer.
@@ -74,3 +69,8 @@ bullet.dsl.converter.schema.file: ""
 
 # POJOBulletRecordConverter - POJO class name
 bullet.dsl.converter.pojo.class.name:
+
+###### BulletDeserializer properties
+
+# The classpath to the BulletDeserializer to use
+bullet.dsl.deserializer.class.name:

@@ -33,7 +33,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bullet.core.version>0.6.5</bullet.core.version>
+        <bullet.core.version>0.6.6</bullet.core.version>
         <kafka.clients.version>2.1.0</kafka.clients.version>
         <pulsar.client.version>2.2.1</pulsar.client.version>
         <avro.version>1.7.7</avro.version>

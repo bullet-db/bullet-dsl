@@ -47,7 +47,7 @@ public class BulletDSLConfigTest {
         BulletDSLConfig config = new BulletDSLConfig();
         config.set(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, BulletDSLConfig.FILE_PREFIX + "schemas/empty.json");
         config.validate();
-        Assert.assertEquals(config.getAs(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, String.class), "{}\n");
+        Assert.assertEquals(config.getAs(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, String.class), "{}");
     }
 
     @Test
@@ -55,7 +55,7 @@ public class BulletDSLConfigTest {
         BulletDSLConfig config = new BulletDSLConfig();
         config.set(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, BulletDSLConfig.FILE_PREFIX + "src/test/resources/schemas/empty.json");
         config.validate();
-        Assert.assertEquals(config.getAs(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, String.class), "{}\n");
+        Assert.assertEquals(config.getAs(BulletDSLConfig.DESERIALIZER_AVRO_SCHEMA_FILE, String.class), "{}");
     }
 
     @Test(expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "Could not read file: does-not-exist")

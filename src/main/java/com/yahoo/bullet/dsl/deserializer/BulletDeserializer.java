@@ -11,26 +11,27 @@ import com.yahoo.bullet.dsl.BulletDSLException;
 import java.io.Serializable;
 
 /**
- * Super cool. Does cool stuff.
+ * A BulletDeserializer is used to deserialize or transform output from a BulletConnector into input for a BulletRecordConverter, e.g.
+ * from byte arrays to maps. Deserializers should extend this class and expect configuration though {@link BulletDSLConfig}.
  */
 public abstract class BulletDeserializer implements Serializable {
 
     protected BulletDSLConfig config;
 
     /**
-     * Takes in. spits out.
+     * Deserializes or transforms an object.
      *
-     * @param object
-     * @return
-     * @throws BulletDSLException
+     * @param object The object to deserialize or transform.
+     * @return The deserialized or transformed object.
+     * @throws BulletDSLException if there is a deserialization error.
      */
     public abstract Object deserialize(Object object) throws BulletDSLException;
 
     /**
-     * Creates a BulletConnector instance using the specified class.
+     * Creates a BulletDeserializer instance using the specified class.
      *
-     * @param config The configuration containing the BulletConnector class name and other relevant settings.
-     * @return A new instance of the specified BulletConnector class.
+     * @param config The configuration containing the BulletDeserializer class name and other relevant settings.
+     * @return A new instance of the specified BulletDeserializer class.
      */
     public static BulletDeserializer from(BulletDSLConfig config) {
         return config.loadConfiguredClass(BulletDSLConfig.DESERIALIZER_CLASS_NAME);

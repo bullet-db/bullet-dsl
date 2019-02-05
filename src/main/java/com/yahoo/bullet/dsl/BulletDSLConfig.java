@@ -13,16 +13,16 @@ import com.yahoo.bullet.dsl.connector.PulsarConnector;
 import com.yahoo.bullet.dsl.converter.POJOBulletRecordConverter;
 import com.yahoo.bullet.dsl.deserializer.AvroDeserializer;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.yahoo.bullet.common.Validator.isImpliedBy;
 import static java.util.function.Predicate.isEqual;
@@ -78,21 +78,21 @@ public class BulletDSLConfig extends BulletConfig {
                                                                                                      PULSAR_SCHEMA_PROTOBUF,
                                                                                                      PULSAR_SCHEMA_CUSTOM));
 
-    // BulletDeserializer properties
-    public static final String DESERIALIZER_CLASS_NAME = "bullet.dsl.deserializer.class.name";
-    public static final String DESERIALIZER_AVRO_CLASS_NAME = "bullet.dsl.deserializer.avro.class.name";
-    public static final String DESERIALIZER_AVRO_SCHEMA_FILE = "bullet.dsl.deserializer.avro.schema.file";
-
     // BulletRecordConverter properties
     public static final String RECORD_CONVERTER_CLASS_NAME = "bullet.dsl.converter.class.name";
     public static final String RECORD_CONVERTER_SCHEMA_FILE = "bullet.dsl.converter.schema.file";
     public static final String RECORD_CONVERTER_POJO_CLASS_NAME = "bullet.dsl.converter.pojo.class.name";
 
+    // BulletDeserializer properties
+    public static final String DESERIALIZER_CLASS_NAME = "bullet.dsl.deserializer.class.name";
+    public static final String DESERIALIZER_AVRO_CLASS_NAME = "bullet.dsl.deserializer.avro.class.name";
+    public static final String DESERIALIZER_AVRO_SCHEMA_FILE = "bullet.dsl.deserializer.avro.schema.file";
+
     // Class names
     public static final String KAFKA_CONNECTOR_CLASS_NAME = KafkaConnector.class.getName();
     public static final String PULSAR_CONNECTOR_CLASS_NAME = PulsarConnector.class.getName();
-    public static final String AVRO_DESERIALIZER_CLASS_NAME = AvroDeserializer.class.getName();
     public static final String POJO_CONVERTER_CLASS_NAME = POJOBulletRecordConverter.class.getName();
+    public static final String AVRO_DESERIALIZER_CLASS_NAME = AvroDeserializer.class.getName();
 
     // Defaults
     public static final String DEFAULT_DSL_CONFIGURATION = "bullet_dsl_defaults.yaml";
@@ -188,11 +188,25 @@ public class BulletDSLConfig extends BulletConfig {
                  .unless(Validator::isNull)
                  .orFail();
 
+        // BulletRecordConverter validation
+        VALIDATOR.define(RECORD_CONVERTER_CLASS_NAME)
+                 .checkIf(Validator::isClassName)
+                 .unless(Validator::isNull)
+                 .orFail();
+        VALIDATOR.define(RECORD_CONVERTER_SCHEMA_FILE)
+                 .checkIf(Validator::isString)
+                 .unless(Validator::isNull)
+                 .orFail();
+        VALIDATOR.define(RECORD_CONVERTER_POJO_CLASS_NAME);
+        VALIDATOR.relate("If using POJOBulletRecordConverter, a POJO class name must be specified.", RECORD_CONVERTER_CLASS_NAME, RECORD_CONVERTER_POJO_CLASS_NAME)
+                 .checkIf(isImpliedBy(isEqual(POJO_CONVERTER_CLASS_NAME), Validator::isClassName))
+                 .orFail();
+
         // BulletDeserializer validation
         VALIDATOR.define(DESERIALIZER_CLASS_NAME);
         VALIDATOR.define(DESERIALIZER_AVRO_SCHEMA_FILE)
                  .checkIf(Validator::isString)
-                 .castTo(BulletDSLConfig::readFile)
+                 .castTo(BulletDSLConfig::stringFromFile)
                  .unless(Validator::isNull)
                  .orFail();
         VALIDATOR.define(DESERIALIZER_AVRO_CLASS_NAME)
@@ -202,20 +216,6 @@ public class BulletDSLConfig extends BulletConfig {
         VALIDATOR.evaluate("If using AvroDeserializer, the Avro schema file or class name must be specified.", DESERIALIZER_CLASS_NAME, DESERIALIZER_AVRO_SCHEMA_FILE, DESERIALIZER_AVRO_CLASS_NAME)
                  .checkIf(BulletDSLConfig::isAtLeastOneAvroDeserializerFieldDefined)
                  .orFail();
-
-        // BulletRecordConverter validation
-        VALIDATOR.define(RECORD_CONVERTER_CLASS_NAME)
-                .checkIf(Validator::isClassName)
-                .unless(Validator::isNull)
-                .orFail();
-        VALIDATOR.define(RECORD_CONVERTER_SCHEMA_FILE)
-                .checkIf(Validator::isString)
-                .unless(Validator::isNull)
-                .orFail();
-        VALIDATOR.define(RECORD_CONVERTER_POJO_CLASS_NAME);
-        VALIDATOR.relate("If using POJOBulletRecordConverter, a POJO class name must be specified.", RECORD_CONVERTER_CLASS_NAME, RECORD_CONVERTER_POJO_CLASS_NAME)
-                .checkIf(isImpliedBy(isEqual(POJO_CONVERTER_CLASS_NAME), Validator::isClassName))
-                .orFail();
     }
 
     /**
@@ -253,31 +253,36 @@ public class BulletDSLConfig extends BulletConfig {
         return this;
     }
 
-    private static Object readFile(Object file) {
+    private static Object stringFromFile(Object file) {
         String fileName = (String) file;
         if (fileName.startsWith(FILE_PREFIX)) {
-            fileName = fileName.substring(FILE_PREFIX.length());
-            try {
-                InputStream is = BulletDSLConfig.class.getResourceAsStream("/" + fileName);
-                if (is != null) {
-                    return writeToString(is);
-                }
-                return writeToString(new FileInputStream(new File(fileName)));
-            } catch (IOException e) {
-                throw new RuntimeException("Could not read file: " + fileName, e);
-            }
+            return readFile(fileName.substring(FILE_PREFIX.length()));
         }
         return file;
     }
 
-    private static String writeToString(InputStream is) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = is.read(buffer)) != -1) {
-            output.write(buffer, 0, length);
+    private static String readFile(String fileName) {
+        // try to read from resource first
+        try (InputStream is = BulletDSLConfig.class.getResourceAsStream("/" + fileName)) {
+            if (is != null) {
+                return writeToString(is);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return output.toString(StandardCharsets.UTF_8.name());
+        return readFromFile(fileName);
+    }
+
+    private static String readFromFile(String fileName) {
+        try (InputStream is = new FileInputStream(fileName)) {
+            return writeToString(is);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read file: " + fileName, e);
+        }
+    }
+
+    private static String writeToString(InputStream is) {
+        return new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.joining("\n"));
     }
 
     private static boolean isAtLeastOneAvroDeserializerFieldDefined(List<Object> fields) {
