@@ -4,13 +4,13 @@
 
     <groupId>com.yahoo.bullet</groupId>
     <artifactId>bullet-dsl</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
     <name>bullet-dsl</name>
 
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/bullet-db/bullet-dsl.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>bullet-dsl-0.1.0</tag>
     </scm>
 
     <distributionManagement>
