@@ -28,6 +28,8 @@ import java.util.Objects;
 @Slf4j
 public class AvroBulletRecordConverter extends BulletRecordConverter {
 
+    private static final long serialVersionUID = -5066600942303615002L;
+
     /**
      * Constructs an AvroBulletRecordConverter without a schema.
      *

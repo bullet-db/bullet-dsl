@@ -27,6 +27,8 @@ import java.util.Optional;
 @Slf4j
 public class KafkaConnector extends BulletConnector {
 
+    private static final long serialVersionUID = -256168979644903950L;
+
     // Exposed for tests
     @Setter(AccessLevel.PACKAGE)
     private KafkaConsumer<Object, Object> consumer;

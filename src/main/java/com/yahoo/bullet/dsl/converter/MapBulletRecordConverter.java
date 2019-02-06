@@ -19,6 +19,9 @@ import java.util.Objects;
  * If a schema is not specified, maps are effectively flattened without any regard to type-safety.
  */
 public class MapBulletRecordConverter extends BulletRecordConverter {
+
+    private static final long serialVersionUID = -6592569189954638549L;
+
     /**
      * Constructs a MapBulletRecordConverter without a schema.
      *

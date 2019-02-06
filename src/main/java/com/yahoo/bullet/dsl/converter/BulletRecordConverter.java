@@ -31,6 +31,7 @@ import java.util.Optional;
  */
 public abstract class BulletRecordConverter implements Serializable {
 
+    private static final long serialVersionUID = -8337322656873297988L;
     private BulletRecordProvider provider;
     protected BulletDSLConfig config;
     protected BulletRecordSchema schema;

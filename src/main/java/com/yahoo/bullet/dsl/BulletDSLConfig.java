@@ -107,6 +107,7 @@ public class BulletDSLConfig extends BulletConfig {
     public static final String FILE_PREFIX = "file://";
 
     private static final Validator VALIDATOR = BulletConfig.getValidator();
+    private static final long serialVersionUID = -5570246581194772623L;
 
     static {
         // BulletConnector validation

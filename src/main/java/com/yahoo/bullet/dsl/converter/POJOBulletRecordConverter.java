@@ -40,6 +40,7 @@ import java.util.Objects;
 public class POJOBulletRecordConverter extends BulletRecordConverter {
 
     private static final List<Class> PRIMITIVES = Arrays.asList(Boolean.class, Integer.class, Long.class, Float.class, Double.class, String.class);
+    private static final long serialVersionUID = 1542840952973181399L;
 
     // Exposed for testing
     @Getter(AccessLevel.PACKAGE)

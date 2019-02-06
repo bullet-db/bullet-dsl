@@ -19,6 +19,8 @@ import java.util.List;
  */
 public abstract class BulletConnector implements AutoCloseable, Serializable {
 
+    private static final long serialVersionUID = -8131977808756978941L;
+
     // Exposed for testing
     @Getter(AccessLevel.PACKAGE)
     protected BulletDSLConfig config;

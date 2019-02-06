@@ -13,12 +13,15 @@ import com.yahoo.bullet.common.SerializerDeserializer;
  */
 public class JavaDeserializer extends BulletDeserializer {
 
+    private static final long serialVersionUID = -8588983048490798720L;
+
     /**
      * Constructs a JavaDeserializer from a given (but unused) configuration. Required constructor.
      *
      * @param bulletConfig Not used.
      */
     public JavaDeserializer(BulletConfig bulletConfig) {
+        super(bulletConfig);
     }
 
     @Override

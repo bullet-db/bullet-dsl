@@ -32,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class PulsarConnector extends BulletConnector {
 
+    private static final long serialVersionUID = 2958805692867790602L;
+
     // Exposed for tests
     @Getter(AccessLevel.PACKAGE)
     private PulsarClient client;

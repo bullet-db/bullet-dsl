@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
  */
 public class AvroDeserializer extends BulletDeserializer {
 
+    private static final long serialVersionUID = 4832970047084142383L;
     private DatumReader<GenericRecord> reader;
     private BinaryDecoder decoder;
 
@@ -31,7 +32,7 @@ public class AvroDeserializer extends BulletDeserializer {
      * @param bulletConfig The configuration that specifies the avro schema file or record class.
      */
     public AvroDeserializer(BulletConfig bulletConfig) {
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
     }
 
     private void initialize() throws BulletDSLException {
