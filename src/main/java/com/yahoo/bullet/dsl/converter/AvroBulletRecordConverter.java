@@ -36,7 +36,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter() throws BulletDSLException {
-        config = new BulletDSLConfig();
+        super(null);
         build();
     }
 
@@ -47,9 +47,10 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter(String schema) throws BulletDSLException {
+        super(null);
         Objects.requireNonNull(schema);
-        config = new BulletDSLConfig();
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, schema);
+        config.validate();
         build();
     }
 
@@ -60,8 +61,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         build();
     }
 

@@ -36,10 +36,10 @@ public class PulsarConnector extends BulletConnector {
 
     // Exposed for tests
     @Getter(AccessLevel.PACKAGE)
-    private PulsarClient client;
+    private transient PulsarClient client;
 
     @Setter(AccessLevel.PACKAGE)
-    private Consumer<Object> consumer;
+    private transient Consumer<Object> consumer;
 
     private boolean asyncCommit;
     private int timeout;
@@ -51,8 +51,7 @@ public class PulsarConnector extends BulletConnector {
      */
     @SuppressWarnings("unchecked")
     public PulsarConnector(BulletConfig bulletConfig) {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         asyncCommit = config.getAs(BulletDSLConfig.CONNECTOR_ASYNC_COMMIT_ENABLE, Boolean.class);
         timeout = config.getAs(BulletDSLConfig.CONNECTOR_READ_TIMEOUT_MS, Number.class).intValue();
     }

@@ -23,10 +23,10 @@ public abstract class BulletDeserializer implements Serializable {
     /**
      * Constructor that takes a configuration containing the settings relevant for this deserializer.
      *
-     * @param config The {@link BulletConfig} to use.
+     * @param bulletConfig The {@link BulletConfig} to use.
      */
-    public BulletDeserializer(BulletConfig config) {
-        this.config = new BulletDSLConfig(config);
+    public BulletDeserializer(BulletConfig bulletConfig) {
+        this.config = new BulletDSLConfig(bulletConfig);
     }
 
     /**

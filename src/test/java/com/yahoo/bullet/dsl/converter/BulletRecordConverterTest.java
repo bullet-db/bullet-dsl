@@ -5,6 +5,7 @@
  */
 package com.yahoo.bullet.dsl.converter;
 
+import com.yahoo.bullet.common.BulletConfig;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 import com.yahoo.bullet.dsl.DummyAvro;
@@ -22,6 +23,10 @@ import java.util.Map;
 public class BulletRecordConverterTest {
 
     private static class MockBulletRecordConverter extends BulletRecordConverter {
+        MockBulletRecordConverter(BulletConfig bulletConfig) {
+            super(bulletConfig);
+        }
+
         @Override
         protected Object get(Object object, String base) {
             return null;
@@ -166,7 +171,7 @@ public class BulletRecordConverterTest {
 
     @Test
     public void testGetField() {
-        BulletRecordConverter converter = new MockBulletRecordConverter();
+        BulletRecordConverter converter = new MockBulletRecordConverter(null);
 
         List<String> list = Arrays.asList("hello", "world");
         Assert.assertEquals(converter.getField(list, "0"), "hello");

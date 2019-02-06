@@ -5,6 +5,7 @@
  */
 package com.yahoo.bullet.dsl.connector;
 
+import com.yahoo.bullet.common.BulletConfig;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 import lombok.AccessLevel;
@@ -24,6 +25,15 @@ public abstract class BulletConnector implements AutoCloseable, Serializable {
     // Exposed for testing
     @Getter(AccessLevel.PACKAGE)
     protected BulletDSLConfig config;
+
+    /**
+     * Constructor that takes a configuration containing the settings relevant for this connector.
+     *
+     * @param bulletConfig The {@link BulletConfig} to use.
+     */
+    public BulletConnector(BulletConfig bulletConfig) {
+        this.config = new BulletDSLConfig(bulletConfig);
+    }
 
     /**
      * Initializes the BulletConnector. Must be called before read().

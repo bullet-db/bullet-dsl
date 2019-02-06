@@ -66,10 +66,11 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public POJOBulletRecordConverter(Class<?> type, String schema) throws BulletDSLException {
+        super(null);
         Objects.requireNonNull(type);
-        config = new BulletDSLConfig();
         config.set(BulletDSLConfig.RECORD_CONVERTER_POJO_CLASS_NAME, type.getName());
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, schema);
+        config.validate();
         build();
     }
 
@@ -80,8 +81,7 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public POJOBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         build();
     }
 

@@ -31,7 +31,7 @@ public class KafkaConnector extends BulletConnector {
 
     // Exposed for tests
     @Setter(AccessLevel.PACKAGE)
-    private KafkaConsumer<Object, Object> consumer;
+    private transient KafkaConsumer<Object, Object> consumer;
 
     private List<String> topics;
     private boolean startAtEnd;
@@ -45,8 +45,7 @@ public class KafkaConnector extends BulletConnector {
      * @param bulletConfig The configuration that specifies the settings for a KafkaConnector.
      */
     public KafkaConnector(BulletConfig bulletConfig) {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         topics = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_TOPICS, List.class);
         startAtEnd = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_START_AT_END_ENABLE, Boolean.class);
         autoCommit = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT, Boolean.class);
