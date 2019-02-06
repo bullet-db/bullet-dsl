@@ -19,15 +19,19 @@ import java.util.Objects;
  * If a schema is not specified, maps are effectively flattened without any regard to type-safety.
  */
 public class MapBulletRecordConverter extends BulletRecordConverter {
+
+    private static final long serialVersionUID = -6592569189954638549L;
+
     /**
      * Constructs a MapBulletRecordConverter without a schema.
      *
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public MapBulletRecordConverter() throws BulletDSLException {
-        config = new BulletDSLConfig();
+        super(null);
         build();
     }
+
     /**
      * Constructs a MapBulletRecordConverter from a given schema.
      *
@@ -35,9 +39,10 @@ public class MapBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public MapBulletRecordConverter(String schema) throws BulletDSLException {
+        super(null);
         Objects.requireNonNull(schema);
-        config = new BulletDSLConfig();
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, schema);
+        config.validate();
         build();
     }
 
@@ -48,8 +53,7 @@ public class MapBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public MapBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         build();
     }
 

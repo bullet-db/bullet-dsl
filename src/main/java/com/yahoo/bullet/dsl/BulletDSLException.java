@@ -10,6 +10,8 @@ package com.yahoo.bullet.dsl;
  */
 public class BulletDSLException extends Exception {
 
+    private static final long serialVersionUID = -4845209101137527167L;
+
     /**
      * Constructor to initialize BulletDSLException with a message.
      *

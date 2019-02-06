@@ -7,6 +7,7 @@ package com.yahoo.bullet.dsl.converter;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.yahoo.bullet.common.BulletConfig;
 import com.yahoo.bullet.common.BulletError;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
@@ -31,9 +32,19 @@ import java.util.Optional;
  */
 public abstract class BulletRecordConverter implements Serializable {
 
+    private static final long serialVersionUID = -8337322656873297988L;
     private BulletRecordProvider provider;
     protected BulletDSLConfig config;
     protected BulletRecordSchema schema;
+
+    /**
+     * Constructor that takes a configuration containing the settings relevant for this converter.
+     *
+     * @param bulletConfig The {@link BulletConfig} to use.
+     */
+    public BulletRecordConverter(BulletConfig bulletConfig) {
+        this.config = new BulletDSLConfig(bulletConfig);
+    }
 
     /**
      * Helper function used to initialize BulletRecordConverter from BulletDSLConfig. The default implementation sets the

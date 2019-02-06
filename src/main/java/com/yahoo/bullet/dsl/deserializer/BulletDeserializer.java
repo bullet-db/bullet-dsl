@@ -5,6 +5,7 @@
  */
 package com.yahoo.bullet.dsl.deserializer;
 
+import com.yahoo.bullet.common.BulletConfig;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 
@@ -16,7 +17,17 @@ import java.io.Serializable;
  */
 public abstract class BulletDeserializer implements Serializable {
 
+    private static final long serialVersionUID = 3601804496002477644L;
     protected BulletDSLConfig config;
+
+    /**
+     * Constructor that takes a configuration containing the settings relevant for this deserializer.
+     *
+     * @param bulletConfig The {@link BulletConfig} to use.
+     */
+    public BulletDeserializer(BulletConfig bulletConfig) {
+        this.config = new BulletDSLConfig(bulletConfig);
+    }
 
     /**
      * Deserializes or transforms an object.

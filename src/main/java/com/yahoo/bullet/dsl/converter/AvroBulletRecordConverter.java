@@ -28,13 +28,15 @@ import java.util.Objects;
 @Slf4j
 public class AvroBulletRecordConverter extends BulletRecordConverter {
 
+    private static final long serialVersionUID = -5066600942303615002L;
+
     /**
      * Constructs an AvroBulletRecordConverter without a schema.
      *
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter() throws BulletDSLException {
-        config = new BulletDSLConfig();
+        super(null);
         build();
     }
 
@@ -45,9 +47,10 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter(String schema) throws BulletDSLException {
+        super(null);
         Objects.requireNonNull(schema);
-        config = new BulletDSLConfig();
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, schema);
+        config.validate();
         build();
     }
 
@@ -58,8 +61,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
      * @throws BulletDSLException if there is an error creating the converter.
      */
     public AvroBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
-        // Copy settings from config.
-        config = new BulletDSLConfig(bulletConfig);
+        super(bulletConfig);
         build();
     }
 
