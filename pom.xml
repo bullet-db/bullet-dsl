@@ -310,11 +310,11 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.apache.avro</pattern>
-                                    <shadedPattern>com.yahoo.bullet.dsl.org.apache.avro</shadedPattern>
+                                    <shadedPattern>com.yahoo.bullet.dsl.shaded.org.apache.avro</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.google.gson</pattern>
-                                    <shadedPattern>com.yahoo.bullet.dsl.com.google.gson</shadedPattern>
+                                    <shadedPattern>com.yahoo.bullet.dsl.shaded.com.google.gson</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
