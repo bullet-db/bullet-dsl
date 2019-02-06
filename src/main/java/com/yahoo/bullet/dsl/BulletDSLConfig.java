@@ -256,29 +256,19 @@ public class BulletDSLConfig extends BulletConfig {
     private static Object stringFromFile(Object file) {
         String fileName = (String) file;
         if (fileName.startsWith(FILE_PREFIX)) {
-            return readFile(fileName.substring(FILE_PREFIX.length()));
+            fileName = fileName.substring(FILE_PREFIX.length());
+            try {
+                return writeToString(getInputStreamFor(fileName));
+            } catch (IOException e) {
+                throw new RuntimeException("Could not read file: " + fileName, e);
+            }
         }
         return file;
     }
 
-    private static String readFile(String fileName) {
-        // try to read from resource first
-        try (InputStream is = BulletDSLConfig.class.getResourceAsStream("/" + fileName)) {
-            if (is != null) {
-                return writeToString(is);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return readFromFile(fileName);
-    }
-
-    private static String readFromFile(String fileName) {
-        try (InputStream is = new FileInputStream(fileName)) {
-            return writeToString(is);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not read file: " + fileName, e);
-        }
+    private static InputStream getInputStreamFor(String resource) throws IOException {
+        InputStream is = BulletDSLConfig.class.getResourceAsStream("/" + resource);
+        return is != null ? is : new FileInputStream(resource);
     }
 
     private static String writeToString(InputStream is) {
