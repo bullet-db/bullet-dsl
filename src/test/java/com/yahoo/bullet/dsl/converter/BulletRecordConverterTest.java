@@ -13,11 +13,20 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BulletRecordConverterTest {
+
+    private static class MockBulletRecordConverter extends BulletRecordConverter {
+        @Override
+        protected Object get(Object object, String base) {
+            return null;
+        }
+    }
 
     private BulletDSLConfig config;
 
@@ -153,5 +162,20 @@ public class BulletRecordConverterTest {
         Assert.assertEquals(record.get("myString"), dummyAvro.getMyString());
         Assert.assertEquals(record.get("myStringMap"), dummyAvro.getMyStringMap());
         Assert.assertNull(record.get("myDummyAvro"));
+    }
+
+    @Test
+    public void testGetField() {
+        BulletRecordConverter converter = new MockBulletRecordConverter();
+
+        List<String> list = Arrays.asList("hello", "world");
+        Assert.assertEquals(converter.getField(list, "0"), "hello");
+        Assert.assertEquals(converter.getField(list, "1"), "world");
+
+        Map<String, String> map = Collections.singletonMap("hello", "world");
+        Assert.assertEquals(converter.getField(map, "hello"), "world");
+        Assert.assertNull(converter.getField(map, "world"));
+
+        Assert.assertNull(converter.getField(0, "0"));
     }
 }

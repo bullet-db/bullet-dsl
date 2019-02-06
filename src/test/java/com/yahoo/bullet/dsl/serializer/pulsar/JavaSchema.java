@@ -8,13 +8,22 @@ package com.yahoo.bullet.dsl.serializer.pulsar;
 import com.yahoo.bullet.common.SerializerDeserializer;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.common.schema.SchemaInfo;
+import org.apache.pulsar.common.schema.SchemaType;
 
 import java.io.Serializable;
 
 /**
- * A Pulsar schema that uses Java serialization to encode/decode {@link Serializable} objects.
+ * A custom Pulsar schema that uses Java serialization to encode/decode {@link Serializable} objects.
  */
-public class PulsarSchema implements Schema<Serializable> {
+public class JavaSchema implements Schema<Serializable> {
+
+    private static final SchemaInfo SCHEMA_INFO = new SchemaInfo();
+
+    static {
+        SCHEMA_INFO.setName("JavaSchema");
+        SCHEMA_INFO.setSchema(new byte[0]);
+        SCHEMA_INFO.setType(SchemaType.NONE);
+    }
 
     @Override
     public byte[] encode(Serializable message) {
@@ -28,6 +37,6 @@ public class PulsarSchema implements Schema<Serializable> {
 
     @Override
     public SchemaInfo getSchemaInfo() {
-        return null;
+        return SCHEMA_INFO;
     }
 }

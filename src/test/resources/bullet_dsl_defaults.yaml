@@ -1,20 +1,3 @@
-###### BulletRecordConverter properties
-
-bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
-
-###### AvroBulletRecordConverter properties
-
-bullet.dsl.converter.avro.throw.unsupported.enable: true
-
-###### POJOBulletRecordConverter properties
-
-bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
-bullet.dsl.converter.pojo.schema.file: "src/test/resources/foo_schema_simple.json"
-
-###### MapBulletRecordConverter properties
-
-bullet.dsl.converter.map.schema.file: "src/test/resources/map_schema.json"
-
 ###### BulletConnector properties
 
 bullet.dsl.connector.class.name: "com.yahoo.bullet.dsl.connector.KafkaConnector"
@@ -36,4 +19,22 @@ bullet.dsl.connector.pulsar.client.serviceUrl: "pulsar://localhost:6650"
 bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 bullet.dsl.connector.pulsar.topics:
   - ""
-bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.PulsarSchema"
+bullet.dsl.connector.pulsar.schema.type: "CUSTOM"
+bullet.dsl.connector.pulsar.schema.class.name: "com.yahoo.bullet.dsl.serializer.pulsar.JavaSchema"
+
+###### BulletRecordConverter properties
+
+bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+
+###### POJOBulletRecordConverter properties
+
+bullet.dsl.converter.pojo.class.name: "com.yahoo.bullet.dsl.converter.POJOBulletRecordConverterTest$Foo"
+
+###### BulletDeserializer properties
+
+bullet.dsl.deserializer.class.name: "com.yahoo.bullet.dsl.deserializer.JavaDeserializer"
+
+##### AvroDeserializer properties
+
+bullet.dsl.deserializer.avro.schema.file:
+bullet.dsl.deserializer.avro.class.name:

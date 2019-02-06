@@ -1,26 +1,3 @@
-###### BulletRecordConverter properties
-
-# The classpath to the BulletRecordConverter to use
-bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
-bullet.dsl.converter.schema.file: ""
-
-###### AvroBulletRecordConverter properties
-
-# Specifies whether or not to throw an exception on unsupported fields
-bullet.dsl.converter.avro.throw.unsupported.enable: true
-
-###### POJOBulletRecordConverter properties
-
-# The POJO classpath
-bullet.dsl.converter.pojo.class.name:
-# The POJO schema filepath (optional)
-bullet.dsl.converter.pojo.schema.file:
-
-###### MapBulletRecordConverter properties
-
-# The map schema filepath
-bullet.dsl.converter.map.schema.file:
-
 ###### BulletConnector properties
 
 # The classpath to the BulletConnector to use
@@ -44,14 +21,16 @@ bullet.dsl.connector.kafka.start.at.end.enable: false
 bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
 bullet.dsl.connector.kafka.group.id:
 bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
-bullet.dsl.connector.kafka.value.deserializer:
+bullet.dsl.connector.kafka.value.deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
 
 ###### PulsarConnector properties
 
 # The list of Pulsar topics to subscribe to (required)
 bullet.dsl.connector.pulsar.topics:
 - ""
-# The classpath to the Pulsar Schema to use (required)
+# The Pulsar Schema to use (required)
+bullet.dsl.connector.pulsar.schema.type: "BYTES"
+# The classpath to the Pulsar Schema to use (required only if using JSON, AVRO, PROTOBUF, or CUSTOM schema)
 bullet.dsl.connector.pulsar.schema.class.name:
 
 # PulsarClient properties (prefixed by "bullet.dsl.connector.pulsar.client.") are passed to PulsarClient during construction
@@ -70,3 +49,28 @@ bullet.dsl.connector.pulsar.auth.plugin.params.string:
 bullet.dsl.connector.pulsar.consumer.subscriptionName: ""
 # PulsarConnector overrides the default subscriptionType -- "Exclusive" -- and uses "Shared" if it's not explicitly set
 bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
+
+###### BulletRecordConverter properties
+
+# The classpath to the BulletRecordConverter to use
+bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+# The path to the schema file to use
+bullet.dsl.converter.schema.file: ""
+
+# POJOBulletRecordConverter - POJO class name
+bullet.dsl.converter.pojo.class.name:
+
+###### BulletDeserializer properties
+
+# The classpath to the BulletDeserializer to use
+bullet.dsl.deserializer.class.name:
+
+###### AvroDeserializer properties
+
+# At least one of the following configs must be provided when using AvroDeserializer.
+# If both are provided, only the schema file will be used.
+
+# The path to the Avro schema file to use prefixed by "file://" (e.g. "file://example.avsc")
+bullet.dsl.deserializer.avro.schema.file:
+# The class name of the Avro record class to deserialize
+bullet.dsl.deserializer.avro.class.name:

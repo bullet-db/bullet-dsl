@@ -74,7 +74,7 @@ public abstract class BulletRecordConverter implements Serializable {
     }
 
     /**
-     * Converts an object to a BulletRecord using given record. The default implementation assumes a valid schema.
+     * Converts an object to a BulletRecord using the given record. The default implementation assumes a valid schema.
      *
      * @param object The object to be converted.
      * @param record The record to insert fields into.

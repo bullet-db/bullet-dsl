@@ -75,12 +75,12 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
     /**
      * Constructs a POJOBulletRecordConverter from a given configuration.
      *
-     * @param config The configuration that specifies the settings for a POJOBulletRecordConverter.
+     * @param bulletConfig The configuration that specifies the settings for a POJOBulletRecordConverter.
      * @throws BulletDSLException if there is an error creating the converter.
      */
-    public POJOBulletRecordConverter(BulletConfig config) throws BulletDSLException {
+    public POJOBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
         // Copy settings from config.
-        this.config = new BulletDSLConfig(config);
+        config = new BulletDSLConfig(bulletConfig);
         build();
     }
 

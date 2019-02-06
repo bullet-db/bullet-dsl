@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,29 +36,26 @@ public class KafkaConnector extends BulletConnector {
     private boolean autoCommit;
     private boolean asyncCommit;
     private Duration timeout;
-    private Map<String, Object> properties;
 
     /**
      * Constructs a KafkaConnector from a given configuration.
      *
-     * @param config The configuration that specifies the settings for a KafkaConnector.
+     * @param bulletConfig The configuration that specifies the settings for a KafkaConnector.
      */
-    public KafkaConnector(BulletConfig config) {
+    public KafkaConnector(BulletConfig bulletConfig) {
         // Copy settings from config.
-        this.config = new BulletDSLConfig(config);
-        this.topics = this.config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_TOPICS, List.class);
-        this.startAtEnd = this.config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_START_AT_END_ENABLE, Boolean.class);
-        this.autoCommit = this.config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT, Boolean.class);
-        this.asyncCommit = this.config.getAs(BulletDSLConfig.CONNECTOR_ASYNC_COMMIT_ENABLE, Boolean.class);
-        this.timeout = Duration.ofMillis(this.config.getAs(BulletDSLConfig.CONNECTOR_READ_TIMEOUT_MS, Number.class).longValue());
-        this.properties = this.config.getAllWithPrefix(Optional.empty(), BulletDSLConfig.CONNECTOR_KAFKA_NAMESPACE, true);
+        config = new BulletDSLConfig(bulletConfig);
+        topics = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_TOPICS, List.class);
+        startAtEnd = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_START_AT_END_ENABLE, Boolean.class);
+        autoCommit = config.getAs(BulletDSLConfig.CONNECTOR_KAFKA_ENABLE_AUTO_COMMIT, Boolean.class);
+        asyncCommit = config.getAs(BulletDSLConfig.CONNECTOR_ASYNC_COMMIT_ENABLE, Boolean.class);
+        timeout = Duration.ofMillis(config.getAs(BulletDSLConfig.CONNECTOR_READ_TIMEOUT_MS, Number.class).longValue());
     }
 
     @Override
     public void initialize() {
-        consumer = new KafkaConsumer<>(properties);
+        consumer = new KafkaConsumer<>(config.getAllWithPrefix(Optional.empty(), BulletDSLConfig.CONNECTOR_KAFKA_NAMESPACE, true));
         consumer.subscribe(topics);
-
         if (startAtEnd) {
             consumer.seekToEnd(Collections.emptyList());
         }

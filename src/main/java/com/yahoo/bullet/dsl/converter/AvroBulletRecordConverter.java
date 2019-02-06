@@ -54,12 +54,12 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     /**
      * Constructs an AvroBulletRecordConverter from a given configuration.
      *
-     * @param config The configuration that specifies the settings for an AvroBulletRecordConverter.
+     * @param bulletConfig The configuration that specifies the settings for an AvroBulletRecordConverter.
      * @throws BulletDSLException if there is an error creating the converter.
      */
-    public AvroBulletRecordConverter(BulletConfig config) throws BulletDSLException {
+    public AvroBulletRecordConverter(BulletConfig bulletConfig) throws BulletDSLException {
         // Copy settings from config.
-        this.config = new BulletDSLConfig(config);
+        config = new BulletDSLConfig(bulletConfig);
         build();
     }
 
