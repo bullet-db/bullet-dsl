@@ -19,7 +19,7 @@ bullet.dsl.connector.kafka.start.at.end.enable: false
 # prefix removed. The properties below are required.
 # Properties found at: https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
 bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
-bullet.dsl.connector.kafka.group.id:
+bullet.dsl.connector.kafka.group.id: "bullet-consumer-group"
 bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
 bullet.dsl.connector.kafka.value.deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
 
