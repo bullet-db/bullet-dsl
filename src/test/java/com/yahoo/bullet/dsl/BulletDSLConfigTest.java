@@ -13,10 +13,10 @@ public class BulletDSLConfigTest {
     @Test
     public void testConstructors() {
         BulletDSLConfig config = new BulletDSLConfig();
-        Assert.assertEquals(config.get(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME), "com.yahoo.bullet.record.AvroBulletRecordProvider");
+        Assert.assertEquals(config.get(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME), "com.yahoo.bullet.record.avro.TypedAvroBulletRecordProvider");
 
         config = new BulletDSLConfig("test_config.yaml");
-        Assert.assertEquals(config.get(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME), "com.yahoo.bullet.record.SimpleBulletRecordProvider");
+        Assert.assertEquals(config.get(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME), "com.yahoo.bullet.record.simple.TypedSimpleBulletRecordProvider");
 
         config = new BulletDSLConfig("src/main/resources/bullet_dsl_defaults.yaml");
         Assert.assertEquals(config.get(BulletDSLConfig.CONNECTOR_KAFKA_GROUP_ID), "bullet-consumer-group");

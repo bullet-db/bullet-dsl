@@ -34,24 +34,28 @@ public class AvroBulletRecordConverterTest {
         dummyAvro.setMyLong(1112L);
         dummyAvro.setMyString("1314");
         dummyAvro.setMyStringMap(Collections.singletonMap("1516", "1718"));
-        dummyAvro.setMyBytes(ByteBuffer.allocate(1));
-        dummyAvro.setMyDummyAvro(new DummyAvro());
 
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter();
         BulletRecord record = recordConverter.convert(dummyAvro);
 
-        Assert.assertEquals(record.get("myBool"), dummyAvro.getMyBool());
-        Assert.assertEquals(record.get("myDouble"), dummyAvro.getMyDouble());
-        Assert.assertEquals(record.get("myFloat"), dummyAvro.getMyFloat());
-        Assert.assertEquals(record.get("myInt"), dummyAvro.getMyInt());
-        Assert.assertEquals(record.get("myIntList"), dummyAvro.getMyIntList());
-        Assert.assertEquals(record.get("myLong"), dummyAvro.getMyLong());
-        Assert.assertEquals(record.get("myString"), dummyAvro.getMyString());
-        Assert.assertEquals(record.get("myStringMap"), dummyAvro.getMyStringMap());
+        Assert.assertEquals(record.typedGet("myBool").getValue(), dummyAvro.getMyBool());
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), dummyAvro.getMyDouble());
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), dummyAvro.getMyFloat());
+        Assert.assertEquals(record.typedGet("myInt").getValue(), dummyAvro.getMyInt());
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), dummyAvro.getMyIntList());
+        Assert.assertEquals(record.typedGet("myLong").getValue(), dummyAvro.getMyLong());
+        Assert.assertEquals(record.typedGet("myString").getValue(), dummyAvro.getMyString());
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), dummyAvro.getMyStringMap());
+        Assert.assertFalse(record.hasField("myBytes"));
+        Assert.assertFalse(record.hasField("myDummyAvro"));
+    }
 
-        // no type-checking without schema
-        Assert.assertNotNull(record.get("myBytes"));
-        Assert.assertNotNull(record.get("myDummyAvro"));
+    @Test(expectedExceptions = ClassCastException.class, expectedExceptionsMessageRegExp = "java\\.nio\\.HeapByteBuffer cannot be cast to java\\.io\\.Serializable")
+    public void testConvertWithoutSchemaNotSerializable() throws Exception {
+        DummyAvro dummyAvro = new DummyAvro();
+        dummyAvro.setMyBytes(ByteBuffer.allocate(1));
+
+        new AvroBulletRecordConverter().convert(dummyAvro);
     }
 
     @Test
@@ -65,10 +69,10 @@ public class AvroBulletRecordConverterTest {
         dummyAvro.setMyDouble(30.0);
 
         BulletRecord record = recordConverter.convert(dummyAvro);
-        Assert.assertEquals(record.get("myBool"), true);
-        Assert.assertEquals(record.get("myLong"), 10L);
-        Assert.assertEquals(record.get("myFloat"), 20.0f);
-        Assert.assertEquals(record.get("myDouble"), 30.0);
+        Assert.assertEquals(record.typedGet("myBool").getValue(), true);
+        Assert.assertEquals(record.typedGet("myLong").getValue(), 10L);
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), 20.0f);
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), 30.0);
     }
 
     @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBytes, reference: myBytes, type: BOOLEAN, subtype: null\\}")
@@ -93,7 +97,7 @@ public class AvroBulletRecordConverterTest {
         BulletRecord record = recordConverter.convert(dummyAvro);
 
         // reference -> myIntList.2
-        Assert.assertEquals(record.get("bbb"), myIntList.get(2));
+        Assert.assertEquals(record.typedGet("bbb").getValue(), myIntList.get(2));
     }
 
     @Test
@@ -105,8 +109,8 @@ public class AvroBulletRecordConverterTest {
 
         BulletRecord record = recordConverter.convert(dummyAvro);
 
-        Assert.assertEquals(record.get("myStringMap"), dummyAvro.getMyStringMap());
-        Assert.assertEquals(record.get("aaa"), "hello");
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), dummyAvro.getMyStringMap());
+        Assert.assertEquals(record.typedGet("aaa").getValue(), "hello");
     }
 
     @Test
@@ -124,7 +128,7 @@ public class AvroBulletRecordConverterTest {
 
         BulletRecord record = recordConverter.convert(dummyAvro);
 
-        Assert.assertEquals(record.get("myDummyInt"), 100);
+        Assert.assertEquals(record.typedGet("myDummyInt").getValue(), 100);
     }
 
     @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myIntList, type: RECORD, subtype: null\\}")
@@ -152,9 +156,9 @@ public class AvroBulletRecordConverterTest {
 
         BulletRecord record = recordConverter.convert(dummyAvro);
         Assert.assertEquals(record.fieldCount(), 3);
-        Assert.assertEquals(record.get("aaa"), "hello");
-        Assert.assertEquals(record.get("bbb"), "world");
-        Assert.assertEquals(record.get("ccc"), "!");
+        Assert.assertEquals(record.typedGet("aaa").getValue(), "hello");
+        Assert.assertEquals(record.typedGet("bbb").getValue(), "world");
+        Assert.assertEquals(record.typedGet("ccc").getValue(), "!");
     }
 
     @Test
@@ -168,20 +172,31 @@ public class AvroBulletRecordConverterTest {
         another.setMyFloat(3.0f);
         another.setMyDouble(4.0);
         another.setMyString("5.0");
-        another.setMyDummyAvro(new DummyAvro()); // not safe but force set when using RECORD
 
         DummyAvro dummyAvro = new DummyAvro();
         dummyAvro.setMyDummyAvro(another);
 
         BulletRecord record = recordConverter.convert(dummyAvro);
-        Assert.assertEquals(record.fieldCount(), 7);
-        Assert.assertEquals(record.get("myBool"), true);
-        Assert.assertEquals(record.get("myInt"), 1);
-        Assert.assertEquals(record.get("myLong"), 2L);
-        Assert.assertEquals(record.get("myFloat"), 3.0f);
-        Assert.assertEquals(record.get("myDouble"), 4.0);
-        Assert.assertEquals(record.get("myString"), "5.0");
-        Assert.assertTrue(record.get("myDummyAvro") instanceof DummyAvro);
+        Assert.assertEquals(record.fieldCount(), 6);
+        Assert.assertEquals(record.typedGet("myBool").getValue(), true);
+        Assert.assertEquals(record.typedGet("myInt").getValue(), 1);
+        Assert.assertEquals(record.typedGet("myLong").getValue(), 2L);
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), 3.0f);
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), 4.0);
+        Assert.assertEquals(record.typedGet("myString").getValue(), "5.0");
+    }
+
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myDummyAvro, type: RECORD, subtype: null\\}")
+    public void testSchemaRecordFromAvroRecordNotSerializable() throws Exception {
+        AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummyrecord.json");
+
+        DummyAvro another = new DummyAvro();
+        another.setMyDummyAvro(new DummyAvro()); // not serializable
+
+        DummyAvro dummyAvro = new DummyAvro();
+        dummyAvro.setMyDummyAvro(another);
+
+        recordConverter.convert(dummyAvro);
     }
 
     @Test
@@ -202,19 +217,19 @@ public class AvroBulletRecordConverterTest {
 
         BulletRecord record = new AvroBulletRecordConverter().convert(mapsAvro);
 
-        Assert.assertEquals(record.get("myBoolMap"), mapsAvro.getMyBoolMap());
-        Assert.assertEquals(record.get("myIntMap"), mapsAvro.getMyIntMap());
-        Assert.assertEquals(record.get("myLongMap"), mapsAvro.getMyLongMap());
-        Assert.assertEquals(record.get("myFloatMap"), mapsAvro.getMyFloatMap());
-        Assert.assertEquals(record.get("myDoubleMap"), mapsAvro.getMyDoubleMap());
-        Assert.assertEquals(record.get("myStringMap"), mapsAvro.getMyStringMap());
-        Assert.assertEquals(record.get("myBoolMapMap"), mapsAvro.getMyBoolMapMap());
-        Assert.assertEquals(record.get("myIntMapMap"), mapsAvro.getMyIntMapMap());
-        Assert.assertEquals(record.get("myLongMapMap"), mapsAvro.getMyLongMapMap());
-        Assert.assertEquals(record.get("myFloatMapMap"), mapsAvro.getMyFloatMapMap());
-        Assert.assertEquals(record.get("myDoubleMapMap"), mapsAvro.getMyDoubleMapMap());
-        Assert.assertEquals(record.get("myStringMapMap"), mapsAvro.getMyStringMapMap());
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBoolMap").getValue(), mapsAvro.getMyBoolMap());
+        Assert.assertEquals(record.typedGet("myIntMap").getValue(), mapsAvro.getMyIntMap());
+        Assert.assertEquals(record.typedGet("myLongMap").getValue(), mapsAvro.getMyLongMap());
+        Assert.assertEquals(record.typedGet("myFloatMap").getValue(), mapsAvro.getMyFloatMap());
+        Assert.assertEquals(record.typedGet("myDoubleMap").getValue(), mapsAvro.getMyDoubleMap());
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), mapsAvro.getMyStringMap());
+        Assert.assertEquals(record.typedGet("myBoolMapMap").getValue(), mapsAvro.getMyBoolMapMap());
+        Assert.assertEquals(record.typedGet("myIntMapMap").getValue(), mapsAvro.getMyIntMapMap());
+        Assert.assertEquals(record.typedGet("myLongMapMap").getValue(), mapsAvro.getMyLongMapMap());
+        Assert.assertEquals(record.typedGet("myFloatMapMap").getValue(), mapsAvro.getMyFloatMapMap());
+        Assert.assertEquals(record.typedGet("myDoubleMapMap").getValue(), mapsAvro.getMyDoubleMapMap());
+        Assert.assertEquals(record.typedGet("myStringMapMap").getValue(), mapsAvro.getMyStringMapMap());
+        Assert.assertFalse(record.hasField("dne"));
     }
 
     @Test
@@ -235,18 +250,18 @@ public class AvroBulletRecordConverterTest {
 
         BulletRecord record = new AvroBulletRecordConverter().convert(listsAvro);
 
-        Assert.assertEquals(record.get("myBoolList"), listsAvro.getMyBoolList());
-        Assert.assertEquals(record.get("myIntList"), listsAvro.getMyIntList());
-        Assert.assertEquals(record.get("myLongList"), listsAvro.getMyLongList());
-        Assert.assertEquals(record.get("myFloatList"), listsAvro.getMyFloatList());
-        Assert.assertEquals(record.get("myDoubleList"), listsAvro.getMyDoubleList());
-        Assert.assertEquals(record.get("myStringList"), listsAvro.getMyStringList());
-        Assert.assertEquals(record.get("myBoolMapList"), listsAvro.getMyBoolMapList());
-        Assert.assertEquals(record.get("myIntMapList"), listsAvro.getMyIntMapList());
-        Assert.assertEquals(record.get("myLongMapList"), listsAvro.getMyLongMapList());
-        Assert.assertEquals(record.get("myFloatMapList"), listsAvro.getMyFloatMapList());
-        Assert.assertEquals(record.get("myDoubleMapList"), listsAvro.getMyDoubleMapList());
-        Assert.assertEquals(record.get("myStringMapList"), listsAvro.getMyStringMapList());
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBoolList").getValue(), listsAvro.getMyBoolList());
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), listsAvro.getMyIntList());
+        Assert.assertEquals(record.typedGet("myLongList").getValue(), listsAvro.getMyLongList());
+        Assert.assertEquals(record.typedGet("myFloatList").getValue(), listsAvro.getMyFloatList());
+        Assert.assertEquals(record.typedGet("myDoubleList").getValue(), listsAvro.getMyDoubleList());
+        Assert.assertEquals(record.typedGet("myStringList").getValue(), listsAvro.getMyStringList());
+        Assert.assertEquals(record.typedGet("myBoolMapList").getValue(), listsAvro.getMyBoolMapList());
+        Assert.assertEquals(record.typedGet("myIntMapList").getValue(), listsAvro.getMyIntMapList());
+        Assert.assertEquals(record.typedGet("myLongMapList").getValue(), listsAvro.getMyLongMapList());
+        Assert.assertEquals(record.typedGet("myFloatMapList").getValue(), listsAvro.getMyFloatMapList());
+        Assert.assertEquals(record.typedGet("myDoubleMapList").getValue(), listsAvro.getMyDoubleMapList());
+        Assert.assertEquals(record.typedGet("myStringMapList").getValue(), listsAvro.getMyStringMapList());
+        Assert.assertFalse(record.hasField("dne"));
     }
 }

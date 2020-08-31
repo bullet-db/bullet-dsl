@@ -41,13 +41,13 @@ public class MapBulletRecordConverterTest {
         // converts all fields from map
         BulletRecord record = recordConverter.convert(map);
 
-        Assert.assertEquals(record.get("myBool"), map.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), map.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), map.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), map.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), map.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), map.get("myString"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), map.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), map.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), map.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), map.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), map.get("myString"));
+        Assert.assertFalse(record.hasField("dne"));
 
         // does not add null fields
         Assert.assertEquals(record.fieldCount(), 6);
@@ -71,13 +71,13 @@ public class MapBulletRecordConverterTest {
         // converts all fields from map
         BulletRecord record = recordConverter.convert(map);
 
-        Assert.assertEquals(record.get("myBool"), map.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), map.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), map.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), map.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), map.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), map.get("myString"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), map.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), map.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), map.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), map.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), map.get("myString"));
+        Assert.assertFalse(record.hasField("dne"));
 
         // does not add null fields
         Assert.assertEquals(record.fieldCount(), 6);
@@ -99,13 +99,13 @@ public class MapBulletRecordConverterTest {
         // converts all fields from map that are in the schema.
         BulletRecord record = recordConverter.convert(map);
 
-        Assert.assertEquals(record.get("myBool"), map.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), map.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), map.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), map.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), map.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), map.get("myString"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), map.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), map.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), map.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), map.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), map.get("myString"));
+        Assert.assertFalse(record.hasField("dne"));
 
         // does not add null for missing fields
         Assert.assertEquals(record.fieldCount(), 6);
@@ -131,12 +131,12 @@ public class MapBulletRecordConverterTest {
         // flattens "data"
         BulletRecord record = recordConverter.convert(mapRecord);
 
-        Assert.assertEquals(record.get("myBool"), map.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), map.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), map.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), map.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), map.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), map.get("myString"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), map.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), map.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), map.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), map.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), map.get("myString"));
 
         // does not add null fields
         Assert.assertEquals(record.fieldCount(), 6);
@@ -183,12 +183,12 @@ public class MapBulletRecordConverterTest {
 
         record = recordConverter.convert(mapRecord);
 
-        Assert.assertEquals(record.get("myBool"), bbb.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), bbb.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), bbb.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), bbb.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), bbb.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), bbb.get("myString"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), bbb.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), bbb.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), bbb.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), bbb.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), bbb.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), bbb.get("myString"));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class MapBulletRecordConverterTest {
 
         BulletRecord record = recordConverter.convert(Collections.singletonMap("myIntList", myIntList));
 
-        Assert.assertEquals(record.get("bbb"), myIntList.get(2));
+        Assert.assertEquals(record.typedGet("bbb").getValue(), myIntList.get(2));
     }
 
     @Test
@@ -222,19 +222,19 @@ public class MapBulletRecordConverterTest {
         MapBulletRecordConverter recordConverter = new MapBulletRecordConverter("schemas/all.json");
         BulletRecord record = recordConverter.convert(map);
 
-        Assert.assertEquals(record.get("myBoolMap"), map.get("myBoolMap"));
-        Assert.assertEquals(record.get("myIntMap"), map.get("myIntMap"));
-        Assert.assertEquals(record.get("myLongMap"), map.get("myLongMap"));
-        Assert.assertEquals(record.get("myFloatMap"), map.get("myFloatMap"));
-        Assert.assertEquals(record.get("myDoubleMap"), map.get("myDoubleMap"));
-        Assert.assertEquals(record.get("myStringMap"), map.get("myStringMap"));
-        Assert.assertEquals(record.get("myBoolMapMap"), map.get("myBoolMapMap"));
-        Assert.assertEquals(record.get("myIntMapMap"), map.get("myIntMapMap"));
-        Assert.assertEquals(record.get("myLongMapMap"), map.get("myLongMapMap"));
-        Assert.assertEquals(record.get("myFloatMapMap"), map.get("myFloatMapMap"));
-        Assert.assertEquals(record.get("myDoubleMapMap"), map.get("myDoubleMapMap"));
-        Assert.assertEquals(record.get("myStringMapMap"), map.get("myStringMapMap"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBoolMap").getValue(), map.get("myBoolMap"));
+        Assert.assertEquals(record.typedGet("myIntMap").getValue(), map.get("myIntMap"));
+        Assert.assertEquals(record.typedGet("myLongMap").getValue(), map.get("myLongMap"));
+        Assert.assertEquals(record.typedGet("myFloatMap").getValue(), map.get("myFloatMap"));
+        Assert.assertEquals(record.typedGet("myDoubleMap").getValue(), map.get("myDoubleMap"));
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), map.get("myStringMap"));
+        Assert.assertEquals(record.typedGet("myBoolMapMap").getValue(), map.get("myBoolMapMap"));
+        Assert.assertEquals(record.typedGet("myIntMapMap").getValue(), map.get("myIntMapMap"));
+        Assert.assertEquals(record.typedGet("myLongMapMap").getValue(), map.get("myLongMapMap"));
+        Assert.assertEquals(record.typedGet("myFloatMapMap").getValue(), map.get("myFloatMapMap"));
+        Assert.assertEquals(record.typedGet("myDoubleMapMap").getValue(), map.get("myDoubleMapMap"));
+        Assert.assertEquals(record.typedGet("myStringMapMap").getValue(), map.get("myStringMapMap"));
+        Assert.assertFalse(record.hasField("dne"));
     }
 
     @Test
@@ -257,18 +257,18 @@ public class MapBulletRecordConverterTest {
         MapBulletRecordConverter recordConverter = new MapBulletRecordConverter("schemas/all.json");
         BulletRecord record = recordConverter.convert(map);
 
-        Assert.assertEquals(record.get("myBoolList"), map.get("myBoolList"));
-        Assert.assertEquals(record.get("myIntList"), map.get("myIntList"));
-        Assert.assertEquals(record.get("myLongList"), map.get("myLongList"));
-        Assert.assertEquals(record.get("myFloatList"), map.get("myFloatList"));
-        Assert.assertEquals(record.get("myDoubleList"), map.get("myDoubleList"));
-        Assert.assertEquals(record.get("myStringList"), map.get("myStringList"));
-        Assert.assertEquals(record.get("myBoolMapList"), map.get("myBoolMapList"));
-        Assert.assertEquals(record.get("myIntMapList"), map.get("myIntMapList"));
-        Assert.assertEquals(record.get("myLongMapList"), map.get("myLongMapList"));
-        Assert.assertEquals(record.get("myFloatMapList"), map.get("myFloatMapList"));
-        Assert.assertEquals(record.get("myDoubleMapList"), map.get("myDoubleMapList"));
-        Assert.assertEquals(record.get("myStringMapList"), map.get("myStringMapList"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBoolList").getValue(), map.get("myBoolList"));
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), map.get("myIntList"));
+        Assert.assertEquals(record.typedGet("myLongList").getValue(), map.get("myLongList"));
+        Assert.assertEquals(record.typedGet("myFloatList").getValue(), map.get("myFloatList"));
+        Assert.assertEquals(record.typedGet("myDoubleList").getValue(), map.get("myDoubleList"));
+        Assert.assertEquals(record.typedGet("myStringList").getValue(), map.get("myStringList"));
+        Assert.assertEquals(record.typedGet("myBoolMapList").getValue(), map.get("myBoolMapList"));
+        Assert.assertEquals(record.typedGet("myIntMapList").getValue(), map.get("myIntMapList"));
+        Assert.assertEquals(record.typedGet("myLongMapList").getValue(), map.get("myLongMapList"));
+        Assert.assertEquals(record.typedGet("myFloatMapList").getValue(), map.get("myFloatMapList"));
+        Assert.assertEquals(record.typedGet("myDoubleMapList").getValue(), map.get("myDoubleMapList"));
+        Assert.assertEquals(record.typedGet("myStringMapList").getValue(), map.get("myStringMapList"));
+        Assert.assertFalse(record.hasField("dne"));
     }
 }

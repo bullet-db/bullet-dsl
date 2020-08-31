@@ -15,6 +15,7 @@ import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.dsl.schema.BulletRecordSchema;
 import com.yahoo.bullet.record.BulletRecord;
 import com.yahoo.bullet.record.BulletRecordProvider;
+import com.yahoo.bullet.typesystem.TypedObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -117,6 +118,7 @@ public abstract class BulletRecordConverter implements Serializable {
      */
     @SuppressWarnings("unchecked")
     protected void setField(BulletRecordField field, Object value, BulletRecord record) {
+        TypedObject typedObject;
         switch (field.getType()) {
             case BOOLEAN:
                 record.setBoolean(field.getName(), (Boolean) value);
@@ -138,14 +140,22 @@ public abstract class BulletRecordConverter implements Serializable {
                 break;
             case LIST:
             case LISTOFMAP:
-                record.forceSet(field.getName(), (List<Object>) value);
+                typedObject = new TypedObject((Serializable) value);
+                if (!typedObject.isList()) {
+                    throw new ClassCastException("Non-list value cannot be set as list.");
+                }
+                record.typedSet(field.getName(), new TypedObject((Serializable) value));
                 break;
             case MAP:
             case MAPOFMAP:
-                record.forceSet(field.getName(), (Map<String, Object>) value);
+                typedObject = new TypedObject((Serializable) value);
+                if (!typedObject.isMap()) {
+                    throw new ClassCastException("Non-map value cannot be set as map.");
+                }
+                record.typedSet(field.getName(), new TypedObject((Serializable) value));
                 break;
             case RECORD:
-                flattenMap((Map<String, Object>) value, record);
+                flattenMap((Map<String, Serializable>) value, record);
         }
     }
 
@@ -155,11 +165,11 @@ public abstract class BulletRecordConverter implements Serializable {
      * @param mapRecord The map to take fields from.
      * @param record The BulletRecord to insert fields into.
      */
-    protected void flattenMap(Map<String, Object> mapRecord, BulletRecord record) {
+    protected void flattenMap(Map<String, Serializable> mapRecord, BulletRecord record) {
         mapRecord.forEach(
             (k, v) -> {
                 if (v != null) {
-                    record.forceSet(k, v);
+                    record.typedSet(k, new TypedObject(v));
                 }
             }
         );

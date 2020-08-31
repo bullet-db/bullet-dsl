@@ -52,16 +52,16 @@ public class BulletRecordConverterTest {
         POJOBulletRecordConverterTest.Foo foo = new POJOBulletRecordConverterTest.Foo();
         BulletRecord record = BulletRecordConverter.from(config).convert(foo);
 
-        Assert.assertNull(record.get("myExcludedInt"));
-        Assert.assertEquals(record.get("myInt"), 123);
-        Assert.assertEquals(record.get("myLong"), 456L);
-        Assert.assertEquals(record.get("myBool"), true);
-        Assert.assertEquals(record.get("myString"), "789");
-        Assert.assertEquals(record.get("myDouble"), 0.12);
-        Assert.assertEquals(record.get("myFloat"), 3.45f);
-        Assert.assertNull(record.get("bar"));
-        Assert.assertEquals(record.get("myIntMap"), foo.getMyIntMap());
-        Assert.assertEquals(record.get("myIntList"), foo.getMyIntList());
+        Assert.assertTrue(record.typedGet("myExcludedInt").isNull());
+        Assert.assertEquals(record.typedGet("myInt").getValue(), 123);
+        Assert.assertEquals(record.typedGet("myLong").getValue(), 456L);
+        Assert.assertEquals(record.typedGet("myBool").getValue(), true);
+        Assert.assertEquals(record.typedGet("myString").getValue(), "789");
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), 0.12);
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), 3.45f);
+        Assert.assertTrue(record.typedGet("bar").isNull());
+        Assert.assertEquals(record.typedGet("myIntMap").getValue(), foo.getMyIntMap());
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), foo.getMyIntList());
     }
 
     @Test
@@ -76,16 +76,16 @@ public class BulletRecordConverterTest {
         POJOBulletRecordConverterTest.Foo foo = new POJOBulletRecordConverterTest.Foo();
         BulletRecord record = converter.convert(foo);
 
-        Assert.assertEquals(record.get("myInt"), 123);
-        Assert.assertEquals(record.get("myLong"), 456L);
-        Assert.assertEquals(record.get("myBool"), true);
-        Assert.assertEquals(record.get("myString"), "789");
-        Assert.assertEquals(record.get("myDouble"), 0.12);
-        Assert.assertEquals(record.get("myFloat"), 3.45f);
-        Assert.assertEquals(record.get("myExcludedInt"), 678);
-        Assert.assertNull(record.get("bar"));
-        Assert.assertEquals(record.get("myIntMap"), foo.getMyIntMap());
-        Assert.assertEquals(record.get("myIntList"), foo.getMyIntList());
+        Assert.assertEquals(record.typedGet("myInt").getValue(), 123);
+        Assert.assertEquals(record.typedGet("myLong").getValue(), 456L);
+        Assert.assertEquals(record.typedGet("myBool").getValue(), true);
+        Assert.assertEquals(record.typedGet("myString").getValue(), "789");
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), 0.12);
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), 3.45f);
+        Assert.assertEquals(record.typedGet("myExcludedInt").getValue(), 678);
+        Assert.assertTrue(record.typedGet("bar").isNull());
+        Assert.assertEquals(record.typedGet("myIntMap").getValue(), foo.getMyIntMap());
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), foo.getMyIntList());
     }
 
     @Test(expectedExceptions = RuntimeException.class)
@@ -115,14 +115,14 @@ public class BulletRecordConverterTest {
 
         BulletRecord record = converter.convert(map);
 
-        Assert.assertEquals(record.get("myBool"), map.get("myBool"));
-        Assert.assertEquals(record.get("myInt"), map.get("myInt"));
-        Assert.assertEquals(record.get("myLong"), map.get("myLong"));
-        Assert.assertEquals(record.get("myFloat"), map.get("myFloat"));
-        Assert.assertEquals(record.get("myDouble"), map.get("myDouble"));
-        Assert.assertEquals(record.get("myString"), map.get("myString"));
-        Assert.assertNull(record.get("myExcludedInt"));
-        Assert.assertNull(record.get("dne"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.typedGet("myInt").getValue(), map.get("myInt"));
+        Assert.assertEquals(record.typedGet("myLong").getValue(), map.get("myLong"));
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), map.get("myFloat"));
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), map.get("myDouble"));
+        Assert.assertEquals(record.typedGet("myString").getValue(), map.get("myString"));
+        Assert.assertTrue(record.typedGet("myExcludedInt").isNull());
+        Assert.assertTrue(record.typedGet("dne").isNull());
     }
 
     @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBool, reference: myBool, type: BOOLEAN, subtype: null\\}")
@@ -158,15 +158,15 @@ public class BulletRecordConverterTest {
 
         BulletRecord record = converter.convert(dummyAvro);
 
-        Assert.assertEquals(record.get("myBool"), dummyAvro.getMyBool());
-        Assert.assertEquals(record.get("myDouble"), dummyAvro.getMyDouble());
-        Assert.assertEquals(record.get("myFloat"), dummyAvro.getMyFloat());
-        Assert.assertEquals(record.get("myInt"), dummyAvro.getMyInt());
-        Assert.assertEquals(record.get("myIntList"), dummyAvro.getMyIntList());
-        Assert.assertEquals(record.get("myLong"), dummyAvro.getMyLong());
-        Assert.assertEquals(record.get("myString"), dummyAvro.getMyString());
-        Assert.assertEquals(record.get("myStringMap"), dummyAvro.getMyStringMap());
-        Assert.assertNull(record.get("myDummyAvro"));
+        Assert.assertEquals(record.typedGet("myBool").getValue(), dummyAvro.getMyBool());
+        Assert.assertEquals(record.typedGet("myDouble").getValue(), dummyAvro.getMyDouble());
+        Assert.assertEquals(record.typedGet("myFloat").getValue(), dummyAvro.getMyFloat());
+        Assert.assertEquals(record.typedGet("myInt").getValue(), dummyAvro.getMyInt());
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), dummyAvro.getMyIntList());
+        Assert.assertEquals(record.typedGet("myLong").getValue(), dummyAvro.getMyLong());
+        Assert.assertEquals(record.typedGet("myString").getValue(), dummyAvro.getMyString());
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), dummyAvro.getMyStringMap());
+        Assert.assertFalse(record.hasField("myDummyAvro"));
     }
 
     @Test

@@ -9,7 +9,9 @@ import com.yahoo.bullet.common.BulletConfig;
 import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 import com.yahoo.bullet.record.BulletRecord;
+import com.yahoo.bullet.typesystem.TypedObject;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,11 +66,11 @@ public class MapBulletRecordConverter extends BulletRecordConverter {
             return super.convert(object, record);
         }
         // no bullet dsl schema
-        Map<String, Object> map = (Map<String, Object>) object;
+        Map<String, Serializable> map = (Map<String, Serializable>) object;
         map.forEach(
             (key, value) -> {
                 if (value != null) {
-                    record.forceSet(key, value);
+                    record.typedSet(key, new TypedObject(value));
                 }
             }
         );
