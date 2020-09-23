@@ -1,1 +1,1 @@
-bullet.record.provider.class.name: "com.yahoo.bullet.record.SimpleBulletRecordProvider"
+bullet.record.provider.class.name: "com.yahoo.bullet.record.simple.TypedSimpleBulletRecordProvider"

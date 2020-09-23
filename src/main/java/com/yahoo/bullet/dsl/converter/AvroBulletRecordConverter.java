@@ -10,10 +10,12 @@ import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.record.BulletRecord;
+import com.yahoo.bullet.typesystem.TypedObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,7 +25,8 @@ import java.util.Objects;
  * <br><br>
  * If a schema is not specified, avro records are effectively flattened without any regard to type-safety.
  * <br><br>
- * Note, this class is not related to {@link com.yahoo.bullet.record.AvroBulletRecord}.
+ * Note, this class is not related to {@link com.yahoo.bullet.record.avro.TypedAvroBulletRecord} or
+ * {@link com.yahoo.bullet.record.avro.UntypedAvroBulletRecord}.
  */
 @Slf4j
 public class AvroBulletRecordConverter extends BulletRecordConverter {
@@ -74,9 +77,9 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         // no bullet dsl schema
         GenericRecord avro = (GenericRecord) object;
         for (Schema.Field field : avro.getSchema().getFields()) {
-            Object value = avro.get(field.pos());
+            Serializable value = (Serializable) avro.get(field.pos());
             if (value != null) {
-                record.forceSet(field.name(), value);
+                record.typedSet(field.name(), new TypedObject(value));
             }
         }
         return record;
@@ -88,7 +91,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         switch (field.getType()) {
             case RECORD:
                 if (value instanceof Map) {
-                    flattenMap((Map<String, Object>) value, record);
+                    flattenMap((Map<String, Serializable>) value, record);
                 } else {
                     flattenRecord((GenericRecord) value, record);
                 }
@@ -101,9 +104,9 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     private void flattenRecord(GenericRecord genericRecord, BulletRecord record) {
         for (Schema.Field field : genericRecord.getSchema().getFields()) {
             String key = field.name();
-            Object value = genericRecord.get(field.pos());
+            Serializable value = (Serializable) genericRecord.get(field.pos());
             if (value != null) {
-                record.forceSet(key, value);
+                record.typedSet(key, new TypedObject(value));
             }
         }
     }

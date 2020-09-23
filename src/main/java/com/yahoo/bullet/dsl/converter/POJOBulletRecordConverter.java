@@ -10,11 +10,13 @@ import com.yahoo.bullet.dsl.BulletDSLConfig;
 import com.yahoo.bullet.dsl.BulletDSLException;
 import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.record.BulletRecord;
+import com.yahoo.bullet.typesystem.TypedObject;
 import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -179,9 +181,9 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
         accessors.forEach(
             (name, accessor) -> {
                 try {
-                    Object value = accessor.getValue().get(object);
+                    Serializable value = (Serializable) accessor.getValue().get(object);
                     if (value != null) {
-                        record.forceSet(name, value);
+                        record.typedSet(name, new TypedObject(value));
                     }
                 } catch (IllegalAccessException ignored) {
                 }
