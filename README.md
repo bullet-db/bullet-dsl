@@ -125,7 +125,7 @@ The values for the possible types are the same as the valid types defined in [Bu
 ##### Records
 
 Note, there is a special case where if you omit the type and the name for an entry in the schema, the reference is assumed to be a map containing arbitrary fields with types in the list above. You can use this if you have a map field that 
-contains various objects with one or mroe types in the list above and want to flatten that map out into the target record using the respective types of each field in the map. The names of the fields in the map will be used as the 
+contains various objects with one or more types in the list above and want to flatten that map out into the target record using the respective types of each field in the map. The names of the fields in the map will be used as the 
 top-level names in the resulting record.
 
 Example schema and fields:
