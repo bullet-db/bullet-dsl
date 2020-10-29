@@ -15,6 +15,7 @@ import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.dsl.schema.BulletRecordSchema;
 import com.yahoo.bullet.record.BulletRecord;
 import com.yahoo.bullet.record.BulletRecordProvider;
+import com.yahoo.bullet.typesystem.Type;
 import com.yahoo.bullet.typesystem.TypedObject;
 
 import java.io.FileNotFoundException;
@@ -37,6 +38,7 @@ public abstract class BulletRecordConverter implements Serializable {
     private BulletRecordProvider provider;
     protected BulletDSLConfig config;
     protected BulletRecordSchema schema;
+    protected boolean shouldTypeCheck = true;
 
     /**
      * Constructor that takes a configuration containing the settings relevant for this converter.
@@ -58,6 +60,7 @@ public abstract class BulletRecordConverter implements Serializable {
         String recordProviderClassName = config.getAs(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME, String.class);
         String schemaFile = config.getAs(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, String.class);
 
+        shouldTypeCheck = config.getAs(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK, Boolean.class);
         provider = BulletRecordProvider.from(recordProviderClassName);
 
         if (schemaFile != null) {
@@ -118,45 +121,15 @@ public abstract class BulletRecordConverter implements Serializable {
      */
     @SuppressWarnings("unchecked")
     protected void setField(BulletRecordField field, Object value, BulletRecord record) {
-        TypedObject typedObject;
-        switch (field.getType()) {
-            case BOOLEAN:
-                record.setBoolean(field.getName(), (Boolean) value);
-                break;
-            case INTEGER:
-                record.setInteger(field.getName(), (Integer) value);
-                break;
-            case LONG:
-                record.setLong(field.getName(), (Long) value);
-                break;
-            case FLOAT:
-                record.setFloat(field.getName(), (Float) value);
-                break;
-            case DOUBLE:
-                record.setDouble(field.getName(), (Double) value);
-                break;
-            case STRING:
-                record.setString(field.getName(), (String) value);
-                break;
-            case LIST:
-            case LISTOFMAP:
-                typedObject = new TypedObject((Serializable) value);
-                if (!typedObject.isList()) {
-                    throw new ClassCastException("Non-list value cannot be set as list.");
-                }
-                record.typedSet(field.getName(), new TypedObject((Serializable) value));
-                break;
-            case MAP:
-            case MAPOFMAP:
-                typedObject = new TypedObject((Serializable) value);
-                if (!typedObject.isMap()) {
-                    throw new ClassCastException("Non-map value cannot be set as map.");
-                }
-                record.typedSet(field.getName(), new TypedObject((Serializable) value));
-                break;
-            case RECORD:
-                flattenMap((Map<String, Serializable>) value, record);
+        Type type = field.getType();
+        // Record
+        if (type == null) {
+            flattenMap((Map<String, Serializable>) value, record);
+            return;
         }
+        String name = field.getName();
+        TypedObject object = getTypedObject(name, type, (Serializable) value);
+        record.typedSet(name, object);
     }
 
     /**
@@ -199,6 +172,28 @@ public abstract class BulletRecordConverter implements Serializable {
             return ((Map<String, Object>) object).get(field);
         }
         return null;
+    }
+
+    /**
+     * Converts the field value with the given name and expected type into a {@link TypedObject}. If type checking is
+     * enabled, it will check to make sure that the expected type matches the final type in the {@link TypedObject}.
+     * This method is only used for non-record fields.
+     *
+     * @param name The name of the field.
+     * @param type The expected type of the field.
+     * @param value The {@link Serializable} value of the field.
+     * @return A {@link TypedObject} wrapping the value.
+     */
+    protected TypedObject getTypedObject(String name, Type type, Serializable value) {
+        if (!shouldTypeCheck) {
+            return new TypedObject(type, value);
+        }
+        TypedObject object = new TypedObject(value);
+        Type expected = object.getType();
+        if (type != expected) {
+            throw new ClassCastException("Field " + name + " had type " + type + " instead of the expected " + type);
+        }
+        return object;
     }
 
     /**

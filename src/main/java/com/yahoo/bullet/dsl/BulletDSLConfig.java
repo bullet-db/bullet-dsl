@@ -81,6 +81,7 @@ public class BulletDSLConfig extends BulletConfig {
     // BulletRecordConverter properties
     public static final String RECORD_CONVERTER_CLASS_NAME = "bullet.dsl.converter.class.name";
     public static final String RECORD_CONVERTER_SCHEMA_FILE = "bullet.dsl.converter.schema.file";
+    public static final String RECORD_CONVERTER_SCHEMA_TYPE_CHECK = "bullet.dsl.converter.schema.type.check";
     public static final String RECORD_CONVERTER_POJO_CLASS_NAME = "bullet.dsl.converter.pojo.class.name";
 
     // BulletDeserializer properties
@@ -103,6 +104,7 @@ public class BulletDSLConfig extends BulletConfig {
     public static final String DEFAULT_CONNECTOR_PULSAR_SCHEMA_TYPE = PULSAR_SCHEMA_BYTES;
     public static final String DEFAULT_CONNECTOR_PULSAR_CONSUMER_SUBSCRIPTION_TYPE = "Shared";
     public static final boolean DEFAULT_CONNECTOR_PULSAR_AUTH_ENABLE = false;
+    public static final boolean DEFAULT_CONVERTER_TYPE_CHECK = false;
 
     public static final String FILE_PREFIX = "file://";
 
@@ -198,6 +200,9 @@ public class BulletDSLConfig extends BulletConfig {
                  .checkIf(Validator::isString)
                  .unless(Validator::isNull)
                  .orFail();
+        VALIDATOR.define(RECORD_CONVERTER_SCHEMA_TYPE_CHECK)
+                 .checkIf(Validator::isBoolean)
+                 .defaultTo(DEFAULT_CONVERTER_TYPE_CHECK);
         VALIDATOR.define(RECORD_CONVERTER_POJO_CLASS_NAME);
         VALIDATOR.relate("If using POJOBulletRecordConverter, a POJO class name must be specified.", RECORD_CONVERTER_CLASS_NAME, RECORD_CONVERTER_POJO_CLASS_NAME)
                  .checkIf(isImpliedBy(isEqual(POJO_CONVERTER_CLASS_NAME), Validator::isClassName))

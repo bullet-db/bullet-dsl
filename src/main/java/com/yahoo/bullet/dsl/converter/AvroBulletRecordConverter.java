@@ -88,16 +88,14 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     @Override
     @SuppressWarnings("unchecked")
     protected void setField(BulletRecordField field, Object value, BulletRecord record) {
-        switch (field.getType()) {
-            case RECORD:
-                if (value instanceof Map) {
-                    flattenMap((Map<String, Serializable>) value, record);
-                } else {
-                    flattenRecord((GenericRecord) value, record);
-                }
-                break;
-            default:
-                super.setField(field, value, record);
+        if (field.getType() == null) {
+            if (value instanceof Map) {
+                flattenMap((Map<String, Serializable>) value, record);
+            } else {
+                flattenRecord((GenericRecord) value, record);
+            }
+        } else {
+            super.setField(field, value, record);
         }
     }
 
