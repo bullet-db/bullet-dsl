@@ -62,8 +62,9 @@ Example usage:
 #### BulletDeserializer
 
 This is an optional layer that can be configured in the Bullet Backends that support it. If one is not needed, the `IdentityDeserializer` can be used. This is primarily needed if the connector reads serialized bytes or some other custom format that needs 
-to be converted into the appropriate input formats that the converter supports. A simple example could be if you were reading from Kafka messages, POJOs that you needed to convert to BulletRecords. But the POJOs were serialized before being ingested into Kafka
-and Kafka itself is not aware that they are POJOs. The `KafkaConnector` would produce raw serialized bytes of the POJO and you could use the `JavaDeserializer` to reify those bytes back into the POJO that the `POJOBulletRecordConverter` could use.
+to be converted into the appropriate input formats that the converter supports. A simple example could be if you were reading POJOS as Kafka messages that you needed to convert to BulletRecords. However, for some reason, the POJOs were serialized to raw 
+bytes before being ingested into Kafka and Kafka itself is not aware that they are POJOs. The `KafkaConnector` would produce raw serialized bytes of the POJO and you would not be able to feed that into the `POJOBulletRecordConverter`. You could then use 
+the `JavaDeserializer` to reify those bytes back into the POJO that the `POJOBulletRecordConverter` could convert.
 
 #### BulletRecordConverter
 
