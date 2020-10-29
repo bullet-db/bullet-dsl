@@ -38,7 +38,7 @@ public abstract class BulletRecordConverter implements Serializable {
     private BulletRecordProvider provider;
     protected BulletDSLConfig config;
     protected BulletRecordSchema schema;
-    protected boolean shouldTypeCheck = true;
+    protected boolean shouldTypeCheck = false;
 
     /**
      * Constructor that takes a configuration containing the settings relevant for this converter.
