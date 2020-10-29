@@ -2,8 +2,7 @@
   "fields": [
     {
       "name": "list",
-      "type": "LIST",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_LIST"
     }
   ]
 }

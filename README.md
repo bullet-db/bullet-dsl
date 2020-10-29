@@ -89,7 +89,7 @@ An array of objects where each object is a BulletRecordField that consists of a 
 When an object is converted, the name of the fields in the resulting BulletRecord are specified by the schema and the corresponding values by the corresponding references.
 If a reference is null, the corresponding name will be used instead.
 
-The values for the possible types are the same as defined in [Bullet Record](https://github.com/bullet-db/bullet-record): 
+The values for the possible types are the same as the valid types defined in [Bullet Record](https://github.com/bullet-db/bullet-record): 
   - BOOLEAN
   - INTEGER 
   - LONG 

@@ -2,8 +2,7 @@
   "fields": [
     {
       "name": "listofmap",
-      "type": "LISTOFMAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP_LIST"
     }
   ]
 }

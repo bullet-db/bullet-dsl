@@ -33,14 +33,12 @@
     {
       "name": "myIntMap",
       "reference": "getMyIntMap",
-      "type": "MAP",
-      "subtype": "INTEGER"
+      "type": "INTEGER_MAP"
     },
     {
       "name": "myIntList",
       "reference": "getMyIntList",
-      "type": "LIST",
-      "subtype": "INTEGER"
+      "type": "INTEGER_LIST"
     }
   ]
 }

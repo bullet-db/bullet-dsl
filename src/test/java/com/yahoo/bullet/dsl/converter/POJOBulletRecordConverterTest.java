@@ -319,7 +319,7 @@ public class POJOBulletRecordConverterTest {
         Assert.assertFalse(record.hasField("bar"));
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found member's type does not match field's type/subtype: \\{name: myInt, reference: throwMyInt, type: INTEGER, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found member's type does not match field's type/subtype: \\{name: myInt, reference: throwMyInt, type: INTEGER\\}")
     public void testNotValidType() throws Exception {
         class Dummy {
             Byte throwMyInt;
@@ -327,7 +327,7 @@ public class POJOBulletRecordConverterTest {
         new POJOBulletRecordConverter(Dummy.class, "src/test/resources/schemas/throw.json");
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Accessor for field not found: \\{name: myInt, reference: throwMyInt, type: INTEGER, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Accessor for field not found: \\{name: myInt, reference: throwMyInt, type: INTEGER\\}")
     public void testNoSuchField() throws Exception {
         class Dummy {
 
@@ -335,7 +335,7 @@ public class POJOBulletRecordConverterTest {
         new POJOBulletRecordConverter(Dummy.class, "src/test/resources/schemas/throw.json");
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found method's return type does not match field's type/subtype: \\{name: myInt, reference: throwMyInt, type: INTEGER, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found method's return type does not match field's type/subtype: \\{name: myInt, reference: throwMyInt, type: INTEGER\\}")
     public void testNotValidGetter() throws Exception {
         class Dummy {
             Integer myInt;
@@ -345,7 +345,7 @@ public class POJOBulletRecordConverterTest {
         new POJOBulletRecordConverter(Dummy.class, "src/test/resources/schemas/throw.json");
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Accessor for field not found: \\{name: myInt, reference: throwMyInt, type: INTEGER, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Accessor for field not found: \\{name: myInt, reference: throwMyInt, type: INTEGER\\}")
     public void testNoSuchGetter() throws Exception {
         class Dummy {
             Integer myInt;
@@ -464,7 +464,7 @@ public class POJOBulletRecordConverterTest {
         Assert.assertNotNull(recordConverter.getAccessors().get("data").getKey());
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found base member's type is not map: \\{name: null, reference: data.aaa.bbb, type: RECORD, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found base member's type is not map: \\{name: null, reference: data.aaa.bbb, type: null\\}")
     public void testExtractInvalidField() throws Exception {
         class Dummy {
             Integer data;
@@ -472,7 +472,7 @@ public class POJOBulletRecordConverterTest {
         new POJOBulletRecordConverter(Dummy.class, "schemas/record2.json");
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found base method's return type is not map: \\{name: null, reference: data.aaa.bbb, type: RECORD, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Found base method's return type is not map: \\{name: null, reference: data.aaa.bbb, type: null\\}")
     public void testExtractInvalidMethod() throws Exception {
         class Dummy {
             Integer data() {

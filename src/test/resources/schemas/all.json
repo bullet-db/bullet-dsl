@@ -26,123 +26,99 @@
     },
     {
       "name": "myBoolMap",
-      "type": "MAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP"
     },
     {
       "name": "myIntMap",
-      "type": "MAP",
-      "subtype": "INTEGER"
+      "type": "INTEGER_MAP"
     },
     {
       "name": "myLongMap",
-      "type": "MAP",
-      "subtype": "LONG"
+      "type": "LONG_MAP"
     },
     {
       "name": "myFloatMap",
-      "type": "MAP",
-      "subtype": "FLOAT"
+      "type": "FLOAT_MAP"
     },
     {
       "name": "myDoubleMap",
-      "type": "MAP",
-      "subtype": "DOUBLE"
+      "type": "DOUBLE_MAP"
     },
     {
       "name": "myStringMap",
-      "type": "MAP",
-      "subtype": "STRING"
+      "type": "STRING_MAP"
     },
     {
       "name": "myBoolMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP_MAP"
     },
     {
       "name": "myIntMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "INTEGER"
+      "type": "INTEGER_MAP_MAP"
     },
     {
       "name": "myLongMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "LONG"
+      "type": "LONG_MAP_MAP"
     },
     {
       "name": "myFloatMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "FLOAT"
+      "type": "FLOAT_MAP_MAP"
     },
     {
       "name": "myDoubleMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "DOUBLE"
+      "type": "DOUBLE_MAP_MAP"
     },
     {
       "name": "myStringMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "STRING"
+      "type": "STRING_MAP_MAP"
     },
     {
       "name": "myBoolList",
-      "type": "LIST",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_LIST"
     },
     {
       "name": "myIntList",
-      "type": "LIST",
-      "subtype": "INTEGER"
+      "type": "INTEGER_LIST"
     },
     {
       "name": "myLongList",
-      "type": "LIST",
-      "subtype": "LONG"
+      "type": "LONG_LIST"
     },
     {
       "name": "myFloatList",
-      "type": "LIST",
-      "subtype": "FLOAT"
+      "type": "FLOAT_LIST"
     },
     {
       "name": "myDoubleList",
-      "type": "LIST",
-      "subtype": "DOUBLE"
+      "type": "DOUBLE_LIST"
     },
     {
       "name": "myStringList",
-      "type": "LIST",
-      "subtype": "STRING"
+      "type": "STRING_LIST"
     },
     {
       "name": "myBoolMapList",
-      "type": "LISTOFMAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP_LIST"
     },
     {
       "name": "myIntMapList",
-      "type": "LISTOFMAP",
-      "subtype": "INTEGER"
+      "type": "INTEGER_MAP_LIST"
     },
     {
       "name": "myLongMapList",
-      "type": "LISTOFMAP",
-      "subtype": "LONG"
+      "type": "LONG_MAP_LIST"
     },
     {
       "name": "myFloatMapList",
-      "type": "LISTOFMAP",
-      "subtype": "FLOAT"
+      "type": "FLOAT_MAP_LIST"
     },
     {
       "name": "myDoubleMapList",
-      "type": "LISTOFMAP",
-      "subtype": "DOUBLE"
+      "type": "DOUBLE_MAP_LIST"
     },
     {
       "name": "myStringMapList",
-      "type": "LISTOFMAP",
-      "subtype": "STRING"
+      "type": "STRING_MAP_LIST"
     }
   ]
 }

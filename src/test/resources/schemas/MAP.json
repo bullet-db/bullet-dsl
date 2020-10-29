@@ -2,8 +2,7 @@
   "fields": [
     {
       "name": "map",
-      "type": "MAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP"
     }
   ]
 }

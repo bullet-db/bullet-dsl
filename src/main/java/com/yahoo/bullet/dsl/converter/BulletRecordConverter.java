@@ -191,7 +191,7 @@ public abstract class BulletRecordConverter implements Serializable {
         TypedObject object = new TypedObject(value);
         Type expected = object.getType();
         if (type != expected) {
-            throw new ClassCastException("Field " + name + " had type " + type + " instead of the expected " + type);
+            throw new ClassCastException("Field " + name + " had type " + expected + " instead of the expected " + type);
         }
         return object;
     }

@@ -1,16 +1,13 @@
 {
   "fields": [
     {
-      "reference": "myIntList",
-      "type": "RECORD"
+      "reference": "myIntList"
     },
     {
-      "reference": "myStringMap",
-      "type": "RECORD"
+      "reference": "myStringMap"
     },
     {
-      "reference": "myDummyAvro",
-      "type": "RECORD"
+      "reference": "myDummyAvro"
     }
   ]
 }

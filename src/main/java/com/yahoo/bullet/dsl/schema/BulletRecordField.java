@@ -14,8 +14,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * BulletRecordField consists of a name, reference, and type. The name refers to the name of the field in the
@@ -35,6 +37,15 @@ public class BulletRecordField implements Initializable, Serializable {
 
     private static final String DELIMITER = ".";
     private static final String REGEX_DELIMITER = "\\.";
+    private static final Set<Type> INVALID_TYPES = new HashSet<>();
+    static {
+        INVALID_TYPES.add(Type.NULL);
+        INVALID_TYPES.add(Type.UNKNOWN);
+        INVALID_TYPES.add(Type.UNKNOWN_LIST);
+        INVALID_TYPES.add(Type.UNKNOWN_MAP);
+        INVALID_TYPES.add(Type.UNKNOWN_MAP_LIST);
+        INVALID_TYPES.add(Type.UNKNOWN_MAP_MAP);
+    }
 
     @Getter
     @Setter(AccessLevel.PACKAGE)
@@ -77,7 +88,7 @@ public class BulletRecordField implements Initializable, Serializable {
             if (reference == null || reference.isEmpty()) {
                 errors.add(FIELD_RECORD_REQUIRES_REFERENCE);
             }
-        } else if (type == Type.NULL || !Type.ACTUAL_TYPES.contains(type)) {
+        } else if (INVALID_TYPES.contains(type)) {
             errors.add(FIELD_INVALID_TYPE);
         }
         if (reference == null) {
