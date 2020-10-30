@@ -125,10 +125,12 @@ public class BulletRecordConverterTest {
         Assert.assertTrue(record.typedGet("dne").isNull());
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBool, reference: myBool, type: BOOLEAN, subtype: null\\}")
-    public void testMapWrongType() throws Exception {
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBool, reference: myBool, type: BOOLEAN\\}")
+    public void testMapWrongTypeWithTypeChecking() throws Exception {
         config.set(BulletDSLConfig.RECORD_CONVERTER_CLASS_NAME, MapBulletRecordConverter.class.getName());
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, "schemas/all.json");
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, true);
+        config.validate();
 
         BulletRecordConverter converter = BulletRecordConverter.from(config);
         Assert.assertTrue(converter instanceof MapBulletRecordConverter);
@@ -137,6 +139,25 @@ public class BulletRecordConverterTest {
         map.put("myBool", 123);
 
         converter.convert(map);
+    }
+
+    @Test
+    public void testMapRightTypeWithTypeChecking() throws Exception {
+        config.set(BulletDSLConfig.RECORD_CONVERTER_CLASS_NAME, MapBulletRecordConverter.class.getName());
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, "schemas/all.json");
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, true);
+        config.validate();
+
+        BulletRecordConverter converter = BulletRecordConverter.from(config);
+        Assert.assertTrue(converter instanceof MapBulletRecordConverter);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("myBool", false);
+
+        BulletRecord record = converter.convert(map);
+
+        Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
+        Assert.assertEquals(record.fieldCount(), 1);
     }
 
     @Test

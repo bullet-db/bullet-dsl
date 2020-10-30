@@ -18,13 +18,11 @@
     },
     {
       "name": "myIntList",
-      "type": "LIST",
-      "subtype": "INTEGER"
+      "type": "INTEGER_LIST"
     },
     {
       "name": "myStringMap",
-      "type": "MAP",
-      "subtype": "STRING"
+      "type": "STRING_MAP"
     },
     {
       "name": "myDummyInt",

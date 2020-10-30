@@ -6,6 +6,7 @@
 package com.yahoo.bullet.dsl.schema;
 
 import com.yahoo.bullet.common.BulletError;
+import com.yahoo.bullet.typesystem.Type;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -45,6 +46,7 @@ public class BulletRecordSchemaTest {
     public void testInitializeNonUniqueFieldNames() {
         BulletRecordField field = new BulletRecordField();
         field.setName("aaa");
+        field.setType(Type.STRING);
 
         schema.setFields(Arrays.asList(field, field));
 
@@ -61,7 +63,7 @@ public class BulletRecordSchemaTest {
         schema.setFields(Collections.singletonList(field));
         Assert.assertTrue(schema.initialize().isPresent());
 
-        field.setType(BulletRecordField.Type.BOOLEAN);
+        field.setType(Type.BOOLEAN);
         Assert.assertFalse(schema.initialize().isPresent());
     }
 }

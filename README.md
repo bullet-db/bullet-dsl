@@ -1,6 +1,6 @@
 # Bullet DSL
 
-[![Build Status](https://travis-ci.org/bullet-db/bullet-dsl.svg?branch=master)](https://travis-ci.org/bullet-db/bullet-dsl) [![Coverage Status](https://coveralls.io/repos/github/bullet-db/bullet-dsl/badge.svg?branch=master)](https://coveralls.io/github/bullet-db/bullet-dsl?branch=master) [![Download](https://api.bintray.com/packages/yahoo/maven/bullet-dsl/images/download.svg) ](https://bintray.com/yahoo/maven/bullet-dsl/_latestVersion)
+[![Build Status](https://travis-ci.com/bullet-db/bullet-dsl.svg?branch=master)](https://travis-ci.com/bullet-db/bullet-dsl) [![Coverage Status](https://coveralls.io/repos/github/bullet-db/bullet-dsl/badge.svg?branch=master)](https://coveralls.io/github/bullet-db/bullet-dsl?branch=master) [![Download](https://api.bintray.com/packages/yahoo/maven/bullet-dsl/images/download.svg) ](https://bintray.com/yahoo/maven/bullet-dsl/_latestVersion)
 
 A DSL for users to plug in their datasource into Bullet (Spark, Storm, etc.)
 
@@ -26,7 +26,7 @@ Bullet DSL is a library written in Java and published to [Bintray](https://bintr
 ## Usage
 
 Bullet DSL consists of two major components: the BulletConnector and the BulletRecordConverter. The BulletConnector is used to read data (objects) from a pluggable datasource while the BulletRecordConverter
-converts those objects into BulletRecords.
+converts those objects into BulletRecords. There is an optional component called the BulletDeserializer that can translate the BulletConnector output to the appropriate BulletRecordConverter input. 
 
 Bullet Storm and Spark (and others) will provide a reading component that will use BulletConnector and BulletRecordConverter, so users will not have to write code themselves but will instead provide configuration.
 
@@ -58,13 +58,20 @@ Example usage:
     } catch (Exception e) {
         // handle exception
     }
+    
+#### BulletDeserializer
+
+This is an optional layer that can be configured in the Bullet Backends that support it. If one is not needed, the `IdentityDeserializer` can be used. This is primarily needed if the connector reads serialized bytes or some other custom format that needs 
+to be converted into the appropriate input formats that the converter supports. A simple example could be if you were reading POJOS as Kafka messages that you needed to convert to BulletRecords. However, for some reason, the POJOs were serialized to raw 
+bytes before being ingested into Kafka and Kafka itself is not aware that they are POJOs. The `KafkaConnector` would produce raw serialized bytes of the POJO and you would not be able to feed that into the `POJOBulletRecordConverter`. You could then use 
+the `JavaDeserializer` to reify those bytes back into the POJO that the `POJOBulletRecordConverter` could convert.
 
 #### BulletRecordConverter
 
-The currently implemented BulletRecordConverters are AvroBulletRecordConverter, MapBulletRecordConverter, and POJOBulletRecordConverter. These converters support converting
-Apache Avro records, maps, and POJOs to BulletRecords.
+The currently implemented BulletRecordConverters are AvroBulletRecordConverter, MapBulletRecordConverter, and POJOBulletRecordConverter. These converters support converting Apache Avro records, maps, and POJOs to BulletRecords.
 
-Note, BulletRecordConverter can be used with or without a BulletRecordSchema; the schema can be specified in the configuration as a json file.
+Note, BulletRecordConverter can be used with or without a BulletRecordSchema; the schema can be specified in the configuration as a json file. If the schema is provided, the types provided there can be used to convert your source data records into BulletRecords without
+any type discovery (although you can turn this on even if you provide a schema). 
 
 Example usage:
 
@@ -78,16 +85,48 @@ Example usage:
 
 #### BulletRecordSchema
 
-An array of objects where each object is a BulletRecordField that consists of a name, reference, type, and subtype.
+An array of objects where each object is a BulletRecordField that consists of a name, reference, and type.
 
 When an object is converted, the name of the fields in the resulting BulletRecord are specified by the schema and the corresponding values by the corresponding references.
 If a reference is null, the corresponding name will be used instead.
 
-Possible types are: BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, STRING, LIST, LISTOFMAP, MAP, MAPOFMAP, and RECORD.
+The values for the possible types are the same as the valid types defined in [Bullet Record](https://github.com/bullet-db/bullet-record): 
+  - BOOLEAN
+  - INTEGER 
+  - LONG 
+  - FLOAT 
+  - DOUBLE 
+  - STRING 
+  - BOOLEAN_MAP
+  - INTEGER_MAP 
+  - LONG_MAP 
+  - FLOAT_MAP 
+  - DOUBLE_MAP 
+  - STRING_MAP 
+  - BOOLEAN_MAP_MAP
+  - INTEGER_MAP_MAP
+  - LONG_MAP_MAP 
+  - FLOAT_MAP_MAP 
+  - DOUBLE_MAP_MAP 
+  - STRING_MAP_MAP 
+  - BOOLEAN_LIST
+  - INTEGER_LIST 
+  - LONG_LIST 
+  - FLOAT_LIST 
+  - DOUBLE_LIST 
+  - STRING_LIST 
+  - BOOLEAN_MAP_LIST
+  - INTEGER_MAP_LIST 
+  - LONG_MAP_LIST 
+  - FLOAT_MAP_LIST 
+  - DOUBLE_MAP_LIST 
+  - STRING_MAP_LIST 
 
-Possible subtypes are: BOOLEAN, INTEGER, LONG, FLOAT, DOUBLE, AND STRING.
+##### Records
 
-Note, if type is MAP, MAPOFMAP, LIST, or LISTOFMAP, then a subtype is required (otherwise subtype must be null). If type is RECORD, then name should be left empty.
+Note, there is a special case where if you omit the type and the name for an entry in the schema, the reference is assumed to be a map containing arbitrary fields with types in the list above. You can use this if you have a map field that 
+contains various objects with one or more types in the list above and want to flatten that map out into the target record using the respective types of each field in the map. The names of the fields in the map will be used as the 
+top-level names in the resulting record.
 
 Example schema and fields:
 
@@ -98,13 +137,11 @@ Example schema and fields:
       },
       {
         "name": "myBoolMap",
-        "type": "MAP",
-        "subtype": "BOOLEAN"
+        "type": "BOOLEAN_MAP"
       },
       {
         "name": "myLongMapMap",
-        "type": "MAPOFMAP",
-        "subtype": "LONG"
+        "type": "LONG_MAP_MAP"
       },
       {
         "name": "myIntFromSomeMap",
@@ -122,8 +159,7 @@ Example schema and fields:
         "type": "INTEGER"
       },
       {
-        "reference" : "someMap",
-        "type": "RECORD"
+        "reference" : "someMap"
       }
     ]
 
@@ -135,7 +171,7 @@ All documentation is available at **[Github Pages here](https://bullet-db.github
 
 * [Bullet DSL](https://bullet-db.github.io/backend/dsl/) to see the complete DSL documentation.
 
-### Useful Links
+### Quick Links
 
 * [Spark Quick Start](https://bullet-db.github.io/quick-start/spark) to start with a Bullet instance running locally on Spark.
 * [Storm Quick Start](https://bullet-db.github.io/quick-start/storm) to start with a Bullet instance running locally on Storm.

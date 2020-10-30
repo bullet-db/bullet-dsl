@@ -75,7 +75,7 @@ public class AvroBulletRecordConverterTest {
         Assert.assertEquals(record.typedGet("myDouble").getValue(), 30.0);
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBytes, reference: myBytes, type: BOOLEAN, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: myBytes, reference: myBytes, type: BOOLEAN\\}")
     public void testSchemaWrongType() throws Exception {
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummy.json");
 
@@ -131,7 +131,7 @@ public class AvroBulletRecordConverterTest {
         Assert.assertEquals(record.typedGet("myDummyInt").getValue(), 100);
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myIntList, type: RECORD, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myIntList, type: null\\}")
     public void testSchemaRecordFromNotRecord() throws Exception {
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummyrecord.json");
 
@@ -186,7 +186,7 @@ public class AvroBulletRecordConverterTest {
         Assert.assertEquals(record.typedGet("myString").getValue(), "5.0");
     }
 
-    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myDummyAvro, type: RECORD, subtype: null\\}")
+    @Test(expectedExceptions = BulletDSLException.class, expectedExceptionsMessageRegExp = "Could not convert field: \\{name: null, reference: myDummyAvro, type: null\\}")
     public void testSchemaRecordFromAvroRecordNotSerializable() throws Exception {
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummyrecord.json");
 

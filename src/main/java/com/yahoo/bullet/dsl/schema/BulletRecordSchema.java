@@ -44,7 +44,7 @@ public class BulletRecordSchema implements Initializable, Serializable {
         if (fields == null || fields.isEmpty()) {
             return Optional.of(Collections.singletonList(SCHEMA_REQUIRES_FIELDS));
         }
-        List<BulletRecordField> nonRecordFields = fields.stream().filter(recordField -> recordField.getType() != BulletRecordField.Type.RECORD).collect(Collectors.toList());
+        List<BulletRecordField> nonRecordFields = fields.stream().filter(recordField -> recordField.getType() != null).collect(Collectors.toList());
         Set<String> names = nonRecordFields.stream().map(BulletRecordField::getName).collect(Collectors.toSet());
         if (names.size() < nonRecordFields.size()) {
             return Optional.of(Collections.singletonList(SCHEMA_REQUIRES_UNIQUE_FIELD_NAMES));

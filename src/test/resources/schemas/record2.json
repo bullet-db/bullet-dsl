@@ -1,8 +1,7 @@
 {
   "fields": [
     {
-      "reference": "data.aaa.bbb",
-      "type": "RECORD"
+      "reference": "data.aaa.bbb"
     }
   ]
 }

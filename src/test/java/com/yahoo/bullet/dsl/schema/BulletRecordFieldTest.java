@@ -6,6 +6,7 @@
 package com.yahoo.bullet.dsl.schema;
 
 import com.yahoo.bullet.common.BulletError;
+import com.yahoo.bullet.typesystem.Type;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,27 +24,27 @@ public class BulletRecordFieldTest {
     }
 
     @Test
-    public void testInitializeMissingNameAndType() {
+    public void testInitializeMissingName() {
+        field.setType(Type.BOOLEAN);
+
         // missing name
         Optional<List<BulletError>> optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_REQUIRES_NAME));
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_REQUIRES_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 2);
+        Assert.assertEquals(optionalErrors.get().size(), 1);
 
-        // empty name
+        // empty name and reference
         field.setName("");
         optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_REQUIRES_NAME));
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_REQUIRES_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 2);
+        Assert.assertEquals(optionalErrors.get().size(), 1);
     }
 
     @Test
     public void testInitializeNameWithDelimiters() {
         field.setName("aaa.bbb");
-        field.setType(BulletRecordField.Type.BOOLEAN);
+        field.setType(Type.BOOLEAN);
 
         Optional<List<BulletError>> optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
@@ -55,7 +56,7 @@ public class BulletRecordFieldTest {
     public void testInitializeReferenceWithTrailingDelimiters() {
         field.setName("aaa");
         field.setReference(".aaa");
-        field.setType(BulletRecordField.Type.BOOLEAN);
+        field.setType(Type.BOOLEAN);
 
         Optional<List<BulletError>> optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
@@ -81,110 +82,58 @@ public class BulletRecordFieldTest {
     }
 
     @Test
-    public void testInitializePrimitive() {
+    public void testInitializeWithInvalidTypes() {
         field.setName("aaa");
-        field.setType(BulletRecordField.Type.BOOLEAN);
-
-        Assert.assertFalse(field.initialize().isPresent());
-    }
-
-    @Test
-    public void testInitializePrimitiveWithSubtype() {
-        field.setName("aaa");
-        field.setType(BulletRecordField.Type.STRING);
-        field.setSubtype(BulletRecordField.Type.BOOLEAN);
+        field.setType(Type.NULL);
 
         Optional<List<BulletError>> optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_PRIMITIVE_REQUIRES_NULL_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-    }
-
-    @Test
-    public void testInitializeList() {
-        field.setName("aaa");
-        field.setType(BulletRecordField.Type.LIST);
-
-        Optional<List<BulletError>> optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
         Assert.assertEquals(optionalErrors.get().size(), 1);
 
-        field.setSubtype(BulletRecordField.Type.LIST);
-
+        field.setType(Type.UNKNOWN);
         optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
         Assert.assertEquals(optionalErrors.get().size(), 1);
 
-        field.setSubtype(BulletRecordField.Type.INTEGER);
+        field.setType(Type.UNKNOWN_MAP);
+        optionalErrors = field.initialize();
+        Assert.assertTrue(optionalErrors.isPresent());
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
+        Assert.assertEquals(optionalErrors.get().size(), 1);
 
-        Assert.assertFalse(field.initialize().isPresent());
+        field.setType(Type.UNKNOWN_LIST);
+        optionalErrors = field.initialize();
+        Assert.assertTrue(optionalErrors.isPresent());
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
+        Assert.assertEquals(optionalErrors.get().size(), 1);
+
+        field.setType(Type.UNKNOWN_MAP_MAP);
+        optionalErrors = field.initialize();
+        Assert.assertTrue(optionalErrors.isPresent());
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
+        Assert.assertEquals(optionalErrors.get().size(), 1);
+
+        field.setType(Type.UNKNOWN_MAP_LIST);
+        optionalErrors = field.initialize();
+        Assert.assertTrue(optionalErrors.isPresent());
+        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
+        Assert.assertEquals(optionalErrors.get().size(), 1);
     }
 
     @Test
-    public void testInitializeListOfMap() {
+    public void testInitializeWithValidTypes() {
         field.setName("aaa");
-        field.setType(BulletRecordField.Type.LISTOFMAP);
-
-        Optional<List<BulletError>> optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.LISTOFMAP);
-
-        optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.LONG);
-
+        field.setType(Type.BOOLEAN);
         Assert.assertFalse(field.initialize().isPresent());
-    }
-
-    @Test
-    public void testInitializeMap() {
-        field.setName("aaa");
-        field.setType(BulletRecordField.Type.MAP);
-
-        Optional<List<BulletError>> optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.MAP);
-
-        optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.FLOAT);
-
+        field.setType(Type.STRING_LIST);
         Assert.assertFalse(field.initialize().isPresent());
-    }
-
-    @Test
-    public void testInitializeMapOfMap() {
-        field.setName("aaa");
-        field.setType(BulletRecordField.Type.MAPOFMAP);
-
-        Optional<List<BulletError>> optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.MAPOFMAP);
-
-        optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_LIST_OR_MAP_REQUIRES_PRIMITIVE_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
-
-        field.setSubtype(BulletRecordField.Type.DOUBLE);
-
+        field.setType(Type.FLOAT_MAP_LIST);
+        Assert.assertFalse(field.initialize().isPresent());
+        field.setType(Type.DOUBLE_MAP);
+        Assert.assertFalse(field.initialize().isPresent());
+        field.setType(Type.BOOLEAN_MAP_MAP);
         Assert.assertFalse(field.initialize().isPresent());
     }
 
@@ -192,15 +141,12 @@ public class BulletRecordFieldTest {
     public void testInitializeRecord() {
         // missing reference
         field.setName("aaa");
-        field.setType(BulletRecordField.Type.RECORD);
-        field.setSubtype(BulletRecordField.Type.BOOLEAN);
 
         Optional<List<BulletError>> optionalErrors = field.initialize();
         Assert.assertTrue(optionalErrors.isPresent());
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_NULL_NAME));
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_REFERENCE));
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_NULL_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 3);
+        Assert.assertEquals(optionalErrors.get().size(), 2);
 
         // empty reference
         field.setReference("");
@@ -209,13 +155,11 @@ public class BulletRecordFieldTest {
         Assert.assertTrue(optionalErrors.isPresent());
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_NULL_NAME));
         Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_REFERENCE));
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_RECORD_REQUIRES_NULL_SUBTYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 3);
+        Assert.assertEquals(optionalErrors.get().size(), 2);
 
         // no errors
         field.setName(null);
         field.setReference("aaa");
-        field.setSubtype(null);
 
         Assert.assertFalse(field.initialize().isPresent());
     }
@@ -223,7 +167,7 @@ public class BulletRecordFieldTest {
     @Test
     public void testInitializeToken() {
         field.setName("aaa");
-        field.setType(BulletRecordField.Type.STRING);
+        field.setType(Type.STRING);
         field.setReference("aaa.bbb.ccc.ddd.eee");
 
         Assert.assertFalse(field.initialize().isPresent());
@@ -240,15 +184,7 @@ public class BulletRecordFieldTest {
     public void testToString() {
         field.setName("aaa");
         field.setReference("bbb");
-        field.setType(BulletRecordField.Type.MAPOFMAP);
-        field.setSubtype(BulletRecordField.Type.LONG);
-
-        Assert.assertEquals(field.toString(), "{name: aaa, reference: bbb, type: MAPOFMAP, subtype: LONG}");
-    }
-
-    @Test
-    public void testTypeValueOf() {
-        // coverage
-        Assert.assertEquals(BulletRecordField.Type.valueOf("MAPOFMAP"), BulletRecordField.Type.MAPOFMAP);
+        field.setType(Type.STRING_MAP_MAP);
+        Assert.assertEquals(field.toString(), "{name: aaa, reference: bbb, type: STRING_MAP_MAP}");
     }
 }

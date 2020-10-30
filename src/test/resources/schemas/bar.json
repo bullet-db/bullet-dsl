@@ -2,33 +2,27 @@
   "fields": [
     {
       "name": "myBoolMap",
-      "type": "MAP",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_MAP"
     },
     {
       "name": "myBoolList",
-      "type": "LIST",
-      "subtype": "BOOLEAN"
+      "type": "BOOLEAN_LIST"
     },
     {
       "name": "myStringList",
-      "type": "LIST",
-      "subtype": "STRING"
+      "type": "STRING_LIST"
     },
     {
       "name": "myDoubleMap",
-      "type": "MAP",
-      "subtype": "DOUBLE"
+      "type": "DOUBLE_MAP"
     },
     {
       "name": "myIntMapMap",
-      "type": "MAPOFMAP",
-      "subtype": "INTEGER"
+      "type": "INTEGER_MAP_MAP"
     },
     {
       "name": "myLongMapList",
-      "type": "LISTOFMAP",
-      "subtype": "LONG"
+      "type": "LONG_MAP_LIST"
     }
   ]
 }

@@ -35,7 +35,7 @@ import java.util.Objects;
  * If a schema is specified, method names in addition to member names can be used in references.
  * <br><br>
  * Note, POJOBulletRecordConverter uses reflections and is relatively slow; specifying getters in the schema will
- * lead to slightly better performance. Furthermore, the converter only find declared fields and methods and does not
+ * lead to slightly better performance. Furthermore, the converter only finds declared fields and methods and does not
  * look into superclasses or interfaces.
  */
 @Slf4j
@@ -212,59 +212,56 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
      * @return True if the types match the record field.
      */
     private static boolean typesMatch(Class type, Type genericType, BulletRecordField recordField) {
+        com.yahoo.bullet.typesystem.Type recordFieldType = recordField.getType();
         try {
-            switch (recordField.getType()) {
-                case BOOLEAN:
-                case INTEGER:
-                case LONG:
-                case FLOAT:
-                case DOUBLE:
-                case STRING:
-                    return type == recordField.getType().getUnderlyingType();
-                case LIST:
-                    if (List.class.isAssignableFrom(type)) {
-                        ParameterizedType pt = (ParameterizedType) genericType;
-                        Type listType = pt.getActualTypeArguments()[0];
-                        return listType == recordField.getSubtype().getUnderlyingType();
+            // Record case
+            if (recordFieldType == null) {
+                if (Map.class.isAssignableFrom(type)) {
+                    ParameterizedType pt = (ParameterizedType) genericType;
+                    Class keyType = (Class) pt.getActualTypeArguments()[0];
+                    return keyType == String.class;
+                }
+                return false;
+            } else if (com.yahoo.bullet.typesystem.Type.isPrimitive(recordFieldType)) {
+                return type == recordFieldType.getUnderlyingClass();
+            } else if (com.yahoo.bullet.typesystem.Type.isPrimitiveList(recordFieldType)) {
+                if (List.class.isAssignableFrom(type)) {
+                    ParameterizedType pt = (ParameterizedType) genericType;
+                    Type listType = pt.getActualTypeArguments()[0];
+                    return listType == recordFieldType.getSubType().getUnderlyingClass();
+                }
+                return false;
+            } else if (com.yahoo.bullet.typesystem.Type.isComplexList(recordFieldType)) {
+                if (List.class.isAssignableFrom(type)) {
+                    ParameterizedType pt = (ParameterizedType) genericType;
+                    ParameterizedType listType = (ParameterizedType) pt.getActualTypeArguments()[0];
+                    if (Map.class.isAssignableFrom((Class) listType.getRawType())) {
+                        Class keyType = (Class) listType.getActualTypeArguments()[0];
+                        Class valueType = (Class) listType.getActualTypeArguments()[1];
+                        return keyType == String.class && valueType == recordFieldType.getSubType().getSubType().getUnderlyingClass();
                     }
-                    return false;
-                case LISTOFMAP:
-                    if (List.class.isAssignableFrom(type)) {
-                        ParameterizedType pt = (ParameterizedType) genericType;
-                        ParameterizedType listType = (ParameterizedType) pt.getActualTypeArguments()[0];
-                        if (Map.class.isAssignableFrom((Class) listType.getRawType())) {
-                            Class keyType = (Class) listType.getActualTypeArguments()[0];
-                            Class valueType = (Class) listType.getActualTypeArguments()[1];
-                            return keyType == String.class && valueType == recordField.getSubtype().getUnderlyingType();
-                        }
+                }
+                return false;
+            } else if (com.yahoo.bullet.typesystem.Type.isPrimitiveMap(recordFieldType)) {
+                if (Map.class.isAssignableFrom(type)) {
+                    ParameterizedType pt = (ParameterizedType) genericType;
+                    Class keyType = (Class) pt.getActualTypeArguments()[0];
+                    Type valueType = pt.getActualTypeArguments()[1];
+                    return keyType == String.class && valueType == recordFieldType.getSubType().getUnderlyingClass();
+                }
+                return false;
+            } else if (com.yahoo.bullet.typesystem.Type.isComplexMap(recordFieldType)) {
+                if (Map.class.isAssignableFrom(type)) {
+                    ParameterizedType pt = (ParameterizedType) genericType;
+                    Class keyType = (Class) pt.getActualTypeArguments()[0];
+                    ParameterizedType valueType = (ParameterizedType) pt.getActualTypeArguments()[1];
+                    if (keyType == String.class && Map.class.isAssignableFrom((Class) valueType.getRawType())) {
+                        Class subKeyType = (Class) valueType.getActualTypeArguments()[0];
+                        Class subValueType = (Class) valueType.getActualTypeArguments()[1];
+                        return subKeyType == String.class && subValueType == recordFieldType.getSubType().getSubType().getUnderlyingClass();
                     }
-                    return false;
-                case MAP:
-                    if (Map.class.isAssignableFrom(type)) {
-                        ParameterizedType pt = (ParameterizedType) genericType;
-                        Class keyType = (Class) pt.getActualTypeArguments()[0];
-                        Type valueType = pt.getActualTypeArguments()[1];
-                        return keyType == String.class && valueType == recordField.getSubtype().getUnderlyingType();
-                    }
-                    return false;
-                case MAPOFMAP:
-                    if (Map.class.isAssignableFrom(type)) {
-                        ParameterizedType pt = (ParameterizedType) genericType;
-                        Class keyType = (Class) pt.getActualTypeArguments()[0];
-                        ParameterizedType valueType = (ParameterizedType) pt.getActualTypeArguments()[1];
-                        if (keyType == String.class && Map.class.isAssignableFrom((Class) valueType.getRawType())) {
-                            Class subKeyType = (Class) valueType.getActualTypeArguments()[0];
-                            Class subValueType = (Class) valueType.getActualTypeArguments()[1];
-                            return subKeyType == String.class && subValueType == recordField.getSubtype().getUnderlyingType();
-                        }
-                    }
-                    return false;
-                case RECORD:
-                    if (Map.class.isAssignableFrom(type)) {
-                        ParameterizedType pt = (ParameterizedType) genericType;
-                        Class keyType = (Class) pt.getActualTypeArguments()[0];
-                        return keyType == String.class;
-                    }
+                }
+                return false;
             }
         } catch (Exception ignored) {
         }
