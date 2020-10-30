@@ -60,7 +60,7 @@ public abstract class BulletRecordConverter implements Serializable {
         String recordProviderClassName = config.getAs(BulletDSLConfig.RECORD_PROVIDER_CLASS_NAME, String.class);
         String schemaFile = config.getAs(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, String.class);
 
-        shouldTypeCheck = config.getAs(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK, Boolean.class);
+        shouldTypeCheck = config.getAs(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, Boolean.class);
         provider = BulletRecordProvider.from(recordProviderClassName);
 
         if (schemaFile != null) {

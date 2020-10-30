@@ -129,7 +129,7 @@ public class BulletRecordConverterTest {
     public void testMapWrongTypeWithTypeChecking() throws Exception {
         config.set(BulletDSLConfig.RECORD_CONVERTER_CLASS_NAME, MapBulletRecordConverter.class.getName());
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, "schemas/all.json");
-        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK, true);
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, true);
         config.validate();
 
         BulletRecordConverter converter = BulletRecordConverter.from(config);
@@ -145,7 +145,7 @@ public class BulletRecordConverterTest {
     public void testMapRightTypeWithTypeChecking() throws Exception {
         config.set(BulletDSLConfig.RECORD_CONVERTER_CLASS_NAME, MapBulletRecordConverter.class.getName());
         config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, "schemas/all.json");
-        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK, true);
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, true);
         config.validate();
 
         BulletRecordConverter converter = BulletRecordConverter.from(config);

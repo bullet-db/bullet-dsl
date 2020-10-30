@@ -59,7 +59,7 @@ bullet.dsl.converter.schema.file: ""
 # Should type checking be performed for fields with type in the schema. It is useful to make sure that the types in
 # your source records match your expectations. You can set this to false when you are sure of your schema. This is
 # ignored if you do not provide a schema.
-bullet.dsl.converter.schema.type.check: false
+bullet.dsl.converter.schema.type.check.enable: false
 
 # POJOBulletRecordConverter - POJO class name
 bullet.dsl.converter.pojo.class.name:
