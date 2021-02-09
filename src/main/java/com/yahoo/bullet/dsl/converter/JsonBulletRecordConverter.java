@@ -40,7 +40,7 @@ public class JsonBulletRecordConverter extends MapBulletRecordConverter {
     @Override
     public BulletRecord convert(Object object, BulletRecord record) throws BulletDSLException {
         String json = (String) object;
-        Map<String, Serializable> map = GSON.fromJson(json, new TypeToken<Map<String, Object>>(){ }.getType());
+        Map<String, Serializable> map = GSON.fromJson(json, new TypeToken<Map<String, Object>>() { }.getType());
         return super.convert(map, record);
     }
 }
