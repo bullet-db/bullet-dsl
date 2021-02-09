@@ -18,7 +18,7 @@ import java.util.Map;
  * JsonBulletRecordConverter is used to convert {@link String} json to {@link BulletRecord}. It uses Gson to convert
  * the json to a map which is then converted to a {@link BulletRecord}.
  * <br><br>
- * If a schema is not specified, the json effectively flattened without any regard to type-safety.
+ * If a schema is not specified, the json is effectively flattened without any regard to type-safety.
  */
 public class JsonBulletRecordConverter extends MapBulletRecordConverter {
 
