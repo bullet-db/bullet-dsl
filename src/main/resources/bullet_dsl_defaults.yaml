@@ -1,7 +1,7 @@
 ###### BulletConnector properties
 
 # The classpath to the BulletConnector to use
-bullet.dsl.connector.class.name: "com.yahoo.bullet.dsl.connector.KafkaConnector"
+bullet.dsl.connector.class.name:
 # The read timeout duration in ms
 bullet.dsl.connector.read.timeout.ms: 0
 # Whether or not to asynchronously commit messages
@@ -53,7 +53,7 @@ bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
 ###### BulletRecordConverter properties
 
 # The classpath to the BulletRecordConverter to use
-bullet.dsl.converter.class.name: "com.yahoo.bullet.dsl.converter.AvroBulletRecordConverter"
+bullet.dsl.converter.class.name:
 # The path to the schema file to use
 bullet.dsl.converter.schema.file: ""
 # Should type checking be performed for fields with type in the schema. It is useful to make sure that the types in
