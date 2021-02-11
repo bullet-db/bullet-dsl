@@ -29,8 +29,9 @@ import java.util.Optional;
 
 /**
  * BulletRecordConverter is used to convert objects into BulletRecords. Converters should extend this class and expect
- * configuration though {@link BulletDSLConfig}. If a {@link BulletRecordSchema} is provided, values will be typed casted
- * during conversion. If a schema is not provided, the level of type-checking is left to the implementation.
+ * configuration though {@link BulletDSLConfig}. If a {@link BulletRecordSchema} is provided, and type-checking is
+ * enabled, the converter will check that values match their types in the schema and throw if they do not. If a schema is
+ * not provided, the level of type-checking is left to the implementation.
  */
 public abstract class BulletRecordConverter implements Serializable {
 
