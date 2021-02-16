@@ -59,6 +59,7 @@
             <artifactId>bullet-core</artifactId>
             <version>${bullet.core.version}</version>
         </dependency>
+        <!-- Used for the JSON converter as well as an internal use so it is not provided -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
