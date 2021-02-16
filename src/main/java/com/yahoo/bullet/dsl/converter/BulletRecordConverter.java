@@ -191,6 +191,9 @@ public abstract class BulletRecordConverter implements Serializable {
         }
         TypedObject object = new TypedObject(value);
         Type actual = object.getType();
+
+        // If the object came back as an UNKNOWN container and it's empty and we have a schema, there's no need to fail
+        actual = fixTypeIfEmpty(type, actual, value);
         if (type != actual) {
             throw new ClassCastException("Field " + name + " had type " + actual + " instead of the expected " + type);
         }
@@ -210,6 +213,26 @@ public abstract class BulletRecordConverter implements Serializable {
             o = getField(o, token[i]);
         }
         return o;
+    }
+
+    /**
+     * Returns the expected type if value was actually an empty container. Otherwise, returns the actual type.
+     *
+     * @param expected The expected {@link Type} of the field from the schema.
+     * @param actual The computed, actual {@link Type} of the field from the record.
+     * @param value The actual value of field from the record.
+     * @return Either the expected or actual type if the given value was empty.
+     */
+    private Type fixTypeIfEmpty(Type expected, Type actual, Serializable value) {
+        switch (actual) {
+            case UNKNOWN_LIST:
+            case UNKNOWN_MAP_LIST:
+                return ((List) value).isEmpty() ? expected : actual;
+            case UNKNOWN_MAP:
+            case UNKNOWN_MAP_MAP:
+                return ((Map) value).isEmpty() ? expected : actual;
+        }
+        return actual;
     }
 
     /**
