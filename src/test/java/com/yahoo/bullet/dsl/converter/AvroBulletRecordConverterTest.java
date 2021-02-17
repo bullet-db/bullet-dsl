@@ -16,10 +16,13 @@ import org.testng.annotations.Test;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 public class AvroBulletRecordConverterTest {
 
@@ -30,10 +33,10 @@ public class AvroBulletRecordConverterTest {
         dummyAvro.setMyDouble(0.12);
         dummyAvro.setMyFloat(3.45f);
         dummyAvro.setMyInt(678);
-        dummyAvro.setMyIntList(Collections.singletonList(910));
+        dummyAvro.setMyIntList(singletonList(910));
         dummyAvro.setMyLong(1112L);
         dummyAvro.setMyString("1314");
-        dummyAvro.setMyStringMap(Collections.singletonMap("1516", "1718"));
+        dummyAvro.setMyStringMap(singletonMap("1516", "1718"));
 
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter();
         BulletRecord record = recordConverter.convert(dummyAvro);
@@ -105,7 +108,7 @@ public class AvroBulletRecordConverterTest {
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummy.json");
 
         DummyAvro dummyAvro = new DummyAvro();
-        dummyAvro.setMyStringMap(Collections.singletonMap("aaa", "hello"));
+        dummyAvro.setMyStringMap(singletonMap("aaa", "hello"));
 
         BulletRecord record = recordConverter.convert(dummyAvro);
 
@@ -136,7 +139,7 @@ public class AvroBulletRecordConverterTest {
         AvroBulletRecordConverter recordConverter = new AvroBulletRecordConverter("schemas/dummyrecord.json");
 
         DummyAvro dummyAvro = new DummyAvro();
-        dummyAvro.setMyIntList(Collections.emptyList());
+        dummyAvro.setMyIntList(emptyList());
 
         recordConverter.convert(dummyAvro);
     }
@@ -202,18 +205,18 @@ public class AvroBulletRecordConverterTest {
     @Test
     public void testMaps() throws Exception {
         MapsAvro mapsAvro = new MapsAvro();
-        mapsAvro.setMyBoolMap(Collections.singletonMap("a", false));
-        mapsAvro.setMyIntMap(Collections.singletonMap("b", 2));
-        mapsAvro.setMyLongMap(Collections.singletonMap("c", 3L));
-        mapsAvro.setMyFloatMap(Collections.singletonMap("d", 4.0f));
-        mapsAvro.setMyDoubleMap(Collections.singletonMap("e", 5.0));
-        mapsAvro.setMyStringMap(Collections.singletonMap("f", "6"));
-        mapsAvro.setMyBoolMapMap(Collections.singletonMap("g", Collections.singletonMap("h", true)));
-        mapsAvro.setMyIntMapMap(Collections.singletonMap("i", Collections.singletonMap("j", 8)));
-        mapsAvro.setMyLongMapMap(Collections.singletonMap("k", Collections.singletonMap("l", 9L)));
-        mapsAvro.setMyFloatMapMap(Collections.singletonMap("m", Collections.singletonMap("n", 10.0f)));
-        mapsAvro.setMyDoubleMapMap(Collections.singletonMap("o", Collections.singletonMap("p", 11.0)));
-        mapsAvro.setMyStringMapMap(Collections.singletonMap("q", Collections.singletonMap("r", "12")));
+        mapsAvro.setMyBoolMap(singletonMap("a", false));
+        mapsAvro.setMyIntMap(singletonMap("b", 2));
+        mapsAvro.setMyLongMap(singletonMap("c", 3L));
+        mapsAvro.setMyFloatMap(singletonMap("d", 4.0f));
+        mapsAvro.setMyDoubleMap(singletonMap("e", 5.0));
+        mapsAvro.setMyStringMap(singletonMap("f", "6"));
+        mapsAvro.setMyBoolMapMap(singletonMap("g", singletonMap("h", true)));
+        mapsAvro.setMyIntMapMap(singletonMap("i", singletonMap("j", 8)));
+        mapsAvro.setMyLongMapMap(singletonMap("k", singletonMap("l", 9L)));
+        mapsAvro.setMyFloatMapMap(singletonMap("m", singletonMap("n", 10.0f)));
+        mapsAvro.setMyDoubleMapMap(singletonMap("o", singletonMap("p", 11.0)));
+        mapsAvro.setMyStringMapMap(singletonMap("q", singletonMap("r", "12")));
 
         BulletRecord record = new AvroBulletRecordConverter().convert(mapsAvro);
 
@@ -235,18 +238,18 @@ public class AvroBulletRecordConverterTest {
     @Test
     public void testLists() throws Exception {
         ListsAvro listsAvro = new ListsAvro();
-        listsAvro.setMyBoolList(Collections.singletonList(false));
-        listsAvro.setMyIntList(Collections.singletonList(14));
-        listsAvro.setMyLongList(Collections.singletonList(15L));
-        listsAvro.setMyFloatList(Collections.singletonList(16.0f));
-        listsAvro.setMyDoubleList(Collections.singletonList(17.0));
-        listsAvro.setMyStringList(Collections.singletonList("18"));
-        listsAvro.setMyBoolMapList(Collections.singletonList(Collections.singletonMap("s", true)));
-        listsAvro.setMyIntMapList(Collections.singletonList(Collections.singletonMap("t", 20)));
-        listsAvro.setMyLongMapList(Collections.singletonList(Collections.singletonMap("u", 21L)));
-        listsAvro.setMyFloatMapList(Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        listsAvro.setMyDoubleMapList(Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        listsAvro.setMyStringMapList(Collections.singletonList(Collections.singletonMap("x", "24")));
+        listsAvro.setMyBoolList(singletonList(false));
+        listsAvro.setMyIntList(singletonList(14));
+        listsAvro.setMyLongList(singletonList(15L));
+        listsAvro.setMyFloatList(singletonList(16.0f));
+        listsAvro.setMyDoubleList(singletonList(17.0));
+        listsAvro.setMyStringList(singletonList("18"));
+        listsAvro.setMyBoolMapList(singletonList(singletonMap("s", true)));
+        listsAvro.setMyIntMapList(singletonList(singletonMap("t", 20)));
+        listsAvro.setMyLongMapList(singletonList(singletonMap("u", 21L)));
+        listsAvro.setMyFloatMapList(singletonList(singletonMap("v", 22.0f)));
+        listsAvro.setMyDoubleMapList(singletonList(singletonMap("w", 23.0)));
+        listsAvro.setMyStringMapList(singletonList(singletonMap("x", "24")));
 
         BulletRecord record = new AvroBulletRecordConverter().convert(listsAvro);
 

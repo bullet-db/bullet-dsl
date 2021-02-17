@@ -14,6 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -158,6 +159,31 @@ public class BulletRecordConverterTest {
 
         Assert.assertEquals(record.typedGet("myBool").getValue(), map.get("myBool"));
         Assert.assertEquals(record.fieldCount(), 1);
+    }
+
+    @Test
+    public void testMapUnknownTypesWithTypeChecking() throws Exception {
+        config.set(BulletDSLConfig.RECORD_CONVERTER_CLASS_NAME, MapBulletRecordConverter.class.getName());
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_FILE, "schemas/all.json");
+        config.set(BulletDSLConfig.RECORD_CONVERTER_SCHEMA_TYPE_CHECK_ENABLE, true);
+        config.validate();
+
+        BulletRecordConverter converter = BulletRecordConverter.from(config);
+        Assert.assertTrue(converter instanceof MapBulletRecordConverter);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("myStringMap", new HashMap<>());
+        map.put("myIntMapMap", new HashMap<>());
+        map.put("myDoubleList", new ArrayList<>());
+        map.put("myBoolMapList", new ArrayList<>());
+
+        BulletRecord record = converter.convert(map);
+
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), map.get("myStringMap"));
+        Assert.assertEquals(record.typedGet("myIntMapMap").getValue(), map.get("myIntMapMap"));
+        Assert.assertEquals(record.typedGet("myDoubleList").getValue(), map.get("myDoubleList"));
+        Assert.assertEquals(record.typedGet("myBoolMapList").getValue(), map.get("myBoolMapList"));
+        Assert.assertEquals(record.fieldCount(), 4);
     }
 
     @Test

@@ -12,10 +12,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 public class MapBulletRecordConverterTest {
 
@@ -197,7 +199,7 @@ public class MapBulletRecordConverterTest {
 
         List<Integer> myIntList = Arrays.asList(0, 1, 2, 3, 4);
 
-        BulletRecord record = recordConverter.convert(Collections.singletonMap("myIntList", myIntList));
+        BulletRecord record = recordConverter.convert(singletonMap("myIntList", myIntList));
 
         Assert.assertEquals(record.typedGet("bbb").getValue(), myIntList.get(2));
     }
@@ -205,18 +207,18 @@ public class MapBulletRecordConverterTest {
     @Test
     public void testMaps() throws Exception {
         Map<String, Object> map = new HashMap<>();
-        map.put("myBoolMap", Collections.singletonMap("a", false));
-        map.put("myIntMap", Collections.singletonMap("b", 2));
-        map.put("myLongMap", Collections.singletonMap("c", 3L));
-        map.put("myFloatMap", Collections.singletonMap("d", 4.0f));
-        map.put("myDoubleMap", Collections.singletonMap("e", 5.0));
-        map.put("myStringMap", Collections.singletonMap("f", "6"));
-        map.put("myBoolMapMap", Collections.singletonMap("g", Collections.singletonMap("h", true)));
-        map.put("myIntMapMap", Collections.singletonMap("i", Collections.singletonMap("j", 8)));
-        map.put("myLongMapMap", Collections.singletonMap("k", Collections.singletonMap("l", 9L)));
-        map.put("myFloatMapMap", Collections.singletonMap("m", Collections.singletonMap("n", 10.0f)));
-        map.put("myDoubleMapMap", Collections.singletonMap("o", Collections.singletonMap("p", 11.0)));
-        map.put("myStringMapMap", Collections.singletonMap("q", Collections.singletonMap("r", "12")));
+        map.put("myBoolMap", singletonMap("a", false));
+        map.put("myIntMap", singletonMap("b", 2));
+        map.put("myLongMap", singletonMap("c", 3L));
+        map.put("myFloatMap", singletonMap("d", 4.0f));
+        map.put("myDoubleMap", singletonMap("e", 5.0));
+        map.put("myStringMap", singletonMap("f", "6"));
+        map.put("myBoolMapMap", singletonMap("g", singletonMap("h", true)));
+        map.put("myIntMapMap", singletonMap("i", singletonMap("j", 8)));
+        map.put("myLongMapMap", singletonMap("k", singletonMap("l", 9L)));
+        map.put("myFloatMapMap", singletonMap("m", singletonMap("n", 10.0f)));
+        map.put("myDoubleMapMap", singletonMap("o", singletonMap("p", 11.0)));
+        map.put("myStringMapMap", singletonMap("q", singletonMap("r", "12")));
 
         // Loads schema using class loader
         MapBulletRecordConverter recordConverter = new MapBulletRecordConverter("schemas/all.json");
@@ -240,18 +242,18 @@ public class MapBulletRecordConverterTest {
     @Test
     public void testLists() throws Exception {
         Map<String, Object> map = new HashMap<>();
-        map.put("myBoolList", Collections.singletonList(false));
-        map.put("myIntList", Collections.singletonList(14));
-        map.put("myLongList", Collections.singletonList(15L));
-        map.put("myFloatList", Collections.singletonList(16.0f));
-        map.put("myDoubleList", Collections.singletonList(17.0));
-        map.put("myStringList", Collections.singletonList("18"));
-        map.put("myBoolMapList", Collections.singletonList(Collections.singletonMap("s", true)));
-        map.put("myIntMapList", Collections.singletonList(Collections.singletonMap("t", 20)));
-        map.put("myLongMapList", Collections.singletonList(Collections.singletonMap("u", 21L)));
-        map.put("myFloatMapList", Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        map.put("myDoubleMapList", Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        map.put("myStringMapList", Collections.singletonList(Collections.singletonMap("x", "24")));
+        map.put("myBoolList", singletonList(false));
+        map.put("myIntList", singletonList(14));
+        map.put("myLongList", singletonList(15L));
+        map.put("myFloatList", singletonList(16.0f));
+        map.put("myDoubleList", singletonList(17.0));
+        map.put("myStringList", singletonList("18"));
+        map.put("myBoolMapList", singletonList(singletonMap("s", true)));
+        map.put("myIntMapList", singletonList(singletonMap("t", 20)));
+        map.put("myLongMapList", singletonList(singletonMap("u", 21L)));
+        map.put("myFloatMapList", singletonList(singletonMap("v", 22.0f)));
+        map.put("myDoubleMapList", singletonList(singletonMap("w", 23.0)));
+        map.put("myStringMapList", singletonList(singletonMap("x", "24")));
 
         // Loads schema using class loader
         MapBulletRecordConverter recordConverter = new MapBulletRecordConverter("schemas/all.json");
