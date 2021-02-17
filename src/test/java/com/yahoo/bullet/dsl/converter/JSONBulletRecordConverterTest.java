@@ -11,9 +11,12 @@ import com.yahoo.bullet.record.BulletRecord;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 
 public class JSONBulletRecordConverterTest {
 
@@ -160,47 +163,59 @@ public class JSONBulletRecordConverterTest {
 
     @Test
     public void testMaps() throws Exception {
-        String json = "{'myLongMapMap':{'k':{'l':9}},'myStringMapMap':{'q':{'r':'12'}},'myBoolMap':{'a':false},'myDoubleMapMap':{'o':{'p':11.0}},'myDoubleMap':{'e':5.0},'myFloatMapMap':{'m':{'n':10.0}},'myLongMap':{'c':3},'myFloatMap':{'d':4.0},'myBoolMapMap':{'g':{'h':true}},'myIntMapMap':{'i':{'j':8}},'myIntMap':{'b':2},'myStringMap':{'f':'6'}}";
+        String json = "{'myLongMapMap':{'k':{'l':9}},'myStringMapMap':{'q':{'r':'12'}},'myBoolMap':{'a':false}," +
+                       "'myDoubleMapMap':{'o':{'p':11.0}},'myDoubleMap':{'e':5.0},'myFloatMapMap':{'m':{'n':10.0}}," +
+                       "'myLongMap':{'c':3},'myFloatMap':{'d':4.0},'myBoolMapMap':{'g':{'h':true}}," +
+                       "'myIntMapMap':{'i':{'j':8}},'myIntMap':{'b':2},'myStringMap':{'f':'6'}," +
+                       "'myFloatMapList':[{'v':22.0},null],'myIntList':[null,14]}";
 
         // Loads schema using class loader
         JSONBulletRecordConverter recordConverter = new JSONBulletRecordConverter("schemas/all.json");
         BulletRecord record = recordConverter.convert(json);
 
-        Assert.assertEquals(record.typedGet("myBoolMap").getValue(), Collections.singletonMap("a", false));
-        Assert.assertEquals(record.typedGet("myIntMap").getValue(), Collections.singletonMap("b", 2));
-        Assert.assertEquals(record.typedGet("myLongMap").getValue(), Collections.singletonMap("c", 3L));
-        Assert.assertEquals(record.typedGet("myFloatMap").getValue(), Collections.singletonMap("d", 4.0f));
-        Assert.assertEquals(record.typedGet("myDoubleMap").getValue(), Collections.singletonMap("e", 5.0));
-        Assert.assertEquals(record.typedGet("myStringMap").getValue(), Collections.singletonMap("f", "6"));
-        Assert.assertEquals(record.typedGet("myBoolMapMap").getValue(), Collections.singletonMap("g", Collections.singletonMap("h", true)));
-        Assert.assertEquals(record.typedGet("myIntMapMap").getValue(), Collections.singletonMap("i", Collections.singletonMap("j", 8)));
-        Assert.assertEquals(record.typedGet("myLongMapMap").getValue(), Collections.singletonMap("k", Collections.singletonMap("l", 9L)));
-        Assert.assertEquals(record.typedGet("myFloatMapMap").getValue(), Collections.singletonMap("m", Collections.singletonMap("n", 10.0f)));
-        Assert.assertEquals(record.typedGet("myDoubleMapMap").getValue(), Collections.singletonMap("o", Collections.singletonMap("p", 11.0)));
-        Assert.assertEquals(record.typedGet("myStringMapMap").getValue(), Collections.singletonMap("q", Collections.singletonMap("r", "12")));
+        Assert.assertEquals(record.typedGet("myBoolMap").getValue(), singletonMap("a", false));
+        Assert.assertEquals(record.typedGet("myIntMap").getValue(), singletonMap("b", 2));
+        Assert.assertEquals(record.typedGet("myLongMap").getValue(), singletonMap("c", 3L));
+        Assert.assertEquals(record.typedGet("myFloatMap").getValue(), singletonMap("d", 4.0f));
+        Assert.assertEquals(record.typedGet("myDoubleMap").getValue(), singletonMap("e", 5.0));
+        Assert.assertEquals(record.typedGet("myStringMap").getValue(), singletonMap("f", "6"));
+        Assert.assertEquals(record.typedGet("myBoolMapMap").getValue(), singletonMap("g", singletonMap("h", true)));
+        Assert.assertEquals(record.typedGet("myIntMapMap").getValue(), singletonMap("i", singletonMap("j", 8)));
+        Assert.assertEquals(record.typedGet("myLongMapMap").getValue(), singletonMap("k", singletonMap("l", 9L)));
+        Assert.assertEquals(record.typedGet("myFloatMapMap").getValue(), singletonMap("m", singletonMap("n", 10.0f)));
+        Assert.assertEquals(record.typedGet("myDoubleMapMap").getValue(), singletonMap("o", singletonMap("p", 11.0)));
+        Assert.assertEquals(record.typedGet("myStringMapMap").getValue(), singletonMap("q", singletonMap("r", "12")));
+        Assert.assertEquals(record.typedGet("myFloatMapList").getValue(), asList(singletonMap("v", 22.0f), null));
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), asList(null, 14));
         Assert.assertFalse(record.hasField("dne"));
     }
 
     @Test
     public void testLists() throws Exception {
-        String json = "{'myLongMapList':[{'u':21}],'myFloatList':[16.0],'myFloatMapList':[{'v':22.0}],'myIntList':[14],'myIntMapList':[{'t':20}],'myLongList':[15],'myBoolList':[false],'myBoolMapList':[{'s':true}],'myStringMapList':[{'x':'24'}],'myDoubleMapList':[{'w':23.0}],'myStringList':['18'],'myDoubleList':[17.0]}";
+        String json = "{'myLongMapList':[{'u':21}],'myFloatList':[16.0],'myFloatMapList':[{'v':22.0}],'myIntList':[14]," +
+                       "'myIntMapList':[{'t':20}],'myLongList':[15],'myBoolList':[false],'myBoolMapList':[{'s':true}]," +
+                       "'myStringMapList':[{'x':'24'}],'myDoubleMapList':[{'w':23.0}],'myStringList':['18'],'myDoubleList':[17.0]," +
+                       "'myLongMap':{'c':3,'d':null},'myFloatMapMap':{'m':{'n':10.0},'o':null}}" ;
 
         // Loads schema using class loader
         JSONBulletRecordConverter recordConverter = new JSONBulletRecordConverter("schemas/all.json");
         BulletRecord record = recordConverter.convert(json);
 
-        Assert.assertEquals(record.typedGet("myBoolList").getValue(), Collections.singletonList(false));
-        Assert.assertEquals(record.typedGet("myIntList").getValue(), Collections.singletonList(14));
-        Assert.assertEquals(record.typedGet("myLongList").getValue(), Collections.singletonList(15L));
-        Assert.assertEquals(record.typedGet("myFloatList").getValue(), Collections.singletonList(16.0f));
-        Assert.assertEquals(record.typedGet("myDoubleList").getValue(), Collections.singletonList(17.0));
-        Assert.assertEquals(record.typedGet("myStringList").getValue(), Collections.singletonList("18"));
-        Assert.assertEquals(record.typedGet("myBoolMapList").getValue(), Collections.singletonList(Collections.singletonMap("s", true)));
-        Assert.assertEquals(record.typedGet("myIntMapList").getValue(), Collections.singletonList(Collections.singletonMap("t", 20)));
-        Assert.assertEquals(record.typedGet("myLongMapList").getValue(), Collections.singletonList(Collections.singletonMap("u", 21L)));
-        Assert.assertEquals(record.typedGet("myFloatMapList").getValue(), Collections.singletonList(Collections.singletonMap("v", 22.0f)));
-        Assert.assertEquals(record.typedGet("myDoubleMapList").getValue(), Collections.singletonList(Collections.singletonMap("w", 23.0)));
-        Assert.assertEquals(record.typedGet("myStringMapList").getValue(), Collections.singletonList(Collections.singletonMap("x", "24")));
+        Assert.assertEquals(record.typedGet("myBoolList").getValue(), singletonList(false));
+        Assert.assertEquals(record.typedGet("myIntList").getValue(), singletonList(14));
+        Assert.assertEquals(record.typedGet("myLongList").getValue(), singletonList(15L));
+        Assert.assertEquals(record.typedGet("myFloatList").getValue(), singletonList(16.0f));
+        Assert.assertEquals(record.typedGet("myDoubleList").getValue(), singletonList(17.0));
+        Assert.assertEquals(record.typedGet("myStringList").getValue(), singletonList("18"));
+        Assert.assertEquals(record.typedGet("myBoolMapList").getValue(), singletonList(singletonMap("s", true)));
+        Assert.assertEquals(record.typedGet("myIntMapList").getValue(), singletonList(singletonMap("t", 20)));
+        Assert.assertEquals(record.typedGet("myLongMapList").getValue(), singletonList(singletonMap("u", 21L)));
+        Assert.assertEquals(record.typedGet("myDoubleMapList").getValue(), singletonList(singletonMap("w", 23.0)));
+        Assert.assertEquals(record.typedGet("myStringMapList").getValue(), singletonList(singletonMap("x", "24")));
+        Map<String, Map<String, Float>> expected = new HashMap<>();
+        expected.put("m", singletonMap("n", 10.0f));
+        expected.put("o", null);
+        Assert.assertEquals(record.typedGet("myFloatMapMap").getValue(), expected);
         Assert.assertFalse(record.hasField("dne"));
     }
 }

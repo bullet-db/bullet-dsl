@@ -19,6 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
+/**
+ * JSONBulletRecordConverter is used to convert String JSON to {@link BulletRecord} instances. The JSON must be an
+ * object containing the fields of the record.
+ * <br><br>
+ * If a schema is not specified, numeric types will default to {@link Double}. If a schema is provided, the appropriate
+ * specified types will be used.
+ */
 public class JSONBulletRecordConverter extends MapBulletRecordConverter {
 
     private static final long serialVersionUID = -9133702879277054842L;
@@ -103,28 +110,32 @@ public class JSONBulletRecordConverter extends MapBulletRecordConverter {
     }
 
     private static Serializable toInt(Serializable primitive) {
-        return ((Number) primitive).intValue();
+        return primitive == null ? null : ((Number) primitive).intValue();
     }
 
     private static Serializable toLong(Serializable primitive) {
-        return ((Number) primitive).longValue();
+        return primitive == null ? null : ((Number) primitive).longValue();
     }
 
     private static Serializable toFloat(Serializable primitive) {
-        return ((Number) primitive).floatValue();
+        return primitive == null ? null : ((Number) primitive).floatValue();
     }
 
     @SuppressWarnings("unchecked")
     private static Serializable toNumberMap(Serializable map, UnaryOperator<Serializable> mapper) {
-        Map<String, Serializable> asMap = (Map<String, Serializable>) map;
-        asMap.replaceAll((k, v) -> mapper.apply(v));
+        if (map != null) {
+            Map<String, Serializable> asMap = (Map<String, Serializable>) map;
+            asMap.replaceAll((k, v) -> mapper.apply(v));
+        }
         return map;
     }
 
     @SuppressWarnings("unchecked")
     private static Serializable toNumberList(Serializable list, UnaryOperator<Serializable> mapper) {
-        List<Serializable> asList = (List<Serializable>) list;
-        asList.replaceAll(mapper);
+        if (list != null) {
+            List<Serializable> asList = (List<Serializable>) list;
+            asList.replaceAll(mapper);
+        }
         return list;
     }
 }
