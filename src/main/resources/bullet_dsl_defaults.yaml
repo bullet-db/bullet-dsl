@@ -61,6 +61,9 @@ bullet.dsl.converter.schema.file: ""
 # ignored if you do not provide a schema.
 bullet.dsl.converter.schema.type.check.enable: false
 
+# Enable string type conversions from native Avro formats to Java String for the AvroBulletRecordConverter
+bullet.dsl.converter.avro.string.type.fix.enable: false
+
 # POJOBulletRecordConverter - POJO class name
 bullet.dsl.converter.pojo.class.name:
 

@@ -16,6 +16,9 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +35,7 @@ import java.util.Objects;
 public class AvroBulletRecordConverter extends BulletRecordConverter {
 
     private static final long serialVersionUID = -5066600942303615002L;
+    protected boolean runStringFixer;
 
     /**
      * Constructs an AvroBulletRecordConverter without a schema.
@@ -69,16 +73,36 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     }
 
     @Override
+    protected BulletRecordConverter build() throws BulletDSLException {
+        BulletRecordConverter converter = super.build();
+        runStringFixer = config.getAs(BulletDSLConfig.RECORD_CONVERTER_AVRO_STRING_TYPE_FIX_ENABLE, Boolean.class);
+        return converter;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public BulletRecord convert(Object object, BulletRecord record) throws BulletDSLException {
         if (schema != null) {
             return super.convert(object, record);
         }
-        // no bullet dsl schema
+        // No Bullet DSL schema
         GenericRecord avro = (GenericRecord) object;
-        for (Schema.Field field : avro.getSchema().getFields()) {
-            Serializable value = (Serializable) avro.get(field.pos());
-            if (value != null) {
+        return convertGenericRecord(avro, avro.getSchema(), record);
+    }
+
+    /**
+     * Converts a {@link GenericRecord} with a {@link Schema} into the provided {@link BulletRecord}.
+     *
+     * @param genericRecord The {@link GenericRecord} to convert.
+     * @param schema The {@link Schema} of the {@link GenericRecord}.
+     * @param record The {@link BulletRecord} to place the fields into.
+     * @return The {@link BulletRecord} with the added fields.
+     */
+    protected BulletRecord convertGenericRecord(GenericRecord genericRecord, Schema schema, BulletRecord record) {
+        for (Schema.Field field : schema.getFields()) {
+            Object datum = genericRecord.get(field.pos());
+            if (datum != null) {
+                Serializable value = runStringFixer ? fix(field.schema(), datum) : (Serializable) datum;
                 record.typedSet(field.name(), new TypedObject(value));
             }
         }
@@ -99,16 +123,6 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         }
     }
 
-    private void flattenRecord(GenericRecord genericRecord, BulletRecord record) {
-        for (Schema.Field field : genericRecord.getSchema().getFields()) {
-            String key = field.name();
-            Serializable value = (Serializable) genericRecord.get(field.pos());
-            if (value != null) {
-                record.typedSet(key, new TypedObject(value));
-            }
-        }
-    }
-
     @Override
     protected Object get(Object object, String base) {
         return ((GenericRecord) object).get(base);
@@ -121,5 +135,60 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
             return ((GenericRecord) object).get(field);
         }
         return super.getField(object, field);
+    }
+
+    private void flattenRecord(GenericRecord genericRecord, BulletRecord record) {
+        for (Schema.Field field : genericRecord.getSchema().getFields()) {
+            String key = field.name();
+            Serializable value = (Serializable) genericRecord.get(field.pos());
+            if (value != null) {
+                record.typedSet(key, new TypedObject(value));
+            }
+        }
+    }
+
+    private Serializable fix(Schema fieldSchema, Object datum) {
+        if (datum == null) {
+            return null;
+        }
+        switch (fieldSchema.getType()) {
+            case STRING:
+                return datum.toString();
+            case UNION:
+                return fixUnion(fieldSchema.getTypes(), datum);
+            case MAP:
+                return fixMap(fieldSchema.getValueType(), (Map<CharSequence, Object>) datum);
+            case ARRAY:
+                return fixArray(fieldSchema.getElementType(), (List<Object>) datum);
+        }
+        return (Serializable) datum;
+    }
+
+    private Serializable fixUnion(List<Schema> types, Object value) {
+        Serializable fixed = null;
+        for (Schema schema : types) {
+            Schema.Type type = schema.getType();
+            if (type == Schema.Type.NULL) {
+                continue;
+            }
+            // Use the first non null type that works
+            try {
+                fixed = fix(schema, value);
+            } catch (Exception ignored) {
+            }
+        }
+        return fixed;
+    }
+
+    private Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
+        HashMap<String, Object> map = new HashMap<>();
+        value.forEach((k, v) -> map.put(k == null ? null : k.toString(), fix(valueType, v)));
+        return map;
+    }
+
+    private Serializable fixArray(Schema elementType, List<Object> value) {
+        ArrayList<Object> list = new ArrayList<>();
+        value.forEach(e -> list.add(fix(elementType, e)));
+        return list;
     }
 }
