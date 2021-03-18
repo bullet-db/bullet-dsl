@@ -38,24 +38,25 @@ import static java.util.Collections.singletonMap;
 public class AvroBulletRecordConverterTest {
     private static final Schema SCHEMA;
     static {
-        SCHEMA = SchemaBuilder.record("Test").namespace("foo").fields()
-                    .name("string").type().optional().stringType()
-                    .name("int").type().optional().intType()
-                    .name("mapOfString").type().optional().map().values().stringType()
-                    .name("mapOfDouble").type().optional().map().values().doubleType()
-                    .name("mapOfMapOfString").type().optional().map().values().map().values().stringType()
-                    .name("listOfString").type().optional().array().items().stringType()
-                    .name("listOfBoolean").type().optional().array().items().booleanType()
-                    .name("listOfMapOfString").type().optional().array().items().map().values().stringType()
-                    .name("unsupportedUnion").type().unionOf()
-                        .nullType().and()
-                        .record("record")
-                        .fields()
-                            .name("stringField").type().optional().stringType()
-                            .endRecord()
-                        .endUnion()
-                        .nullDefault()
-                    .endRecord();
+        SCHEMA = SchemaBuilder.record("Test").namespace("foo")
+                    .fields()
+                        .name("string").type().optional().stringType()
+                        .name("int").type().optional().intType()
+                        .name("mapOfString").type().optional().map().values().stringType()
+                        .name("mapOfDouble").type().optional().map().values().doubleType()
+                        .name("mapOfMapOfString").type().optional().map().values().map().values().stringType()
+                        .name("listOfString").type().optional().array().items().stringType()
+                        .name("listOfBoolean").type().optional().array().items().booleanType()
+                        .name("listOfMapOfString").type().optional().array().items().map().values().stringType()
+                        .name("unsupportedUnion").type().unionOf()
+                            .nullType().and()
+                            .record("record")
+                            .fields()
+                                .name("stringField").type().optional().stringType()
+                                .endRecord()
+                            .endUnion()
+                            .nullDefault()
+                        .endRecord();
     }
 
     @AllArgsConstructor
