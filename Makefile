@@ -13,7 +13,7 @@ jar:
 	    mvn clean package
 
 release:
-	    mvn -B release:branch -DbranchName=bullet-dsl-release release:clean
+	    mvn -B releae:prepare release:branch -DbranchName=travis-release release:clean
 
 coverage:
 	    mvn clean clover2:setup test clover2:aggregate clover2:clover
