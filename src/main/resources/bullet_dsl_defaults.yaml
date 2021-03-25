@@ -55,7 +55,7 @@ bullet.dsl.connector.pulsar.consumer.subscriptionType: "Shared"
 # The classpath to the BulletRecordConverter to use
 bullet.dsl.converter.class.name:
 # The path to the schema file to use
-bullet.dsl.converter.schema.file: ""
+bullet.dsl.converter.schema.file:
 # Should type checking be performed for fields with type in the schema. It is useful to make sure that the types in
 # your source records match your expectations. You can set this to false when you are sure of your schema. This is
 # ignored if you do not provide a schema.
