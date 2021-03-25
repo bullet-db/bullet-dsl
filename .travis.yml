@@ -6,14 +6,14 @@ script:
 - mvn verify
 after_success:
 - mvn coveralls:report
-- test "${TRAVIS_PULL_REQUEST}" == "false" && test "${TRAVIS_TAG}" != "" && mvn deploy --settings travis/settings.xml
+- test "${TRAVIS_PULL_REQUEST}" == "false" && test "${TRAVIS_BRANCH}" == "bullet-dsl-build-release" && mvn deploy --settings travis/settings.xml
 cache:
   directories:
   - "~/.m2"
 branches:
   only:
   - master
-  - "/^bullet-dsl-[0-9]+\\.[0-9]+\\.[0-9]+/"
+  - bullet-dsl-build-release
 env:
   global:
   - secure: L3E/+rhrQgBQrHFsh4zl64ICTcxBumrMTFn8FzROonafyyuRcBIuuYLoQ1VjIdfYmJcKCH01Wbt+cqVhYd5s4VA+RUn1LajfoV7LVquyfMZImSV1n8bTzjYvkW+hoGQ7TZXS5B5e2CMEgDxGOfInmPdoatOusPYQhkxTVySopW6Oow/xs1QMbRC5VhSqmsj+GovNRGgJhgdacClaIZL58RbQPyFd64mzvz/LnKq9ZySi6XzxI0CIaSXNLUVOQg5A+1q3Jaqblfid4g8qxR5DzKy7A+pGlXMikeRZM81eFMHioVCygz+72fmYgeiZ6vb0/w3T28LoN9orbGGaYGitKPnJyJyA6mZ37HSOWwBL9mlZIPZPflmtM6pOC06xzQO7QwXNKrRKrBjFlVFC5b6YX1e5OmYnM103AXdgxuc0Oadx/5RcCB6o2K9HSeqoxFGN7fWIxLZKLXqawskX3E7SPjAtjiblcTKHQcYYlJZNnO8055wNRS7e8cPW7rh5WzALRnjIZUxJN6j5Uu+wBvF2GSIApzLnYFL/ZJKc+lxbgjtKU5bs+ohGSlYE+a4W4KcSmg/epsiDk4y1yL6IcraqOh1EyeO1B9tYqbRQB+jzE2Eoxprn4doHYYnUZTf2gTfob+oL356ctNTwpbXRPQLwHLSxxGY27deVcci1vKpxYc4=
