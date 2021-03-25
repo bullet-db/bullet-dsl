@@ -10,7 +10,7 @@
 
     <scm>
         <developerConnection>scm:git:ssh://git@github.com/bullet-db/bullet-dsl.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>bullet-dsl-release</tag>
     </scm>
 
     <distributionManagement>
