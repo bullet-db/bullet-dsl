@@ -13,7 +13,7 @@ jar:
 	    mvn clean package
 
 release:
-	    mvn -B release:prepare release:clean
+	    mvn -B release:prepare release:clean && BRANCH=`git describe --abbrev=0` && git checkout -b $BRANCH && git push origin $BRANCH
 
 coverage:
 	    mvn clean clover2:setup test clover2:aggregate clover2:clover
