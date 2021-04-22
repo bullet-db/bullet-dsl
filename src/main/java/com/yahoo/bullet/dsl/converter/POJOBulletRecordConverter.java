@@ -11,10 +11,10 @@ import com.yahoo.bullet.dsl.BulletDSLException;
 import com.yahoo.bullet.dsl.schema.BulletRecordField;
 import com.yahoo.bullet.record.BulletRecord;
 import com.yahoo.bullet.typesystem.TypedObject;
-import javafx.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -124,7 +124,7 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
             if (!field.isSynthetic()) {
                 if (hasValidType(field)) {
                     field.setAccessible(true);
-                    accessors.put(field.getName(), new Pair<>(null, field));
+                    accessors.put(field.getName(), Pair.of(null, field));
                 } else {
                     log.warn("Ignoring field with unsupported type: " + field.getName());
                 }
@@ -143,7 +143,7 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
                 throw new BulletDSLException("Found base method's return type is not map: " + field);
             }
             m.setAccessible(true);
-            accessors.put(token[0], new Pair<>(m, null));
+            accessors.put(token[0], Pair.of(m, null));
             return true;
         } catch (NoSuchMethodException ignored) {
             return false;
@@ -161,7 +161,7 @@ public class POJOBulletRecordConverter extends BulletRecordConverter {
                 throw new BulletDSLException("Found base member's type is not map: " + field);
             }
             f.setAccessible(true);
-            accessors.put(token[0], new Pair<>(null, f));
+            accessors.put(token[0], Pair.of(null, f));
             return true;
         } catch (NoSuchFieldException ignored) {
             return false;
