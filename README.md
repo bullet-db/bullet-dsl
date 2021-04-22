@@ -1,6 +1,6 @@
 # Bullet DSL
 
-[![Build Status](https://travis-ci.com/bullet-db/bullet-dsl.svg?branch=master)](https://travis-ci.com/bullet-db/bullet-dsl) [![Coverage Status](https://coveralls.io/repos/github/bullet-db/bullet-dsl/badge.svg?branch=master)](https://coveralls.io/github/bullet-db/bullet-dsl?branch=master) [![Download](https://api.bintray.com/packages/yahoo/maven/bullet-dsl/images/download.svg) ](https://bintray.com/yahoo/maven/bullet-dsl/_latestVersion)
+[![Build Status](https://travis-ci.com/bullet-db/bullet-dsl.svg?branch=master)](https://travis-ci.com/bullet-db/bullet-dsl) [![Coverage Status](https://coveralls.io/repos/github/bullet-db/bullet-dsl/badge.svg?branch=master)](https://coveralls.io/github/bullet-db/bullet-dsl?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.yahoo.bullet/bullet-dsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.yahoo.bullet/bullet-dsl/) 
 
 A DSL for users to plug in their datasource into Bullet (Spark, Storm, etc.)
 
