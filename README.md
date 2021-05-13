@@ -25,7 +25,7 @@ Bullet is a streaming query engine that can be plugged into any singular data st
 
 Bullet DSL is a library written in Java and published to Maven Central. 
 
-Versions 1.1.3 and below can be found on[Bintray](https://bintray.com/yahoo/maven/bullet-dsl) and mirrored to [JCenter](http://jcenter.bintray.com/com/yahoo/bullet/bullet-dsl/). To see the various versions and set up your project for your package manager (Maven, Gradle etc), [see here](https://bullet-db.github.io/releases/#bullet-dsl).
+Versions 1.1.3 and below can be found on [Bintray](https://bintray.com/yahoo/maven/bullet-dsl) and mirrored to [JCenter](http://jcenter.bintray.com/com/yahoo/bullet/bullet-dsl/). To see the various versions and set up your project for your package manager (Maven, Gradle etc), [see here](https://bullet-db.github.io/releases/#bullet-dsl).
 
 ## Usage
 
