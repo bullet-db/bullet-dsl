@@ -22,6 +22,7 @@ bullet.dsl.connector.kafka.bootstrap.servers: "localhost:9092"
 bullet.dsl.connector.kafka.group.id: "bullet-consumer-group"
 bullet.dsl.connector.kafka.key.deserializer: "org.apache.kafka.common.serialization.StringDeserializer"
 bullet.dsl.connector.kafka.value.deserializer: "org.apache.kafka.common.serialization.ByteArrayDeserializer"
+bullet.dsl.connector.kafka.enable.auto.commit: true
 
 ###### PulsarConnector properties
 
