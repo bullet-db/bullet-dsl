@@ -167,13 +167,16 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     }
 
     private Serializable fixRecord(Schema schema, GenericRecord record) {
-        HashMap<String, Object> map = new HashMap<>();
-        for (Schema.Field field : schema.getFields()) {
-            // Fix child
-            Serializable child = fix(field.schema(), record.get(field.pos()));
-            map.put(field.name(), child);
-        }
-        return map;
+        // Just doing toString() for now so we can get top-level types working correctly first - then the below should hopefully work for nested types maybe?
+        return record.toString();
+
+//        HashMap<String, Object> map = new HashMap<>();
+//        for (Schema.Field field : schema.getFields()) {
+//            // Fix child
+//            Serializable child = fix(field.schema(), record.get(field.pos()));
+//            map.put(field.name(), child);
+//        }
+//        return map;
     }
 
     private Serializable fixUnion(List<Schema> types, Object value) {
