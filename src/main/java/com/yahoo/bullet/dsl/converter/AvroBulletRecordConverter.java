@@ -158,10 +158,22 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
                 return fixUnion(fieldSchema.getTypes(), datum);
             case MAP:
                 return fixMap(fieldSchema.getValueType(), (Map<CharSequence, Object>) datum);
+            case RECORD:
+                return fixRecord(fieldSchema, (GenericRecord) datum);
             case ARRAY:
                 return fixArray(fieldSchema.getElementType(), (List<Object>) datum);
         }
         return (Serializable) datum;
+    }
+
+    private Serializable fixRecord(Schema schema, GenericRecord record) {
+        HashMap<String, Object> map = new HashMap<>();
+        for (Schema.Field field : schema.getFields()) {
+            // Fix child
+            Serializable child = fix(field.schema(), record.get(field.pos()));
+            map.put(field.name(), child);
+        }
+        return map;
     }
 
     private Serializable fixUnion(List<Schema> types, Object value) {
