@@ -14,6 +14,7 @@ import com.yahoo.bullet.typesystem.TypedObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -158,6 +159,8 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
                 return fixUnion(fieldSchema.getTypes(), datum);
             case MAP:
                 return fixMap(fieldSchema.getValueType(), (Map<CharSequence, Object>) datum);
+            case RECORD:
+                return fixRecord(fieldSchema, (GenericRecord) datum);
             case ARRAY:
                 return fixArray(fieldSchema.getElementType(), (List<Object>) datum);
         }
@@ -174,7 +177,8 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
             // Use the first non null type that works
             try {
                 fixed = fix(schema, value);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                log.error(ExceptionUtils.getStackTrace(e));
             }
         }
         return fixed;
@@ -183,6 +187,12 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
     private Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
         HashMap<String, Object> map = new HashMap<>();
         value.forEach((k, v) -> map.put(k == null ? null : k.toString(), fix(valueType, v)));
+        return map;
+    }
+
+    private Serializable fixRecord(Schema schema, GenericRecord record) {
+        HashMap<String, Object> map = new HashMap<>();
+        schema.getFields().forEach(f -> map.put(f.name(), fix(f.schema(), record.get(f.pos()))));
         return map;
     }
 
