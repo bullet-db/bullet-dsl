@@ -77,10 +77,10 @@ public class AvroBulletRecordConverterTest {
                         .endRecord();
 
         RECORD_SCHEMA = SchemaBuilder.record("recordOfString")
-                    .fields()
-                        .name("firstField").type().nullable().stringType().noDefault()
-                        .name("secondField").type().nullable().stringType().noDefault()
-                        .endRecord();
+                            .fields()
+                                .name("firstField").type().nullable().stringType().noDefault()
+                                .name("secondField").type().nullable().stringType().noDefault()
+                                .endRecord();
     }
 
     @AllArgsConstructor
@@ -443,12 +443,13 @@ public class AvroBulletRecordConverterTest {
 
     @Test
     public void testRecordOfRecordStringFixing() throws Exception {
-        Schema topMapSchema = SchemaBuilder.record("recordOfRecordOfString").fields()
-                .name("firstField").type().optional().record("innerRecordInRecord").fields()
-                    .name("firstField").type().nullable().stringType().noDefault()
-                    .name("secondField").type().nullable().stringType().noDefault()
-                    .endRecord()
-                .endRecord();
+        Schema topMapSchema = SchemaBuilder.record("recordOfRecordOfString")
+                                .fields()
+                                    .name("firstField").type().optional().record("innerRecordInRecord").fields()
+                                        .name("firstField").type().nullable().stringType().noDefault()
+                                        .name("secondField").type().nullable().stringType().noDefault()
+                                        .endRecord()
+                                    .endRecord();
 
         GenericRecord innerRecord = make(RECORD_SCHEMA, new Field("firstField", "firstValue"), new Field("secondField", "secondValue"));
         GenericRecord outerRecord = make(topMapSchema, new Field("firstField", innerRecord));
