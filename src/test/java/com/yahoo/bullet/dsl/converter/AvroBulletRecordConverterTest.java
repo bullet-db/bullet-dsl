@@ -444,9 +444,9 @@ public class AvroBulletRecordConverterTest {
     @Test
     public void testRecordOfRecordStringFixing() throws Exception {
         Schema topMapSchema = SchemaBuilder.record("recordOfRecordOfString").fields()
-                    .name("firstField").type().optional().record("innerRecordInRecord").fields()
-                        .name("firstField").type().nullable().stringType().noDefault()
-                        .name("secondField").type().nullable().stringType().noDefault()
+                .name("firstField").type().optional().record("innerRecordInRecord").fields()
+                    .name("firstField").type().nullable().stringType().noDefault()
+                    .name("secondField").type().nullable().stringType().noDefault()
                     .endRecord()
                 .endRecord();
 

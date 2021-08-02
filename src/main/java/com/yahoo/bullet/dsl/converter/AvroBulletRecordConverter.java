@@ -14,7 +14,6 @@ import com.yahoo.bullet.typesystem.TypedObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
             try {
                 fixed = fix(schema, value);
             } catch (Exception e) {
-                log.error(ExceptionUtils.getStackTrace(e));
+                log.error("Caught exception while processing Avro union: ", e);
             }
         }
         return fixed;
