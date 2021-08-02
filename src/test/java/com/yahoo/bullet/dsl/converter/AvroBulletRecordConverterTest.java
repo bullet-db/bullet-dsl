@@ -37,26 +37,50 @@ import static java.util.Collections.singletonMap;
 
 public class AvroBulletRecordConverterTest {
     private static final Schema SCHEMA;
+    private static final Schema RECORD_SCHEMA;
     static {
         SCHEMA = SchemaBuilder.record("Test").namespace("foo")
                     .fields()
                         .name("string").type().optional().stringType()
                         .name("int").type().optional().intType()
                         .name("mapOfString").type().optional().map().values().stringType()
+                        .name("recordOfString").type().optional().record("myRecord").fields()
+                            .name("firstField").type().nullable().stringType().noDefault()
+                            .name("secondField").type().nullable().stringType().noDefault()
+                        .endRecord()
                         .name("mapOfDouble").type().optional().map().values().doubleType()
                         .name("mapOfMapOfString").type().optional().map().values().map().values().stringType()
+                        .name("mapOfRecordOfString").type().optional().map().values()
+                            .record("innerRecordInMap").fields()
+                                .name("firstField").type().nullable().stringType().noDefault()
+                                .name("secondField").type().nullable().stringType().noDefault()
+                            .endRecord()
+                        .name("recordOfRecordOfString").type().optional().record("myRecordOfRecord").fields()
+                            .name("firstField").type().optional().record("innerRecordInRecord").fields()
+                                .name("firstField").type().nullable().stringType().noDefault()
+                                .name("secondField").type().nullable().stringType().noDefault()
+                            .endRecord()
+                        .endRecord()
                         .name("listOfString").type().optional().array().items().stringType()
                         .name("listOfBoolean").type().optional().array().items().booleanType()
                         .name("listOfMapOfString").type().optional().array().items().map().values().stringType()
+                        .name("listOfRecordOfString").type().optional().array().items().record("stringRecord").fields()
+                            .name("firstField").type().nullable().stringType().noDefault()
+                            .name("secondField").type().nullable().stringType().noDefault()
+                        .endRecord()
                         .name("unsupportedUnion").type().unionOf()
                             .nullType().and()
-                            .record("record")
-                            .fields()
-                                .name("stringField").type().optional().stringType()
-                                .endRecord()
+                            .enumeration("enumeration")
+                                .symbols("one", "two", "three")
                             .endUnion()
                             .nullDefault()
                         .endRecord();
+
+        RECORD_SCHEMA = SchemaBuilder.record("recordOfString")
+                            .fields()
+                                .name("firstField").type().nullable().stringType().noDefault()
+                                .name("secondField").type().nullable().stringType().noDefault()
+                                .endRecord();
     }
 
     @AllArgsConstructor
@@ -65,14 +89,18 @@ public class AvroBulletRecordConverterTest {
         Object value;
     }
 
-    private static GenericRecord make(Field... fields) {
-        GenericRecordBuilder builder = new GenericRecordBuilder(SCHEMA);
+    private static GenericRecord make(Schema schema, Field... fields) {
+        GenericRecordBuilder builder = new GenericRecordBuilder(schema);
         for (Field field : fields) {
             builder.set(field.name, field.value);
         }
         return builder.build();
     }
-    
+
+    private static GenericRecord make(Field... fields) {
+        return make(SCHEMA, fields);
+    }
+
     private static AvroBulletRecordConverter fixingConverter() throws Exception {
         BulletDSLConfig config = new BulletDSLConfig();
         config.set(BulletDSLConfig.RECORD_CONVERTER_AVRO_STRING_TYPE_FIX_ENABLE, true);
@@ -357,6 +385,20 @@ public class AvroBulletRecordConverterTest {
     }
 
     @Test
+    public void testRecordStringFixing() throws Exception {
+        GenericRecord record = make(RECORD_SCHEMA, new Field("firstField", "firstValue"), new Field("secondField", "secondValue"));
+        GenericRecord input = make(new Field("recordOfString", record));
+        BulletRecord actual = fixingConverter().convert(input);
+
+        BulletRecord expected = new TypedAvroBulletRecordProvider().getInstance();
+        HashMap<String, String> expectedMap = new HashMap<>();
+        expectedMap.put("firstField", "firstValue");
+        expectedMap.put("secondField", "secondValue");
+        expected.typedSet("recordOfString", new TypedObject(Type.STRING_MAP, expectedMap));
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
     public void testMapOfMapStringFixing() throws Exception {
         Map<Utf8, Map<CharSequence, Utf8>> stringMapMap = new HashMap<>();
         Map<CharSequence, Utf8> stringMap = new HashMap<>();
@@ -382,6 +424,49 @@ public class AvroBulletRecordConverterTest {
     }
 
     @Test
+    public void testMapOfRecordOfStringFixing() throws Exception {
+        Map<String, GenericRecord> mapOfRecordOfString = new HashMap<>();
+        GenericRecord innerRecord = make(RECORD_SCHEMA, new Field("firstField", "firstValue"), new Field("secondField", "secondValue"));
+        mapOfRecordOfString.put("innerRecordInMap", innerRecord);
+        GenericRecord input = make(new Field("mapOfRecordOfString", mapOfRecordOfString));
+        BulletRecord actual = fixingConverter().convert(input);
+
+        BulletRecord expected = new TypedAvroBulletRecordProvider().getInstance();
+        HashMap<String, HashMap<String, String>> expectedOuterMap = new HashMap<>();
+        HashMap<String, String> expectedInnerMap = new HashMap<>();
+        expectedInnerMap.put("firstField", "firstValue");
+        expectedInnerMap.put("secondField", "secondValue");
+        expectedOuterMap.put("innerRecordInMap", expectedInnerMap);
+        expected.typedSet("mapOfRecordOfString", new TypedObject(Type.STRING_MAP_MAP, expectedOuterMap));
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testRecordOfRecordStringFixing() throws Exception {
+        Schema topMapSchema = SchemaBuilder.record("recordOfRecordOfString")
+                                .fields()
+                                    .name("firstField").type().optional().record("innerRecordInRecord").fields()
+                                        .name("firstField").type().nullable().stringType().noDefault()
+                                        .name("secondField").type().nullable().stringType().noDefault()
+                                        .endRecord()
+                                    .endRecord();
+
+        GenericRecord innerRecord = make(RECORD_SCHEMA, new Field("firstField", "firstValue"), new Field("secondField", "secondValue"));
+        GenericRecord outerRecord = make(topMapSchema, new Field("firstField", innerRecord));
+        GenericRecord input = make(new Field("recordOfRecordOfString", outerRecord));
+        BulletRecord actual = fixingConverter().convert(input);
+
+        BulletRecord expected = new TypedAvroBulletRecordProvider().getInstance();
+        HashMap<String, HashMap<String, String>> expectedOuterMap = new HashMap<>();
+        HashMap<String, String> expectedInnerMap = new HashMap<>();
+        expectedInnerMap.put("firstField", "firstValue");
+        expectedInnerMap.put("secondField", "secondValue");
+        expectedOuterMap.put("firstField", expectedInnerMap);
+        expected.typedSet("recordOfRecordOfString", new TypedObject(Type.STRING_MAP_MAP, expectedOuterMap));
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
     public void testListStringFixing() throws Exception {
         List<Utf8> stringList = new ArrayList<>();
         stringList.add(new Utf8("foo"));
@@ -401,7 +486,28 @@ public class AvroBulletRecordConverterTest {
     }
 
     @Test
-    public void testListOfListStringFixing() throws Exception {
+    public void testListOfRecordStringFixing() throws Exception {
+        GenericRecord innerRecord = make(RECORD_SCHEMA, new Field("firstField", "firstValue"), new Field("secondField", "secondValue"));
+        List<Object> stringRecordList = new ArrayList<>();
+        stringRecordList.add(innerRecord);
+        stringRecordList.add(null);
+
+        GenericRecord input = make(new Field("listOfRecordOfString", stringRecordList));
+        BulletRecord actual = fixingConverter().convert(input);
+
+        BulletRecord expected = new TypedAvroBulletRecordProvider().getInstance();
+        ArrayList<Map<String, String>> expectedStringMapList = new ArrayList<>();
+        HashMap<String, String> expectedStringMap = new HashMap<>();
+        expectedStringMap.put("firstField", "firstValue");
+        expectedStringMap.put("secondField", "secondValue");
+        expectedStringMapList.add(expectedStringMap);
+        expectedStringMapList.add(null);
+        expected.typedSet("listOfRecordOfString", new TypedObject(Type.STRING_MAP_LIST, expectedStringMapList));
+        Assert.assertEquals(actual, expected);
+    }
+
+    @Test
+    public void testListOfMapStringFixing() throws Exception {
         List<Map<CharSequence, CharSequence>> stringMapList = new ArrayList<>();
         Map<CharSequence, CharSequence> stringMap = new HashMap<>();
         stringMap.put(new Utf8("foo"), new Utf8("bar"));
@@ -428,11 +534,8 @@ public class AvroBulletRecordConverterTest {
     @Test(expectedExceptions = UnsupportedOperationException.class, expectedExceptionsMessageRegExp = ".*null or unknown.*")
     public void testUnsupportedStringFixing() throws Exception {
         Schema unionSchema = SCHEMA.getField("unsupportedUnion").schema();
-        int index = unionSchema.getIndexNamed("foo.record");
-        GenericRecord nested = new GenericData.Record(unionSchema.getTypes().get(index));
-        nested.put("stringField", new Utf8("bar"));
+        GenericData.EnumSymbol nested = new GenericData.EnumSymbol(unionSchema, "one");
         GenericRecord input = make (new Field("unsupportedUnion", nested));
-
         fixingConverter().convert(input);
     }
 }
