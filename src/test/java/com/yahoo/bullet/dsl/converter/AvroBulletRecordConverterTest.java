@@ -406,7 +406,7 @@ public class AvroBulletRecordConverterTest {
         stringMap.put(null, new Utf8("baz"));
         stringMap.put("qux", new Utf8("norf"));
         stringMapMap.put(new Utf8("boo"), stringMap);
-        stringMapMap.put(null, new HashMap<>());
+        stringMapMap.put(null, singletonMap("qux", new Utf8("quux")));
 
         GenericRecord input = make(new Field("mapOfMapOfString", stringMapMap));
         BulletRecord actual = fixingConverter().convert(input);
@@ -418,7 +418,7 @@ public class AvroBulletRecordConverterTest {
         expectedStringMap.put(null, "baz");
         expectedStringMap.put("qux", "norf");
         expectedStringMapMap.put("boo", expectedStringMap);
-        expectedStringMapMap.put(null, new HashMap<>());
+        expectedStringMapMap.put(null, singletonMap("qux", "quux"));
         expected.typedSet("mapOfMapOfString", new TypedObject(Type.STRING_MAP_MAP, expectedStringMapMap));
         Assert.assertEquals(actual, expected);
     }
