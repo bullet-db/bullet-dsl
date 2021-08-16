@@ -147,7 +147,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         }
     }
 
-    private Serializable fix(Schema fieldSchema, Object datum) {
+    protected Serializable fix(Schema fieldSchema, Object datum) {
         if (datum == null) {
             return null;
         }
@@ -166,7 +166,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         return (Serializable) datum;
     }
 
-    private Serializable fixUnion(List<Schema> types, Object value) {
+    protected Serializable fixUnion(List<Schema> types, Object value) {
         Serializable fixed = null;
         for (Schema schema : types) {
             Schema.Type type = schema.getType();
@@ -183,19 +183,19 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         return fixed;
     }
 
-    private Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
+    protected Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
         HashMap<String, Object> map = new HashMap<>();
         value.forEach((k, v) -> map.put(k == null ? null : k.toString(), fix(valueType, v)));
         return map;
     }
 
-    private Serializable fixRecord(Schema schema, GenericRecord record) {
+    protected Serializable fixRecord(Schema schema, GenericRecord record) {
         HashMap<String, Object> map = new HashMap<>();
         schema.getFields().forEach(f -> map.put(f.name(), fix(f.schema(), record.get(f.pos()))));
         return map;
     }
 
-    private Serializable fixArray(Schema elementType, List<Object> value) {
+    protected Serializable fixArray(Schema elementType, List<Object> value) {
         ArrayList<Object> list = new ArrayList<>();
         value.forEach(e -> list.add(fix(elementType, e)));
         return list;
