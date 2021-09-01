@@ -137,17 +137,14 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         return super.getField(object, field);
     }
 
-    private void flattenRecord(GenericRecord genericRecord, BulletRecord record) {
-        for (Schema.Field field : genericRecord.getSchema().getFields()) {
-            String key = field.name();
-            Serializable value = (Serializable) genericRecord.get(field.pos());
-            if (value != null) {
-                record.typedSet(key, new TypedObject(value));
-            }
-        }
-    }
-
-    private Serializable fix(Schema fieldSchema, Object datum) {
+    /**
+     * Fixes data, if necessary, to ensure that the datum is {@link Serializable}.
+     *
+     * @param fieldSchema The {@link Schema} of the datum.
+     * @param datum The datum to fix.
+     * @return The datum as a {@link Serializable}.
+     */
+    protected Serializable fix(Schema fieldSchema, Object datum) {
         if (datum == null) {
             return null;
         }
@@ -166,7 +163,14 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         return (Serializable) datum;
     }
 
-    private Serializable fixUnion(List<Schema> types, Object value) {
+    /**
+     * Fixes data, if necessary, to ensure that the datum is {@link Serializable}.
+     *
+     * @param types The list of {@link Schema} of the datum.
+     * @param datum The datum to fix.
+     * @return The datum as a {@link Serializable}.
+     */
+    protected Serializable fixUnion(List<Schema> types, Object datum) {
         Serializable fixed = null;
         for (Schema schema : types) {
             Schema.Type type = schema.getType();
@@ -175,7 +179,7 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
             }
             // Use the first non null type that works
             try {
-                fixed = fix(schema, value);
+                fixed = fix(schema, datum);
             } catch (Exception e) {
                 log.error("Caught exception while processing Avro union: ", e);
             }
@@ -183,21 +187,52 @@ public class AvroBulletRecordConverter extends BulletRecordConverter {
         return fixed;
     }
 
-    private Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
+    /**
+     * Fixes a map, if necessary, to ensure that all fields and values in the map are {@link Serializable}.
+     *
+     * @param valueType The {@link Schema} of the values in the map.
+     * @param value The {@link Map} to fix.
+     * @return A map with all fields and values {@link Serializable}.
+     */
+    protected Serializable fixMap(Schema valueType, Map<CharSequence, Object> value) {
         HashMap<String, Object> map = new HashMap<>();
         value.forEach((k, v) -> map.put(k == null ? null : k.toString(), fix(valueType, v)));
         return map;
     }
 
-    private Serializable fixRecord(Schema schema, GenericRecord record) {
+    /**
+     * Fixes an Avro record, if necessary, to ensure that all fields and values in the record are {@link Serializable}.
+     *
+     * @param schema The {@link Schema} of the record.
+     * @param record The {@link GenericRecord} to fix.
+     * @return A map representation of the record with all fields and values {@link Serializable}.
+     */
+    protected Serializable fixRecord(Schema schema, GenericRecord record) {
         HashMap<String, Object> map = new HashMap<>();
         schema.getFields().forEach(f -> map.put(f.name(), fix(f.schema(), record.get(f.pos()))));
         return map;
     }
 
-    private Serializable fixArray(Schema elementType, List<Object> value) {
+    /**
+     * Fixes an array, if necessary, to ensure that all elements of the array are {@link Serializable}.
+     *
+     * @param elementType The {@link Schema} of the elements in the array.
+     * @param value The {@link List} representation of the array to fix.
+     * @return A List with all elements {@link Serializable}.
+     */
+    protected Serializable fixArray(Schema elementType, List<Object> value) {
         ArrayList<Object> list = new ArrayList<>();
         value.forEach(e -> list.add(fix(elementType, e)));
         return list;
+    }
+
+    private void flattenRecord(GenericRecord genericRecord, BulletRecord record) {
+        for (Schema.Field field : genericRecord.getSchema().getFields()) {
+            String key = field.name();
+            Serializable value = (Serializable) genericRecord.get(field.pos());
+            if (value != null) {
+                record.typedSet(key, new TypedObject(value));
+            }
+        }
     }
 }
