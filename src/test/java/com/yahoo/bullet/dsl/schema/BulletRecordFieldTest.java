@@ -99,27 +99,19 @@ public class BulletRecordFieldTest {
 
         field.setType(Type.UNKNOWN_MAP);
         optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
+        Assert.assertFalse(optionalErrors.isPresent());
 
         field.setType(Type.UNKNOWN_LIST);
         optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
+        Assert.assertFalse(optionalErrors.isPresent());
 
         field.setType(Type.UNKNOWN_MAP_MAP);
         optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
+        Assert.assertFalse(optionalErrors.isPresent());
 
         field.setType(Type.UNKNOWN_MAP_LIST);
         optionalErrors = field.initialize();
-        Assert.assertTrue(optionalErrors.isPresent());
-        Assert.assertTrue(optionalErrors.get().contains(BulletRecordField.FIELD_INVALID_TYPE));
-        Assert.assertEquals(optionalErrors.get().size(), 1);
+        Assert.assertFalse(optionalErrors.isPresent());
     }
 
     @Test
