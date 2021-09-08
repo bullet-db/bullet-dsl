@@ -41,10 +41,6 @@ public class BulletRecordField implements Initializable, Serializable {
     static {
         INVALID_TYPES.add(Type.NULL);
         INVALID_TYPES.add(Type.UNKNOWN);
-        INVALID_TYPES.add(Type.UNKNOWN_LIST);
-        INVALID_TYPES.add(Type.UNKNOWN_MAP);
-        INVALID_TYPES.add(Type.UNKNOWN_MAP_LIST);
-        INVALID_TYPES.add(Type.UNKNOWN_MAP_MAP);
     }
 
     @Getter
