@@ -52,7 +52,7 @@
         <bullet.core.version>1.5.2</bullet.core.version>
         <kafka.clients.version>2.6.0</kafka.clients.version>
         <pulsar.client.version>2.2.1</pulsar.client.version>
-        <avro.version>1.9.2</avro.version>
+        <avro.version>1.11.3</avro.version>
         <slf4j.version>1.7.32</slf4j.version>
         <log4j.version>2.17.1</log4j.version>
         <maven.compiler.source>1.8</maven.compiler.source>
